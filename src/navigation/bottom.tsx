@@ -5,8 +5,15 @@ import { MainBottomTabsParamsListTypes } from './types';
 import Categories from '../components/categories/Categories';
 import Settings from '../components/settings/Settings';
 import Receipts from '../components/receipts/Receipts';
+import { STRINGS } from '../strings/hebrew';
 
 const Tab = createBottomTabNavigator<MainBottomTabsParamsListTypes>();
+const TAB_LABELS = {
+  Home: STRINGS.HOME,
+  Categories: STRINGS.CATEGORIES,
+  Receipts: STRINGS.RECEIPS,
+  Settings: STRINGS.SETTINGS,
+};
 
 const MainTabs = () => {
   return (
@@ -32,10 +39,26 @@ const MainTabs = () => {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Categories" component={Categories} />
-      <Tab.Screen name="Receipts" component={Receipts} />
-      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{ tabBarLabel: TAB_LABELS.Home }}
+      />
+      <Tab.Screen
+        name="Categories"
+        component={Categories}
+        options={{ tabBarLabel: TAB_LABELS.Categories }}
+      />
+      <Tab.Screen
+        name="Receipts"
+        component={Receipts}
+        options={{ tabBarLabel: TAB_LABELS.Receipts }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={Settings}
+        options={{ tabBarLabel: TAB_LABELS.Settings }}
+      />
     </Tab.Navigator>
   );
 };
