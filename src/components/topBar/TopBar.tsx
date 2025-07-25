@@ -18,10 +18,16 @@ export default TopBar;
 const styles = StyleSheet.create({
   textContainer: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 20,
-    backgroundColor: 'yellow',
+    backgroundColor: 'white',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    borderRadius: 12,
+    paddingStart: 35,
   },
   textStyle: {
     fontSize: 24,
