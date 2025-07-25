@@ -1,11 +1,14 @@
 import { FC } from 'react';
 import { Text, View } from 'react-native';
+import ScreenLayout from '../screenLayout/ScreenLayout';
 
 const Categories: FC = () => {
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Categories Screen</Text>
-    </View>
+    <ScreenLayout>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Categories Screen</Text>
+      </View>
+    </ScreenLayout>
   );
 };
 
