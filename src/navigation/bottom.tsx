@@ -17,6 +17,8 @@ const MainTabs = () => {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'Categories') {
+            iconName = focused ? 'list' : 'list-outline';
           } else if (route.name === 'Receipts') {
             iconName = focused ? 'receipt' : 'receipt-outline';
           } else if (route.name === 'Settings') {
