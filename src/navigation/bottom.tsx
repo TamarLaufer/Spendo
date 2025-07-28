@@ -6,6 +6,7 @@ import Categories from '../components/categories/Categories';
 import Settings from '../components/settings/Settings';
 import Receipts from '../components/receipts/Receipts';
 import { STRINGS } from '../strings/hebrew';
+import AddButton from '../components/button/AddButton';
 
 const Tab = createBottomTabNavigator<MainBottomTabsParamsListTypes>();
 const TAB_LABELS = {
@@ -15,7 +16,13 @@ const TAB_LABELS = {
   Settings: STRINGS.SETTINGS,
 };
 
-const MainTabs = () => {
+const DummyComponent: React.FC = () => null;
+
+type PropsType = {
+  openBottomSheet: () => void;
+};
+
+const MainTabs = ({ openBottomSheet }: PropsType) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -32,7 +39,13 @@ const MainTabs = () => {
             iconName = focused ? 'settings' : 'settings-outline';
           }
 
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return (
+            <Ionicons
+              name={iconName}
+              size={size}
+              color={focused ? '#C562AF' : color}
+            />
+          );
         },
         tabBarActiveTintColor: '#321d63ff',
         tabBarInactiveTintColor: 'gray',
@@ -48,6 +61,13 @@ const MainTabs = () => {
         name="Categories"
         component={Categories}
         options={{ tabBarLabel: TAB_LABELS.Categories }}
+      />
+      <Tab.Screen
+        name="Add"
+        component={DummyComponent}
+        options={{
+          tabBarButton: () => <AddButton onPress={openBottomSheet} />,
+        }}
       />
       <Tab.Screen
         name="Receipts"

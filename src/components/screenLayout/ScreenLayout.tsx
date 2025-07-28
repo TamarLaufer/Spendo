@@ -1,5 +1,4 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
 import TopBar from '../topBar/TopBar';
 
 export default function ScreenLayout({
@@ -8,14 +7,9 @@ export default function ScreenLayout({
   children: React.ReactNode;
 }) {
   return (
-    <View style={styles.container}>
+    <>
       <TopBar />
-      <View style={styles.content}>{children}</View>
-    </View>
+      {children}
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  content: { flex: 1 },
-});

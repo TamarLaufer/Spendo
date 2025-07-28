@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "761916955386",
+    "project_id": "gallery-firebase-d548e",
+    "storage_bucket": "gallery-firebase-d548e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761916955386:android:06bf20b3fbf06f84e54743",
+        "android_client_info": {
+          "package_name": "com.spendo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmAdyJJ7zjrwgLSU47L-jRQQ73VFc4o-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

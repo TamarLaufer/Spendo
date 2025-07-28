@@ -1,4 +1,4 @@
-package com.spendo
+package com.spendo.app
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
