@@ -47,13 +47,9 @@ const categoriesList: CategoryType[] = [
 
 type ChooseCategoryStepType = {
   onNext: () => void;
-  onBack: () => void;
 };
 
-const ChooseCategoryStep: React.FC<ChooseCategoryStepType> = ({
-  onNext,
-  onBack,
-}) => {
+const ChooseCategoryStep: React.FC<ChooseCategoryStepType> = ({ onNext }) => {
   const amount = useExpenseWizard(state => state.amount);
 
   useEffect(() => {

@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { useMemo, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { runOnJS, useWorkletCallback } from 'react-native-reanimated';
 import { theme } from '../theme/theme';
 import AddExpenseStep from '../components/AddExpenseSteps/AddExpenseStep';
@@ -13,14 +13,9 @@ import { Icons } from '../assets/icons';
 type PropsType = {
   bottomSheetRef: React.RefObject<BottomSheetMethods | null>;
   onClose: () => void;
-  onBack?: () => void;
 };
 
-const BottomSheetExpenses = ({
-  bottomSheetRef,
-  onClose,
-  onBack,
-}: PropsType) => {
+const BottomSheetExpenses = ({ bottomSheetRef, onClose }: PropsType) => {
   const snapPoints = useMemo(() => ['75%'], []);
   const [step, setStep] = useState<
     'amount' | 'category' | 'subCategory' | 'endProcess' | 'date'
@@ -39,6 +34,20 @@ const BottomSheetExpenses = ({
 
   const showBackButton = step !== 'amount'; // only from the second step
   const showCancelButton = step !== 'endProcess';
+
+  const handleBack = () => {
+    switch (step) {
+      case 'category':
+        setStep('amount');
+        break;
+      case 'subCategory':
+        setStep('category');
+        break;
+      case 'endProcess':
+        setStep('subCategory');
+        break;
+    }
+  };
 
   return (
     <BottomSheet
@@ -61,16 +70,10 @@ const BottomSheetExpenses = ({
           />
         )}
         {step === 'category' && (
-          <ChooseCategoryStep
-            onBack={() => setStep('amount')}
-            onNext={() => setStep('subCategory')}
-          />
+          <ChooseCategoryStep onNext={() => setStep('subCategory')} />
         )}
         {step === 'subCategory' && (
-          <ChooseSubCategoryStep
-            onBack={() => setStep('category')}
-            onNext={() => setStep('endProcess')}
-          />
+          <ChooseSubCategoryStep onNext={() => setStep('endProcess')} />
         )}
         {/* {step === 'date' && (
       <DateStep
@@ -79,20 +82,17 @@ const BottomSheetExpenses = ({
       />
     )} */}
         {step === 'endProcess' && (
-          <EndProcessStep
-            onBack={() => setStep('subCategory')}
-            onSubmit={() => handleSubmit}
-          />
+          <EndProcessStep onSubmit={() => handleSubmit} />
         )}
         {showBackButton && (
-          <View style={styles.backButton}>
-            <Icons.BACK width={50} height={50} onPress={onBack} />
-          </View>
+          <Pressable style={styles.backButton} onPress={handleBack}>
+            <Icons.BACK width={50} height={50} />
+          </Pressable>
         )}
         {showCancelButton && (
-          <View style={styles.cancelXButton}>
-            <Icons.CANCEL_X width={32} height={32} onPress={onClose} />
-          </View>
+          <Pressable style={styles.cancelXButton} onPress={onClose}>
+            <Icons.CANCEL_X width={32} height={32} />
+          </Pressable>
         )}
       </BottomSheetView>
     </BottomSheet>

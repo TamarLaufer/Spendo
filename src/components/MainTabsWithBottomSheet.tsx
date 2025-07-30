@@ -1,7 +1,7 @@
-import { useRef } from 'react';
-import MainTabs from '../navigation/bottom';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { useRef } from 'react';
 import BottomSheetExpenses from '../bottomSheet/bottomSheetExpenses';
+import MainTabs from '../navigation/bottom';
 
 const MainTabsWithBottomSheet = () => {
   const bottomSheetRef = useRef<BottomSheetMethods | null>(null);

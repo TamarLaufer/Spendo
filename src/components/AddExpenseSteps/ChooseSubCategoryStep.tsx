@@ -45,12 +45,10 @@ const categoriesList: CategoryType[] = [
 ];
 
 type ChooseSubCategoryStepType = {
-  onBack: () => void;
   onNext: () => void;
 };
 
 const ChooseSubCategoryStep: React.FC<ChooseSubCategoryStepType> = ({
-  onBack,
   onNext,
 }) => {
   const {} = useExpenseWizard();
