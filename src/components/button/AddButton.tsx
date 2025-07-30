@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ViewStyle } from 'react-native';
+import { theme } from '../../theme/theme';
 
 type AddButtonType = {
   onPress: () => void;
@@ -20,21 +21,22 @@ const AddButton: React.FC<AddButtonType> = ({ onPress, style }) => {
 
 const styles = StyleSheet.create({
   button: {
-    width: 56,
-    height: 56,
-    borderRadius: 18,
-    backgroundColor: '#C562AF',
+    position: 'absolute',
+    bottom: 30,
+    width: 72,
+    height: 72,
+    borderRadius: 50,
+    backgroundColor: theme.color.purple,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 7,
+    elevation: 10,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    marginLeft: 8,
+    marginLeft: 4,
   },
   plus: {
-    fontSize: 38,
+    fontSize: 45,
     color: 'white',
-    fontWeight: 'bold',
     marginTop: -2,
   },
 });

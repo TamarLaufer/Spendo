@@ -1,14 +1,11 @@
 import { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-// import { Icons } from '../../assets/icons';
+import { theme } from '../../theme/theme';
 
 const TopBar: FC = () => {
-  // const ArrowDownIcon = Icons.ARROW_DOWN;
-
   return (
     <View style={styles.textContainer}>
-      <Text style={styles.textStyle}>Spendo</Text>
-      {/* <ArrowDownIcon width={24} height={24} fill="black" /> */}
+      <Text style={styles.textStyle}>חסכוני</Text>
     </View>
   );
 };
@@ -19,20 +16,22 @@ const styles = StyleSheet.create({
   textContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     paddingVertical: 20,
     backgroundColor: 'white',
     elevation: 8,
-    shadowColor: '#000',
+    shadowColor: theme.color.shadowColor,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     borderRadius: 12,
-    paddingEnd: 35,
+    paddingStart: 35,
   },
   textStyle: {
+    fontFamily: 'PlaypenSansHebrew-Bold',
     fontSize: 24,
     fontWeight: 'bold',
     marginRight: 10,
+    color: theme.color.purple,
   },
 });

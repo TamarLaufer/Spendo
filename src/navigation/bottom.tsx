@@ -7,6 +7,7 @@ import Settings from '../components/settings/Settings';
 import Receipts from '../components/receipts/Receipts';
 import { STRINGS } from '../strings/hebrew';
 import AddButton from '../components/button/AddButton';
+import { theme } from '../theme/theme';
 
 const Tab = createBottomTabNavigator<MainBottomTabsParamsListTypes>();
 const TAB_LABELS = {
@@ -43,13 +44,16 @@ const MainTabs = ({ openBottomSheet }: PropsType) => {
             <Ionicons
               name={iconName}
               size={size}
-              color={focused ? '#C562AF' : color}
+              color={focused ? theme.color.purple : color}
             />
           );
         },
-        tabBarActiveTintColor: '#321d63ff',
+        tabBarActiveTintColor: theme.color.purple,
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
+        tabBarStyle: {
+          height: 70,
+        },
       })}
     >
       <Tab.Screen

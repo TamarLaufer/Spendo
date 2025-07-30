@@ -1,10 +1,7 @@
-import { SvgProps } from 'react-native-svg';
-import ARROW_DOWN from './chevron-down-outline.svg';
+import CANCEL_X from './close-svgrepo-com.svg';
+import BACK from './back-comback-hom-svgrepo-com.svg';
 
-type IconsType = {
-  ARROW_DOWN: React.FC<SvgProps>;
-};
-
-export const Icons: IconsType = {
-  ARROW_DOWN,
+export const Icons = {
+  CANCEL_X,
+  BACK,
 };

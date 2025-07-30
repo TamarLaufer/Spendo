@@ -3,6 +3,8 @@ import expencesReducer from './expensesSlice.ts';
 
 export const store = configureStore({
   reducer: {
-    my: expencesReducer,
+    expenses: expencesReducer,
   },
 });
+
+export type RootState = ReturnType<typeof store.getState>;

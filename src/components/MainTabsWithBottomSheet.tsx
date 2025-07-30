@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import HandleExpenses from '../bottomSheet/HandleExpenses';
 import MainTabs from '../navigation/bottom';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import BottomSheetExpenses from '../bottomSheet/bottomSheetExpenses';
 
 const MainTabsWithBottomSheet = () => {
   const bottomSheetRef = useRef<BottomSheetMethods | null>(null);
@@ -12,7 +12,7 @@ const MainTabsWithBottomSheet = () => {
   return (
     <>
       <MainTabs openBottomSheet={openBottomSheet} />
-      <HandleExpenses
+      <BottomSheetExpenses
         bottomSheetRef={bottomSheetRef}
         onClose={closeBottomSheet}
       />

@@ -21,6 +21,11 @@ const expensesSlice = createSlice({
         expense => expense.id !== action.payload.id,
       );
     },
+    editExpense: (state, action: PayloadAction<ExpensesType>) => {
+      state.expensesList = state.expensesList.filter(
+        expense => expense.id !== action.payload.id,
+      );
+    },
   },
 });
 
