@@ -28,10 +28,9 @@ const styles = StyleSheet.create({
     paddingStart: 35,
   },
   textStyle: {
-    fontFamily: 'PlaypenSansHebrew-Bold',
+    fontFamily: 'PlaypenSansHebrew-bold',
     fontSize: 24,
-    fontWeight: 'bold',
     marginRight: 10,
-    color: theme.color.purple,
+    color: theme.color.dark_purple,
   },
 });

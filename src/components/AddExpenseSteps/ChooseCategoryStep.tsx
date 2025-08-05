@@ -1,79 +1,79 @@
-import React, { Fragment, useEffect } from 'react';
-import { Text, View } from 'react-native';
+import React from 'react';
+import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { CategoryType } from '../../store/types';
-import ContinueButton from './continueButton/ContinueButton';
+import { theme } from '../../theme/theme';
+import { STRINGS } from '../../strings/hebrew';
+import { useCategory } from '../../zustandState/useCategory';
 
-const categoriesList: CategoryType[] = [
-  {
-    id: '1',
-    name: 'מזון',
-    maxAmount: 1500,
-    subCategories: [
-      { id: 'a', name: 'קניות בסופר' },
-      { id: 'ua', name: 'אוכל בחוץ/מזון מהיר' },
-    ],
-  },
-  {
-    id: '2',
-    name: 'ספורט',
-    maxAmount: 300,
-    subCategories: [{ id: 'j', name: 'מכון-כושר' }],
-  },
-  {
-    id: '3',
-    name: 'צעצועים לילדים',
-    maxAmount: 240,
-  },
-  {
-    id: '4',
-    name: 'פעילות משפחתית',
-    maxAmount: 400,
-    subCategories: [
-      { id: 'b', name: 'טיול יומי' },
-      { id: 'bi', name: 'מלון/נופש' },
-    ],
-  },
-  {
-    id: '5',
-    name: 'עיצוב/תחזוקת הבית',
-    maxAmount: 200,
-    subCategories: [
-      { id: 'tra', name: 'תחזוקה-חובה' },
-      { id: 'uea', name: 'עיצוב וכללי' },
-    ],
-  },
-];
+const ChooseCategoryStep = () => {
+  const { categoryId, setCategoryId } = useExpenseWizard();
+  const handleContinue = useExpenseWizard(state => state.handleContinue);
+  const categoriesList = useCategory(state => state.categories);
 
-type ChooseCategoryStepType = {
-  onNext: () => void;
-};
-
-const ChooseCategoryStep: React.FC<ChooseCategoryStepType> = ({ onNext }) => {
-  const amount = useExpenseWizard(state => state.amount);
-
-  useEffect(() => {
-    console.log('amount:', amount);
-  }, [amount]);
-
-  const handleContinuePress = () => {
-    onNext();
+  const handleCategorySelect = (selectedCategoryId: string) => {
+    setCategoryId(selectedCategoryId);
+    handleContinue();
   };
 
-  const {} = useExpenseWizard();
   return (
-    <View>
-      {categoriesList.map(category => {
-        return (
-          <Fragment key={category.id}>
-            <Text>{category.name}</Text>
-            <Text>{category.maxAmount}</Text>
-          </Fragment>
-        );
-      })}
-      <ContinueButton onPress={handleContinuePress} disabled />
+    <View style={styles.container}>
+      {categoriesList.map(category => (
+        <View key={category.categoryId}>
+          <Pressable
+            style={[
+              styles.categoryContainer,
+              categoryId === category.categoryId && styles.selectedCategory,
+            ]}
+            onPress={() => handleCategorySelect(category.categoryId)}
+          >
+            <Text
+              style={[
+                styles.category,
+                categoryId === category.categoryId &&
+                  styles.selectedCategoryText,
+              ]}
+            >
+              {category.categoryName}
+            </Text>
+          </Pressable>
+        </View>
+      ))}
+      <Text>{STRINGS.ADD_CATEGORY}</Text>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingVertical: 18,
+    justifyContent: 'center',
+    marginHorizontal: 35,
+    gap: 25,
+  },
+  categoryContainer: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+    elevation: 2,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  selectedCategory: {
+    borderColor: theme.color.purple,
+  },
+  category: {
+    height: 60,
+    fontSize: 23,
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    color: '#333',
+  },
+  selectedCategoryText: {
+    color: theme.color.dark_purple,
+    fontWeight: 'bold',
+  },
+});
 
 export default ChooseCategoryStep;

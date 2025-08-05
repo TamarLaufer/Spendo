@@ -1,69 +1,62 @@
-import { Fragment } from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { CategoryType } from '../../store/types';
+import { theme } from '../../theme/theme';
+import { useCategory } from '../../zustandState/useCategory';
 
-const categoriesList: CategoryType[] = [
-  {
-    id: '1',
-    name: 'מזון',
-    maxAmount: 1500,
-    subCategories: [
-      { id: 'a', name: 'קניות בסופר' },
-      { id: 'ua', name: 'אוכל בחוץ/מזון מהיר' },
-    ],
-  },
-  {
-    id: '2',
-    name: 'ספורט',
-    maxAmount: 300,
-    subCategories: [{ id: 'j', name: 'מכון-כושר' }],
-  },
-  {
-    id: '3',
-    name: 'צעצועים לילדים',
-    maxAmount: 240,
-  },
-  {
-    id: '4',
-    name: 'פעילות משפחתית',
-    maxAmount: 400,
-    subCategories: [
-      { id: 'b', name: 'טיול יומי' },
-      { id: 'bi', name: 'מלון/נופש' },
-    ],
-  },
-  {
-    id: '5',
-    name: 'עיצוב/תחזוקת הבית',
-    maxAmount: 200,
-    subCategories: [
-      { id: 'tra', name: 'תחזוקה-חובה' },
-      { id: 'uea', name: 'עיצוב וכללי' },
-    ],
-  },
-];
+const ChooseSubCategoryStep = () => {
+  const { categoryId } = useExpenseWizard();
+  const handleContinue = useExpenseWizard(state => state.handleContinue);
+  const findCategoryById = useCategory(state => state.findCategoryById);
+  const selectedCategory = findCategoryById(categoryId);
 
-type ChooseSubCategoryStepType = {
-  onNext: () => void;
-};
-
-const ChooseSubCategoryStep: React.FC<ChooseSubCategoryStepType> = ({
-  onNext,
-}) => {
-  const {} = useExpenseWizard();
   return (
-    <View>
-      {categoriesList.map(category => {
+    <View style={styles.container}>
+      {selectedCategory?.subCategories.map(sub => {
         return (
-          <Fragment>
-            <Text>{category.name}</Text>
-            <Text>{category.maxAmount}</Text>
-          </Fragment>
+          <Pressable
+            key={sub.subCategoryId}
+            style={[styles.categoryContainer]}
+            onPress={handleContinue}
+          >
+            <Text style={styles.category}>{sub.subCategoryName}</Text>
+          </Pressable>
         );
       })}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingVertical: 18,
+    justifyContent: 'center',
+    marginHorizontal: 35,
+    gap: 25,
+  },
+  categoryContainer: {
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
+    elevation: 2,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  selectedCategory: {
+    borderColor: theme.color.purple,
+  },
+  category: {
+    height: 60,
+    fontSize: 23,
+    textAlign: 'center',
+    verticalAlign: 'middle',
+    color: '#333',
+  },
+  selectedCategoryText: {
+    color: theme.color.dark_purple,
+    fontWeight: 'bold',
+  },
+});
 
 export default ChooseSubCategoryStep;

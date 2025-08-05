@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,6 @@ import { theme } from '../../theme/theme';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import ContinueButton from './continueButton/ContinueButton';
 
 const numbers = [
   ['3', '2', '1'],
@@ -21,14 +20,9 @@ const numbers = [
   ['.', '0', '⌫'],
 ];
 
-type AddExpenseStepProps = {
-  onClose: () => void;
-  onNext: () => void;
-};
-
-const AddExpenseStep: React.FC<AddExpenseStepProps> = ({ onNext }) => {
+const AddExpenseStep = () => {
   const [value, setValue] = useState('');
-  const setAmount = useExpenseWizard(state => state.setAmount);
+  const { setAmount } = useExpenseWizard();
 
   const expenseSchema = z.object({
     expenseAmount: z
@@ -41,12 +35,12 @@ const AddExpenseStep: React.FC<AddExpenseStepProps> = ({ onNext }) => {
   type ExpenseFormType = z.infer<typeof expenseSchema>;
 
   const {
-    handleSubmit,
     setValue: setFormValue,
     formState: { errors },
     trigger,
   } = useForm<ExpenseFormType>({
     resolver: zodResolver(expenseSchema),
+    mode: 'onChange',
   });
 
   const handlePress = (num: string) => {
@@ -58,57 +52,53 @@ const AddExpenseStep: React.FC<AddExpenseStepProps> = ({ onNext }) => {
     } else {
       newValue = value + num;
     }
+
     setValue(newValue);
     setFormValue('expenseAmount', newValue, { shouldValidate: true });
+    trigger('expenseAmount');
+
+    // Update the store if valid
+    if (newValue && Number(newValue) > 0) {
+      setAmount(Number(newValue));
+    } else {
+      setAmount(0);
+    }
   };
 
-  const handleContinue = handleSubmit(data => {
-    setAmount(Number(data.expenseAmount)); // save on Zustand
-    onNext(); // moving to next page
-  });
+  // Clear amount when value is empty
+  useEffect(() => {
+    if (!value) {
+      setAmount(0);
+    }
+  }, [value, setAmount]);
 
   return (
-    <Fragment>
-      <View style={styles.sheetContainer}>
-        <TextInput
-          value={value === '' ? '' : formatAmount(value)}
-          editable={false}
-          style={styles.display}
-          placeholder="סכום ההוצאה"
-          keyboardType="numeric"
-          placeholderTextColor={theme.color.placeholder}
-        />
-        {errors.expenseAmount && (
-          <Text style={{ color: 'red', marginTop: 6 }}>
-            {errors.expenseAmount.message}
-          </Text>
-        )}
-        <View style={styles.keypad}>
-          {numbers.map((row, i) => (
-            <View style={styles.row} key={i}>
-              {row.map(num => (
-                <TouchableOpacity
-                  key={num}
-                  style={styles.key}
-                  onPress={() => handlePress(num)}
-                >
-                  <Text style={styles.keyText}>{num}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
+    <View style={styles.sheetContainer}>
+      <TextInput
+        value={value === '' ? '' : formatAmount(value)}
+        editable={false}
+        style={styles.display}
+        placeholder="סכום ההוצאה"
+        keyboardType="numeric"
+        placeholderTextColor={theme.color.placeholder}
+      />
+      {errors.expenseAmount && (
+        <Text style={styles.errorText}>{errors.expenseAmount.message}</Text>
+      )}
+      {numbers.map((row, i) => (
+        <View style={styles.row} key={i}>
+          {row.map(num => (
+            <TouchableOpacity
+              key={num}
+              style={styles.key}
+              onPress={() => handlePress(num)}
+            >
+              <Text style={styles.keyText}>{num}</Text>
+            </TouchableOpacity>
           ))}
         </View>
-        <View style={styles.actions}>
-          <ContinueButton
-            onPress={async () => {
-              const isValid = await trigger('expenseAmount');
-              if (isValid) handleContinue();
-            }}
-            disabled={!value}
-          />
-        </View>
-      </View>
-    </Fragment>
+      ))}
+    </View>
   );
 };
 
@@ -116,8 +106,6 @@ const styles = StyleSheet.create({
   sheetContainer: {
     flex: 1,
     alignItems: 'center',
-    padding: 2,
-    backgroundColor: 'white',
     borderRadius: 24,
     justifyContent: 'center',
   },
@@ -127,9 +115,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'black',
   },
-  keypad: {
-    width: '90%',
-    marginBottom: 24,
+  errorText: {
+    color: 'red',
+    marginTop: 6,
+    textAlign: 'center',
   },
   row: {
     flexDirection: 'row',
@@ -137,38 +126,20 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   key: {
-    width: 65,
-    height: 65,
+    width: 68,
+    height: 68,
     borderRadius: 20,
-    backgroundColor: '#f6f6f6',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 10,
-    elevation: 3,
+    elevation: 2,
   },
   keyText: {
     fontSize: 28,
     color: '#321d63',
     fontWeight: '500',
   },
-  actions: {
-    flex: 1,
-    width: 300,
-    justifyContent: 'space-between',
-    marginTop: 28,
-    // gap: 8,
-  },
-  // cancelButton: {
-  //   flex: 1,
-  //   height: 48,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // cancelText: {
-  //   fontSize: 18,
-  //   fontWeight: 'bold',
-  //   letterSpacing: 1,
-  // },
 });
 
 export default AddExpenseStep;

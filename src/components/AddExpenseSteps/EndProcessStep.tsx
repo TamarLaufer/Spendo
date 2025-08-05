@@ -1,15 +1,17 @@
-import { Button } from 'react-native';
 import { Text, View } from 'react-native';
+import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 
-type EndProcessStepType = {
-  onSubmit: () => void;
+type EndProcessStepType = {};
+
+const EndProcessStep = ({}: EndProcessStepType) => {
+  const subCategoryId = useExpenseWizard(state => state.subCategoryId);
+  console.log(subCategoryId, 'subCategoryId');
+
+  return (
+    <View>
+      <Text>ההוצאה נשמרה בהצלחה!</Text>
+    </View>
+  );
 };
-
-const EndProcessStep = ({ onSubmit }: EndProcessStepType) => (
-  <View>
-    <Text>ההוצאה נשמרה בהצלחה!</Text>
-    <Button title="תודה, סיימתי" onPress={onSubmit} />
-  </View>
-);
 
 export default EndProcessStep;

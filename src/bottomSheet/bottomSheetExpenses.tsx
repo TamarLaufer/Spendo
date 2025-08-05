@@ -1,51 +1,52 @@
-import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { runOnJS, useWorkletCallback } from 'react-native-reanimated';
-import { theme } from '../theme/theme';
+import { useCallback, useMemo } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AddExpenseStep from '../components/AddExpenseSteps/AddExpenseStep';
 import ChooseCategoryStep from '../components/AddExpenseSteps/ChooseCategoryStep';
 import EndProcessStep from '../components/AddExpenseSteps/EndProcessStep';
 import ChooseSubCategoryStep from '../components/AddExpenseSteps/ChooseSubCategoryStep';
 import { Icons } from '../assets/icons';
+import ContinueButton from '../components/AddExpenseSteps/continueButton/ContinueButton';
+import { StepsConfig } from './types';
+import { useExpenseWizard } from '../zustandState/useExpenseWizard';
 
 type PropsType = {
   bottomSheetRef: React.RefObject<BottomSheetMethods | null>;
   onClose: () => void;
 };
 
-const BottomSheetExpenses = ({ bottomSheetRef, onClose }: PropsType) => {
+const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
   const snapPoints = useMemo(() => ['75%'], []);
-  const [step, setStep] = useState<
-    'amount' | 'category' | 'subCategory' | 'endProcess' | 'date'
-  >('amount');
-  const [isBackButton, setIsBackButton] = useState(false);
-  const [isCancelButton, setIsCancelButton] = useState(false);
 
-  const handleSheetChanges = useWorkletCallback((index: number) => {
-    runOnJS(console.log)('BottomSheet index:', index);
+  const {
+    currentStep,
+    resetWizard,
+    canProceedToNextStep,
+    handleContinue,
+    handleBack,
+  } = useExpenseWizard();
+
+  const { header, buttonTitle, showButton } = StepsConfig[currentStep];
+
+  const handleSheetChanges = useCallback((index: number) => {
+    if (index === -1) {
+      resetWizard();
+    }
   }, []);
 
-  const handleSubmit = (value: string) => {
-    // שלחי לפה את הערך שהוקש או העבירי ל־redux/פורם
-    onClose(); // closing  the bottomsheet
-  };
-
-  const showBackButton = step !== 'amount'; // only from the second step
-  const showCancelButton = step !== 'endProcess';
-
-  const handleBack = () => {
-    switch (step) {
+  const renderStep = () => {
+    switch (currentStep) {
+      case 'amount':
+        return <AddExpenseStep />;
       case 'category':
-        setStep('amount');
-        break;
+        return <ChooseCategoryStep />;
       case 'subCategory':
-        setStep('category');
-        break;
+        return <ChooseSubCategoryStep />;
       case 'endProcess':
-        setStep('subCategory');
-        break;
+        return <EndProcessStep />;
+      default:
+        return null;
     }
   };
 
@@ -56,103 +57,77 @@ const BottomSheetExpenses = ({ bottomSheetRef, onClose }: PropsType) => {
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       enablePanDownToClose={true}
+      enableDynamicSizing={false}
       backgroundStyle={{
-        backgroundColor: 'white',
+        backgroundColor: '#F5F5F5',
         borderTopRightRadius: 30,
         borderTopLeftRadius: 30,
       }}
+      style={styles.bottomSheet}
     >
-      <BottomSheetView style={styles.contentContainer}>
-        {step === 'amount' && (
-          <AddExpenseStep
-            onClose={onClose}
-            onNext={() => setStep('category')}
+      {!!header && <Text style={styles.header}>{header}</Text>}
+
+      <BottomSheetScrollView style={styles.bottomScroll}>
+        {renderStep()}
+      </BottomSheetScrollView>
+
+      {currentStep !== 'amount' && (
+        <Pressable style={styles.backButton} onPress={handleBack}>
+          <Icons.BACK width={50} height={50} />
+        </Pressable>
+      )}
+
+      {/* {currentStep !== 'endProcess' && (
+        <Pressable style={styles.cancelXButton} onPress={handleClose}>
+          <Icons.CANCEL_X width={32} height={32} />
+        </Pressable>
+      )} */}
+
+      {showButton && !!buttonTitle && (
+        <View style={styles.actions}>
+          <ContinueButton
+            title={buttonTitle}
+            onPress={handleContinue}
+            disabled={!canProceedToNextStep()}
           />
-        )}
-        {step === 'category' && (
-          <ChooseCategoryStep onNext={() => setStep('subCategory')} />
-        )}
-        {step === 'subCategory' && (
-          <ChooseSubCategoryStep onNext={() => setStep('endProcess')} />
-        )}
-        {/* {step === 'date' && (
-      <DateStep
-        onFinish={handleFinish}
-        onBack={() => setStep('category')}
-      />
-    )} */}
-        {step === 'endProcess' && (
-          <EndProcessStep onSubmit={() => handleSubmit} />
-        )}
-        {showBackButton && (
-          <Pressable style={styles.backButton} onPress={handleBack}>
-            <Icons.BACK width={50} height={50} />
-          </Pressable>
-        )}
-        {showCancelButton && (
-          <Pressable style={styles.cancelXButton} onPress={onClose}>
-            <Icons.CANCEL_X width={32} height={32} />
-          </Pressable>
-        )}
-      </BottomSheetView>
+        </View>
+      )}
     </BottomSheet>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  bottomSheet: {
+    paddingVertical: 12,
     flex: 1,
-    backgroundColor: 'grey',
   },
-  center: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+  bottomScroll: {
+    marginTop: 28,
   },
-  contentContainer: {
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  inputContainer: {
-    marginTop: 25,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  input: {
-    width: 300,
-    height: 60,
-    borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingStart: 20,
-    fontSize: 18,
-  },
-  submitButton: {
-    backgroundColor: theme.color.pink,
-    width: 300,
-    height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
-  },
-  submitButtonText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#EFEEEA',
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 12,
   },
   backButton: {
     position: 'absolute',
-    top: '-3%',
+    top: '-2%',
     left: '7%',
     zIndex: 10,
     transform: [{ rotate: '180deg' }],
   },
   cancelXButton: {
     position: 'absolute',
-    top: '0.2%',
+    top: '0%',
     right: '6%',
     zIndex: 10,
   },
+  actions: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingVertical: 28,
+  },
 });
+
 export default BottomSheetExpenses;

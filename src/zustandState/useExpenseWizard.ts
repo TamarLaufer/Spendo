@@ -1,40 +1,116 @@
 import { create } from 'zustand';
-import { CategoryType, SubcategoryType } from '../store/types';
+import { Steps } from '../bottomSheet/types';
+import { useBottomSheet } from './useBottomSheet';
+import { useCategory } from './useCategory';
 
-export type ExpenseWizardData = {
-  category: CategoryType | null;
-  subCategory?: SubcategoryType | null;
+type ExpenseWizardStateType = {
   amount: number | null;
-  date: Date | null;
-  note?: string;
-};
+  categoryId: string;
+  subCategoryId: string;
+  currentStep: Steps;
 
-type ExpenseWizardState = ExpenseWizardData & {
-  setCategory: (category: CategoryType) => void;
-  setSubCategory: (subCategory: SubcategoryType) => void;
   setAmount: (amount: number) => void;
-  setDate: (date: Date) => void;
-  setNote?: (note: string) => void;
-  reset: () => void;
+  setCategoryId: (categoryId: string) => void;
+  setSubCategoryId: (subCategoryId: string) => void;
+  setCurrentStep: (step: Steps) => void;
+  resetWizard: () => void;
+  canProceedToNextStep: () => boolean;
+  handleClose: () => void;
+  handleBack: () => void;
+  handleContinue: () => void;
 };
 
-export const useExpenseWizard = create<ExpenseWizardState>(set => ({
-  category: null,
-  subCategory: undefined,
+export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
   amount: null,
-  date: null,
-  note: '',
-  setCategory: category => set({ category }),
-  setSubCategory: subCategory => set({ subCategory }),
+  categoryId: '',
+  subCategoryId: '',
+  currentStep: 'amount',
+
   setAmount: amount => set({ amount }),
-  setDate: date => set({ date }),
-  setNote: note => set({ note }),
-  reset: () =>
+  setCategoryId: categoryId => set({ categoryId }),
+  setSubCategoryId: subCategoryId => set({ subCategoryId }),
+  setCurrentStep: currentStep => set({ currentStep }),
+
+  resetWizard: () =>
     set({
-      category: null,
-      subCategory: undefined,
       amount: null,
-      date: null,
-      note: '',
+      categoryId: '',
+      subCategoryId: '',
+      currentStep: 'amount',
     }),
+
+  canProceedToNextStep: () => {
+    const state = get();
+    switch (state.currentStep) {
+      case 'amount':
+        return state.amount !== null && state.amount > 0;
+      case 'category':
+        return state.categoryId !== null;
+      case 'subCategory':
+        return state.subCategoryId !== null;
+      case 'endProcess':
+        return true;
+      default:
+        return false;
+    }
+  },
+
+  handleClose: () => {
+    const closeBottomSheet = useBottomSheet.getState().closeBottomSheet;
+    closeBottomSheet();
+
+    set({
+      amount: null,
+      categoryId: '',
+      subCategoryId: '',
+      currentStep: 'amount',
+    });
+  },
+
+  handleBack: () => {
+    const state = get();
+    const findCategoryById = useCategory.getState().findCategoryById;
+    const selectedCategory = findCategoryById(state.categoryId);
+    switch (state.currentStep) {
+      case 'category':
+        set({ currentStep: 'amount' });
+        break;
+      case 'subCategory':
+        set({ currentStep: 'category' });
+        break;
+      case 'endProcess':
+        if (selectedCategory && selectedCategory.subCategories.length > 0) {
+          set({ currentStep: 'subCategory' });
+        } else {
+          set({ currentStep: 'category' });
+        }
+        break;
+    }
+  },
+
+  handleContinue: () => {
+    const state = get();
+    const findCategoryById = useCategory.getState().findCategoryById;
+    const selectedCategory = findCategoryById(state.categoryId);
+    if (!get().canProceedToNextStep()) return;
+
+    switch (state.currentStep) {
+      case 'amount':
+        set({ currentStep: 'category' });
+        break;
+      case 'category':
+        if (selectedCategory && selectedCategory?.subCategories?.length > 0) {
+          set({ currentStep: 'subCategory' });
+        } else {
+          set({ currentStep: 'endProcess' });
+        }
+        break;
+      case 'subCategory':
+        set({ currentStep: 'endProcess' });
+        break;
+      case 'endProcess':
+        get().handleClose();
+        break;
+    }
+  },
 }));

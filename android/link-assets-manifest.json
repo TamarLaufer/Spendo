@@ -1,0 +1,49 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/OFL.txt",
+      "sha1": "77bbd3d34b7708c813bc34799e22966278332e5c"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-Bold.ttf",
+      "sha1": "d02b6ded959d8d7976eb822bb978fef25c4b4122"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-ExtraBold.ttf",
+      "sha1": "302781cebf3e35a8dc00a8c67d4e56e383f2d842"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-ExtraLight.ttf",
+      "sha1": "5dd5208b61c10ea604e41946c75cecc137a91f60"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-Light.ttf",
+      "sha1": "8289b1b55a7e975c7bed0a897eb7c58ccb95c97f"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-Medium.ttf",
+      "sha1": "e5a15ca91fe7568c07893d687b2f85a4adb42f35"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-Regular.ttf",
+      "sha1": "2940e899a4dbd4e7d3e05cdd217ef16734967329"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-SemiBold.ttf",
+      "sha1": "c16987e88ee74d16b10911ad5399c94cd322cce0"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-Thin.ttf",
+      "sha1": "796dbe3a0de26b2ac8ee49db9680dbb7d1540f35"
+    },
+    {
+      "path": "src/assets/fonts/PlaypenSansHebrew-VariableFont_wght.ttf",
+      "sha1": "f2a752dda73e94a9725ae894225321c69d243ee1"
+    },
+    {
+      "path": "src/assets/fonts/README.txt",
+      "sha1": "0c2615c469db6080cf6753cfb5d31975b6ce84c4"
+    }
+  ]
+}

@@ -4,4 +4,5 @@ export const STRINGS = {
   RECEIPS: 'קבלות',
   SETTINGS: 'הגדרות',
   CONTINUE_BUTTON_TEXT: 'המשך',
+  ADD_CATEGORY: 'הוספת קטגוריה',
 };

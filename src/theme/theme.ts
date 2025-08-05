@@ -4,6 +4,7 @@ export const theme = {
     shadowColor: '#000',
     green: '#096B68',
     placeholder: '#DDDDDD',
-    purple: '#3D365C',
+    dark_purple: '#3D365C',
+    purple: '#C5B0CD',
   },
 };
