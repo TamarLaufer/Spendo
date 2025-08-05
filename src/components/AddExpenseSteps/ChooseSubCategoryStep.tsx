@@ -4,10 +4,15 @@ import { theme } from '../../theme/theme';
 import { useCategory } from '../../zustandState/useCategory';
 
 const ChooseSubCategoryStep = () => {
-  const { categoryId } = useExpenseWizard();
+  const { categoryId, setSubCategoryId } = useExpenseWizard();
   const handleContinue = useExpenseWizard(state => state.handleContinue);
   const findCategoryById = useCategory(state => state.findCategoryById);
   const selectedCategory = findCategoryById(categoryId);
+
+  const handleSubCategorySelect = (subCategoryId: string) => {
+    setSubCategoryId(subCategoryId);
+    handleContinue();
+  };
 
   return (
     <View style={styles.container}>
@@ -16,7 +21,7 @@ const ChooseSubCategoryStep = () => {
           <Pressable
             key={sub.subCategoryId}
             style={[styles.categoryContainer]}
-            onPress={handleContinue}
+            onPress={() => handleSubCategorySelect(sub.subCategoryId)}
           >
             <Text style={styles.category}>{sub.subCategoryName}</Text>
           </Pressable>
