@@ -2,30 +2,39 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useCategory } from '../../zustandState/useCategory';
 import { STRINGS } from '../../strings/hebrew';
+import { formatAmount } from '../../functions/functions';
 
 type EndProcessStepType = {};
 
 const EndProcessStep = ({}: EndProcessStepType) => {
   const subCategoryId = useExpenseWizard(state => state.subCategoryId);
   const categoryId = useExpenseWizard(state => state.categoryId);
+  const amount = useExpenseWizard(state => state.amount);
 
   const findCategoryById = useCategory(state => state.findCategoryById);
   const expenseObj = findCategoryById(categoryId);
+  const paymentMethod = useExpenseWizard(state => state.paymentMethod);
   console.log(expenseObj, 'expenseObj');
-  const currentSubCategory = expenseObj?.subCategories.filter(
+  const currentSubCategory = expenseObj?.subCategories.find(
     item => item.subCategoryId === subCategoryId,
   );
 
   const isSubExist = currentSubCategory
-    ? currentSubCategory?.[0]?.subCategoryName
+    ? currentSubCategory?.subCategoryName
     : '';
+
+  const isAmountExist = amount ? formatAmount(amount) : '';
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>{STRINGS.EXPENSE_SUCCEDED}</Text>
+      <Text style={styles.text}>{`${STRINGS.EXPENSE_IN}: ${
+        expenseObj?.categoryName
+      } ${isSubExist ? `- ${isSubExist}` : ''}`}</Text>
       <Text
-        style={styles.text}
-      >{`${STRINGS.EXPENSE_IN}: ${expenseObj?.categoryName} - ${isSubExist}`}</Text>
+        style={styles.amountText}
+      >{`${isAmountExist} ב${paymentMethod}`}</Text>
+      {/* <Text style={styles.amountText}>{`ב${paymentMethod}`}</Text> */}
     </View>
   );
 };
@@ -38,6 +47,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 22,
+  },
+  amountText: {
+    fontSize: 42,
   },
 });
 

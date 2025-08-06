@@ -10,10 +10,10 @@ import { Icons } from '../assets/icons';
 import ContinueButton from '../components/AddExpenseSteps/continueButton/ContinueButton';
 import { StepsConfig } from './types';
 import { useExpenseWizard } from '../zustandState/useExpenseWizard';
+import PaymentMethodsScreen from '../components/AddExpenseSteps/PaymentMethodsScreen';
 
 type PropsType = {
   bottomSheetRef: React.RefObject<BottomSheetMethods | null>;
-  onClose: () => void;
 };
 
 const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
@@ -43,6 +43,8 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
         return <ChooseCategoryStep />;
       case 'subCategory':
         return <ChooseSubCategoryStep />;
+      case 'payMethod':
+        return <PaymentMethodsScreen />;
       case 'endProcess':
         return <EndProcessStep />;
       default:

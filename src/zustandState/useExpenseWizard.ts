@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Steps } from '../bottomSheet/types';
+import { PAYMENT_METHODS, PaymentMethods, Steps } from '../bottomSheet/types';
 import { useBottomSheet } from './useBottomSheet';
 import { useCategory } from './useCategory';
 
@@ -8,6 +8,8 @@ type ExpenseWizardStateType = {
   categoryId: string;
   subCategoryId: string;
   currentStep: Steps;
+  paymentMethods: readonly PaymentMethods[];
+  paymentMethod: PaymentMethods['name'];
 
   setAmount: (amount: number) => void;
   setCategoryId: (categoryId: string) => void;
@@ -18,6 +20,7 @@ type ExpenseWizardStateType = {
   handleClose: () => void;
   handleBack: () => void;
   handleContinue: () => void;
+  setPaymentMethod: (paymentMethod: PaymentMethods['name']) => void;
 };
 
 export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
@@ -25,11 +28,14 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
   categoryId: '',
   subCategoryId: '',
   currentStep: 'amount',
+  paymentMethods: PAYMENT_METHODS,
+  paymentMethod: PAYMENT_METHODS[0].name,
 
   setAmount: amount => set({ amount }),
   setCategoryId: categoryId => set({ categoryId }),
   setSubCategoryId: subCategoryId => set({ subCategoryId }),
   setCurrentStep: currentStep => set({ currentStep }),
+  setPaymentMethod: paymentMethod => set({ paymentMethod }),
 
   resetWizard: () =>
     set({
@@ -37,6 +43,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
       categoryId: '',
       subCategoryId: '',
       currentStep: 'amount',
+      paymentMethod: PAYMENT_METHODS[0].name,
     }),
 
   canProceedToNextStep: () => {
@@ -48,6 +55,8 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
         return state.categoryId !== null;
       case 'subCategory':
         return state.subCategoryId !== null;
+      case 'payMethod':
+        return state.paymentMethod !== null;
       case 'endProcess':
         return true;
       default:
@@ -64,6 +73,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
       categoryId: '',
       subCategoryId: '',
       currentStep: 'amount',
+      paymentMethod: PAYMENT_METHODS[0].name,
     });
   },
 
@@ -78,12 +88,15 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
       case 'subCategory':
         set({ currentStep: 'category' });
         break;
-      case 'endProcess':
+      case 'payMethod':
         if (selectedCategory && selectedCategory.subCategories.length > 0) {
           set({ currentStep: 'subCategory' });
         } else {
           set({ currentStep: 'category' });
         }
+        break;
+      case 'endProcess':
+        set({ currentStep: 'payMethod' });
         break;
     }
   },
@@ -102,10 +115,13 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
         if (selectedCategory && selectedCategory?.subCategories?.length > 0) {
           set({ currentStep: 'subCategory' });
         } else {
-          set({ currentStep: 'endProcess' });
+          set({ currentStep: 'payMethod' });
         }
         break;
       case 'subCategory':
+        set({ currentStep: 'payMethod' });
+        break;
+      case 'payMethod':
         set({ currentStep: 'endProcess' });
         break;
       case 'endProcess':

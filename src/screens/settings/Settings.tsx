@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Text, View } from 'react-native';
-import ScreenLayout from '../screenLayout/ScreenLayout';
+import ScreenLayout from '../../components/screenLayout/ScreenLayout';
 
 const Settings: FC = () => {
   return (

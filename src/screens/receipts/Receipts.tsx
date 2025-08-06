@@ -1,15 +1,15 @@
 import { FC } from 'react';
 import { Text, View } from 'react-native';
-import ScreenLayout from '../screenLayout/ScreenLayout';
+import ScreenLayout from '../../components/screenLayout/ScreenLayout';
 
-const Categories: FC = () => {
+const Receipts: FC = () => {
   return (
     <ScreenLayout>
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Categories Screen</Text>
+        <Text>Receipts Screen</Text>
       </View>
     </ScreenLayout>
   );
 };
 
-export default Categories;
+export default Receipts;

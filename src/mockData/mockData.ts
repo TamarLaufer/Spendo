@@ -19,7 +19,7 @@ export const categoriesList: CategoryType[] = [
     subCategories: [
       { subCategoryId: '9', subCategoryName: 'מכון-כושר' },
       { subCategoryId: '19', subCategoryName: 'פילאטיס מכשירים' },
-      { subCategoryId: '19', subCategoryName: 'משהו אחר' },
+      { subCategoryId: '21', subCategoryName: 'משהו אחר' },
     ],
   },
   {

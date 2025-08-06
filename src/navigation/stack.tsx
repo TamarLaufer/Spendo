@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { RootStackParamsType } from './types';
-import MainTabsWithBottomSheet from '../components/MainTabsWithBottomSheet';
+import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
 
 const Stack = createStackNavigator<RootStackParamsType>();
 

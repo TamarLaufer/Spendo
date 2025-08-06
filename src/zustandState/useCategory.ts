@@ -24,6 +24,7 @@ type CategoryStateType = {
 
 export const useCategory = create<CategoryStateType>((set, get) => ({
   categories: [],
+
   loadCategories: async () => {
     const categories = await fetchCategories();
     set({ categories });

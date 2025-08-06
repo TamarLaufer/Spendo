@@ -1,3 +1,5 @@
+import { PaymentMethods } from '../bottomSheet/types';
+
 export const formatAmount = (amount: number | string) => {
   const isDecimal = Number(amount) % 1 !== 0;
   const formatter = new Intl.NumberFormat('he-IL', {
@@ -10,4 +12,21 @@ export const formatAmount = (amount: number | string) => {
   if (isNaN(n)) return '';
 
   return formatter.format(n);
+};
+
+export const getPaymentMethodLabel = (method: PaymentMethods): string => {
+  switch (method) {
+    case PaymentMethods.CreditCard:
+      return 'כרטיס אשראי';
+    case PaymentMethods.Cash:
+      return 'מזומן';
+    case PaymentMethods.Bit:
+      return 'ביט';
+    case PaymentMethods.PayPal:
+      return 'פייפאל';
+    case PaymentMethods.BankTransfer:
+      return 'העברה בנקאית';
+    default:
+      return 'לא ידוע';
+  }
 };

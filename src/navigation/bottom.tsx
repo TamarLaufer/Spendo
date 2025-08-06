@@ -1,13 +1,13 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Home from '../components/home/Home';
+import Home from '../screens/home/Home';
 import { MainBottomTabsParamsListTypes } from './types';
-import Categories from '../components/categories/Categories';
-import Settings from '../components/settings/Settings';
-import Receipts from '../components/receipts/Receipts';
 import { STRINGS } from '../strings/hebrew';
 import AddButton from '../components/button/AddButton';
 import { theme } from '../theme/theme';
+import Receipts from '../screens/receipts/Receipts';
+import Settings from '../screens/settings/Settings';
+import Categories from '../screens/categories/Categories';
 
 const Tab = createBottomTabNavigator<MainBottomTabsParamsListTypes>();
 const TAB_LABELS = {

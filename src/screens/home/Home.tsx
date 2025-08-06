@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
-import ScreenLayout from '../screenLayout/ScreenLayout';
+import ScreenLayout from '../../components/screenLayout/ScreenLayout';
 
 const Home = () => {
   return (
