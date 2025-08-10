@@ -10,10 +10,7 @@ type ContinueButtonType = {
 const ContinueButton = ({ onPress, disabled, title }: ContinueButtonType) => {
   return (
     <TouchableOpacity
-      style={[
-        styles.continueButton,
-        { backgroundColor: theme.color.dark_purple },
-      ]}
+      style={[styles.continueButton, { backgroundColor: theme.color.purple }]}
       onPress={onPress}
       disabled={disabled}
     >
@@ -25,7 +22,7 @@ const ContinueButton = ({ onPress, disabled, title }: ContinueButtonType) => {
 const styles = StyleSheet.create({
   continueButton: {
     height: 58,
-    borderRadius: 32,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 40,
@@ -36,6 +33,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     letterSpacing: 1,
+    fontFamily: 'Fredoka-Regular',
   },
 });
 

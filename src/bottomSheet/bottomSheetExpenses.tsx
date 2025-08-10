@@ -33,6 +33,7 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
     if (index === -1) {
       resetWizard();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const renderStep = () => {
@@ -61,9 +62,13 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
       enablePanDownToClose={true}
       enableDynamicSizing={false}
       backgroundStyle={{
-        backgroundColor: '#F5F5F5',
-        borderTopRightRadius: 30,
-        borderTopLeftRadius: 30,
+        backgroundColor: '#FBFBFB',
+        borderTopRightRadius: 60,
+        borderTopLeftRadius: 60,
+        shadowOffset: 10,
+        shadowOpacity: 10,
+        shadowColor: 'black',
+        elevation: 18,
       }}
       style={styles.bottomSheet}
     >
@@ -128,7 +133,7 @@ const styles = StyleSheet.create({
   actions: {
     flex: 1,
     justifyContent: 'center',
-    paddingVertical: 28,
+    paddingBottom: 28,
   },
 });
 

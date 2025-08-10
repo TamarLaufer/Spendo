@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 50,
-    backgroundColor: theme.color.dark_purple,
+    backgroundColor: theme.color.purple,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 10,

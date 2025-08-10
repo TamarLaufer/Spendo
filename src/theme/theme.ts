@@ -5,6 +5,7 @@ export const theme = {
     green: '#096B68',
     placeholder: '#DDDDDD',
     dark_purple: '#3D365C',
-    purple: '#C5B0CD',
+    light_purple: '#C5B0CD',
+    purple: '#9929EA',
   },
 };

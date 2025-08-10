@@ -44,11 +44,11 @@ const MainTabs = ({ openBottomSheet }: PropsType) => {
             <Ionicons
               name={iconName}
               size={size}
-              color={focused ? theme.color.dark_purple : color}
+              color={focused ? theme.color.purple : color}
             />
           );
         },
-        tabBarActiveTintColor: theme.color.dark_purple,
+        tabBarActiveTintColor: theme.color.purple,
         tabBarInactiveTintColor: 'gray',
         headerShown: false,
         tabBarStyle: {

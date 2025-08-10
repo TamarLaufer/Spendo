@@ -1,7 +1,7 @@
-import { StyleSheet, Text } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { Pressable } from 'react-native';
 import { PaymentMethods } from '../../bottomSheet/types';
+import TransactionList from '../TransactionList/TransactionList';
+import { StyleSheet, View } from 'react-native';
 
 const PaymentMethodsScreen = () => {
   const paymentMethods = useExpenseWizard(state => state.paymentMethods);
@@ -12,35 +12,30 @@ const PaymentMethodsScreen = () => {
     handleContinue();
   };
 
-  return paymentMethods.map(payment => {
-    return (
-      <Pressable
-        key={payment.id}
-        onPress={() => handlePaymentChoose(payment.name)}
-        style={styles.categoryContainer}
-      >
-        <Text style={styles.text}>{payment.name}</Text>
-      </Pressable>
-    );
-  });
+  return (
+    <View style={styles.container}>
+      {paymentMethods.map(payment => {
+        return (
+          <TransactionList
+            keyExtractor={item => item.id}
+            data={paymentMethods}
+            mapItem={item => ({
+              onPress: () => handlePaymentChoose(payment.name),
+              text: item.name,
+            })}
+          />
+        );
+      })}
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-  categoryContainer: {
-    backgroundColor: 'white',
+  container: {
+    flex: 1,
+    paddingVertical: 18,
     justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-    elevation: 2,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  text: {
-    height: 60,
-    fontSize: 23,
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    color: '#333',
+    marginHorizontal: 35,
   },
 });
 

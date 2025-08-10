@@ -1,7 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { theme } from '../../theme/theme';
 import { useCategory } from '../../zustandState/useCategory';
+import TransactionList from '../TransactionList/TransactionList';
+import { StyleSheet, View } from 'react-native';
 
 const ChooseSubCategoryStep = () => {
   const { categoryId, setSubCategoryId } = useExpenseWizard();
@@ -16,17 +16,16 @@ const ChooseSubCategoryStep = () => {
 
   return (
     <View style={styles.container}>
-      {selectedCategory?.subCategories.map(sub => {
-        return (
-          <Pressable
-            key={sub.subCategoryId}
-            style={[styles.categoryContainer]}
-            onPress={() => handleSubCategorySelect(sub.subCategoryId)}
-          >
-            <Text style={styles.category}>{sub.subCategoryName}</Text>
-          </Pressable>
-        );
-      })}
+      <TransactionList
+        data={selectedCategory?.subCategories ?? []}
+        mapItem={c => ({
+          onPress: () => {
+            handleSubCategorySelect(c.subCategoryId);
+          },
+          text: c.subCategoryName,
+        })}
+        keyExtractor={c => c.subCategoryId}
+      />
     </View>
   );
 };
@@ -37,30 +36,6 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     justifyContent: 'center',
     marginHorizontal: 35,
-    gap: 25,
-  },
-  categoryContainer: {
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-    elevation: 2,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  selectedCategory: {
-    borderColor: theme.color.purple,
-  },
-  category: {
-    height: 60,
-    fontSize: 23,
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    color: '#333',
-  },
-  selectedCategoryText: {
-    color: theme.color.dark_purple,
-    fontWeight: 'bold',
   },
 });
 

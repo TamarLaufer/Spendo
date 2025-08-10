@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { theme } from '../../theme/theme';
 import { STRINGS } from '../../strings/hebrew';
 import { useCategory } from '../../zustandState/useCategory';
+import TransactionList from '../TransactionList/TransactionList';
 
 const ChooseCategoryStep = () => {
   const { categoryId, setCategoryId } = useExpenseWizard();
@@ -17,27 +17,15 @@ const ChooseCategoryStep = () => {
 
   return (
     <View style={styles.container}>
-      {categoriesList.map(category => (
-        <View key={category.categoryId}>
-          <Pressable
-            style={[
-              styles.categoryContainer,
-              categoryId === category.categoryId && styles.selectedCategory,
-            ]}
-            onPress={() => handleCategorySelect(category.categoryId)}
-          >
-            <Text
-              style={[
-                styles.category,
-                categoryId === category.categoryId &&
-                  styles.selectedCategoryText,
-              ]}
-            >
-              {category.categoryName}
-            </Text>
-          </Pressable>
-        </View>
-      ))}
+      <TransactionList
+        data={categoriesList}
+        mapItem={c => ({
+          text: c.categoryName,
+          onPress: () => handleCategorySelect(c.categoryId),
+          selected: c.categoryId === categoryId,
+        })}
+        keyExtractor={c => c.categoryId}
+      />
       <Text>{STRINGS.ADD_CATEGORY}</Text>
     </View>
   );
@@ -49,30 +37,6 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     justifyContent: 'center',
     marginHorizontal: 35,
-    gap: 25,
-  },
-  categoryContainer: {
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-    elevation: 2,
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  selectedCategory: {
-    borderColor: theme.color.purple,
-  },
-  category: {
-    height: 60,
-    fontSize: 23,
-    textAlign: 'center',
-    verticalAlign: 'middle',
-    color: '#333',
-  },
-  selectedCategoryText: {
-    color: theme.color.dark_purple,
-    fontWeight: 'bold',
   },
 });
 
