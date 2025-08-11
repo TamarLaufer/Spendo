@@ -7,6 +7,7 @@ const PaymentMethodsScreen = () => {
   const paymentMethods = useExpenseWizard(state => state.paymentMethods);
   const handleContinue = useExpenseWizard(state => state.handleContinue);
   const setPaymentMethod = useExpenseWizard(state => state.setPaymentMethod);
+
   const handlePaymentChoose = (selectedPayment: PaymentMethods['name']) => {
     setPaymentMethod(selectedPayment);
     handleContinue();
@@ -14,18 +15,14 @@ const PaymentMethodsScreen = () => {
 
   return (
     <View style={styles.container}>
-      {paymentMethods.map(payment => {
-        return (
-          <TransactionList
-            keyExtractor={item => item.id}
-            data={paymentMethods}
-            mapItem={item => ({
-              onPress: () => handlePaymentChoose(payment.name),
-              text: item.name,
-            })}
-          />
-        );
-      })}
+      <TransactionList
+        keyExtractor={item => item.id}
+        data={paymentMethods}
+        mapItem={item => ({
+          onPress: () => handlePaymentChoose(item.name),
+          text: item.name,
+        })}
+      />
     </View>
   );
 };

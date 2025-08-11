@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import { useCallback, useMemo } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import AddExpenseStep from '../components/AddExpenseSteps/AddExpenseStep';
 import ChooseCategoryStep from '../components/AddExpenseSteps/ChooseCategoryStep';
 import EndProcessStep from '../components/AddExpenseSteps/EndProcessStep';
@@ -25,10 +25,12 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
     canProceedToNextStep,
     handleContinue,
     handleBack,
+    isSubmitReady,
+    submitExpense,
   } = useExpenseWizard();
 
   const { header, buttonTitle, showButton } = StepsConfig[currentStep];
-
+  const [isSaving, setIsSaving] = useState(false);
   const handleSheetChanges = useCallback((index: number) => {
     if (index === -1) {
       resetWizard();
@@ -53,33 +55,64 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
     }
   };
 
+  const primaryTitle =
+    currentStep === 'endProcess' ? 'סיום ושמירה' : buttonTitle;
+
+  const onPrimaryPress = async () => {
+    if (currentStep !== 'endProcess') {
+      return handleContinue();
+    }
+    try {
+      setIsSaving(true);
+      await submitExpense();
+      Alert.alert('נשמר!', 'ההוצאה נשמרה בהצלחה');
+    } catch (error) {
+      Alert.alert('שגיאה', 'שמירה נכשלה');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const primaryDisabled =
+    currentStep === 'endProcess'
+      ? isSaving || !isSubmitReady()
+      : !canProceedToNextStep();
+
   return (
     <BottomSheet
       ref={bottomSheetRef}
       index={-1}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
-      enablePanDownToClose={true}
+      enablePanDownToClose={!isSaving}
       enableDynamicSizing={false}
       backgroundStyle={{
         backgroundColor: '#FBFBFB',
         borderTopRightRadius: 60,
         borderTopLeftRadius: 60,
-        shadowOffset: 10,
-        shadowOpacity: 10,
-        shadowColor: 'black',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
         elevation: 18,
       }}
       style={styles.bottomSheet}
     >
       {!!header && <Text style={styles.header}>{header}</Text>}
 
-      <BottomSheetScrollView style={styles.bottomScroll}>
+      <BottomSheetScrollView
+        style={styles.bottomScroll}
+        contentContainerStyle={{ paddingBottom: 96 }}
+      >
         {renderStep()}
       </BottomSheetScrollView>
 
       {currentStep !== 'amount' && (
-        <Pressable style={styles.backButton} onPress={handleBack}>
+        <Pressable
+          style={styles.backButton}
+          onPress={handleBack}
+          disabled={isSaving}
+        >
           <Icons.BACK width={50} height={50} />
         </Pressable>
       )}
@@ -90,12 +123,13 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
         </Pressable>
       )} */}
 
-      {showButton && !!buttonTitle && (
+      {showButton && !!primaryTitle && (
         <View style={styles.actions}>
           <ContinueButton
-            title={buttonTitle}
-            onPress={handleContinue}
-            disabled={!canProceedToNextStep()}
+            title={primaryTitle}
+            onPress={onPrimaryPress}
+            disabled={primaryDisabled}
+            loading={isSaving}
           />
         </View>
       )}
@@ -119,7 +153,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: '-2%',
+    top: -8,
     left: '7%',
     zIndex: 10,
     transform: [{ rotate: '180deg' }],

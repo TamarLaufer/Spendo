@@ -2,6 +2,13 @@ import { create } from 'zustand';
 import { PAYMENT_METHODS, PaymentMethods, Steps } from '../bottomSheet/types';
 import { useBottomSheet } from './useBottomSheet';
 import { useCategory } from './useCategory';
+import {
+  ExpensePayloadInput,
+  ExpensePayloadOutput,
+  ExpensePayloadSchema,
+  type ExpensePayload,
+} from '../shared/expense';
+import { createExpense } from '../api/api';
 
 type ExpenseWizardStateType = {
   amount: number | null;
@@ -21,6 +28,9 @@ type ExpenseWizardStateType = {
   handleBack: () => void;
   handleContinue: () => void;
   setPaymentMethod: (paymentMethod: PaymentMethods['name']) => void;
+  buildPayload: () => ExpensePayloadOutput | null;
+  submitExpense: () => Promise<void>;
+  isSubmitReady: () => boolean;
 };
 
 export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
@@ -32,7 +42,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
   paymentMethod: PAYMENT_METHODS[0].name,
 
   setAmount: amount => set({ amount }),
-  setCategoryId: categoryId => set({ categoryId }),
+  setCategoryId: categoryId => set({ categoryId, subCategoryId: '' }),
   setSubCategoryId: subCategoryId => set({ subCategoryId }),
   setCurrentStep: currentStep => set({ currentStep }),
   setPaymentMethod: paymentMethod => set({ paymentMethod }),
@@ -52,11 +62,13 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
       case 'amount':
         return state.amount !== null && state.amount > 0;
       case 'category':
-        return state.categoryId !== null;
+        return !!state.categoryId;
       case 'subCategory':
-        return state.subCategoryId !== null;
+        const cat = useCategory.getState().findCategoryById(state.categoryId);
+        const hasSub = !!cat && cat.subCategories.length > 0;
+        return hasSub ? !!state.subCategoryId : true;
       case 'payMethod':
-        return state.paymentMethod !== null;
+        return !!state.paymentMethod;
       case 'endProcess':
         return true;
       default:
@@ -64,17 +76,50 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
     }
   },
 
+  buildPayload: (): ExpensePayloadOutput | null => {
+    const { amount, categoryId, subCategoryId, paymentMethod } = get();
+    if (!amount || amount <= 0 || !categoryId || !paymentMethod) return null;
+
+    // before validation — input
+    const expensePayloadInput: ExpensePayloadInput = {
+      amount,
+      categoryId,
+      subCategoryId: subCategoryId || null,
+      paymentMethod,
+      createdAt: new Date().toISOString(),
+    };
+
+    // validation
+    const parsed = ExpensePayloadSchema.safeParse(expensePayloadInput);
+    if (!parsed.success) return null;
+
+    // after validation — safe payload
+    const expensePayload: ExpensePayload = parsed.data;
+    return expensePayload;
+  },
+
+  submitExpense: async () => {
+    const payload = get().buildPayload();
+    if (!payload) throw new Error('Incomplete expense data');
+
+    await createExpense(payload);
+    get().handleClose();
+  },
+
+  isSubmitReady: () => {
+    const s = get();
+    if (!s.amount || s.amount <= 0) return false;
+    if (!s.categoryId) return false;
+    const cat = useCategory.getState().findCategoryById(s.categoryId);
+    const hasSubs = !!cat && cat.subCategories.length > 0;
+    if (hasSubs && !s.subCategoryId) return false;
+    if (!s.paymentMethod) return false;
+    return true;
+  },
+
   handleClose: () => {
     const closeBottomSheet = useBottomSheet.getState().closeBottomSheet;
     closeBottomSheet();
-
-    set({
-      amount: null,
-      categoryId: '',
-      subCategoryId: '',
-      currentStep: 'amount',
-      paymentMethod: PAYMENT_METHODS[0].name,
-    });
   },
 
   handleBack: () => {

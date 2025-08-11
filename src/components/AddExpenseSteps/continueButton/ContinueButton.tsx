@@ -1,20 +1,35 @@
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
 import { theme } from '../../../theme/theme';
 
 type ContinueButtonType = {
   onPress: () => void;
   title: string;
   disabled: boolean;
+  loading?: boolean;
 };
 
-const ContinueButton = ({ onPress, disabled, title }: ContinueButtonType) => {
+const ContinueButton = ({
+  onPress,
+  disabled,
+  title,
+  loading,
+}: ContinueButtonType) => {
   return (
     <TouchableOpacity
       style={[styles.continueButton, { backgroundColor: theme.color.purple }]}
       onPress={onPress}
-      disabled={disabled}
+      disabled={disabled || loading}
     >
-      <Text style={styles.continueText}>{title}</Text>
+      {loading ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={styles.continueText}>{title}</Text>
+      )}
     </TouchableOpacity>
   );
 };

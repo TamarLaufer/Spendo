@@ -4,9 +4,7 @@ import { useCategory } from '../../zustandState/useCategory';
 import { STRINGS } from '../../strings/hebrew';
 import { formatAmount } from '../../functions/functions';
 
-type EndProcessStepType = {};
-
-const EndProcessStep = ({}: EndProcessStepType) => {
+const EndProcessStep = () => {
   const subCategoryId = useExpenseWizard(state => state.subCategoryId);
   const categoryId = useExpenseWizard(state => state.categoryId);
   const amount = useExpenseWizard(state => state.amount);
@@ -14,7 +12,7 @@ const EndProcessStep = ({}: EndProcessStepType) => {
   const findCategoryById = useCategory(state => state.findCategoryById);
   const expenseObj = findCategoryById(categoryId);
   const paymentMethod = useExpenseWizard(state => state.paymentMethod);
-  console.log(expenseObj, 'expenseObj');
+
   const currentSubCategory = expenseObj?.subCategories.find(
     item => item.subCategoryId === subCategoryId,
   );

@@ -18,13 +18,13 @@ const ChooseCategoryStep = () => {
   return (
     <View style={styles.container}>
       <TransactionList
+        keyExtractor={c => c.categoryName}
         data={categoriesList}
         mapItem={c => ({
           text: c.categoryName,
           onPress: () => handleCategorySelect(c.categoryId),
           selected: c.categoryId === categoryId,
         })}
-        keyExtractor={c => c.categoryId}
       />
       <Text>{STRINGS.ADD_CATEGORY}</Text>
     </View>
