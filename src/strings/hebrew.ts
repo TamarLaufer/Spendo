@@ -7,4 +7,5 @@ export const STRINGS = {
   ADD_CATEGORY: 'הוספת קטגוריה',
   EXPENSE_SUCCEDED: 'ההוצאה נוספה בהצלחה!',
   EXPENSE_IN: 'הוצאה של',
+  LAST_EXPENSES: 'הוצאות אחרונות',
 };
