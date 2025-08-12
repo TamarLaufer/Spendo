@@ -25,10 +25,12 @@ const EndProcessStep = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{STRINGS.EXPENSE_SUCCEDED}</Text>
-      <Text style={styles.text}>{`${STRINGS.EXPENSE_IN}: ${
-        expenseObj?.categoryName
-      } ${isSubExist ? `- ${isSubExist}` : ''}`}</Text>
+      <View style={styles.textContainer}>
+        <Text style={styles.text}>{STRINGS.EXPENSE_SUCCEDED}</Text>
+        <Text style={styles.text}>{`${STRINGS.EXPENSE_IN}: ${
+          expenseObj?.categoryName
+        } ${isSubExist ? `- ${isSubExist}` : ''}`}</Text>
+      </View>
       <Text
         style={styles.amountText}
       >{`${isAmountExist} ב${paymentMethod}`}</Text>
@@ -39,15 +41,21 @@ const EndProcessStep = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: 200,
     justifyContent: 'center',
     alignItems: 'center',
+    marginHorizontal: 25,
   },
+  textContainer: { flex: 1 },
   text: {
-    fontSize: 22,
+    fontSize: 24,
+    textAlign: 'center',
+    verticalAlign: 'middle',
   },
   amountText: {
-    fontSize: 42,
+    fontSize: 33,
+    textAlign: 'center',
+    verticalAlign: 'middle',
   },
 });
 

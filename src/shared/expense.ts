@@ -12,3 +12,4 @@ export const ExpensePayloadSchema = z.object({
 export type ExpensePayload = z.infer<typeof ExpensePayloadSchema>;
 export type ExpensePayloadInput = z.input<typeof ExpensePayloadSchema>; // Before validation
 export type ExpensePayloadOutput = z.output<typeof ExpensePayloadSchema>;
+export type Expense = ExpensePayload & { id: string };

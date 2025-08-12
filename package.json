@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "connect-metro": "adb reverse tcp:8081 tcp:8081"
+    "connect-metro": "adb reverse tcp:8081 tcp:8081 && adb reverse tcp:4000 tcp:4000"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.1.6",

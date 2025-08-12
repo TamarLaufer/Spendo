@@ -3,12 +3,14 @@ import { PAYMENT_METHODS, PaymentMethods, Steps } from '../bottomSheet/types';
 import { useBottomSheet } from './useBottomSheet';
 import { useCategory } from './useCategory';
 import {
+  Expense,
   ExpensePayloadInput,
   ExpensePayloadOutput,
   ExpensePayloadSchema,
   type ExpensePayload,
 } from '../shared/expense';
 import { createExpense } from '../api/api';
+import { useExpenses } from './useExpenses';
 
 type ExpenseWizardStateType = {
   amount: number | null;
@@ -100,9 +102,12 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
 
   submitExpense: async () => {
     const payload = get().buildPayload();
+    console.log(payload);
+
     if (!payload) throw new Error('Incomplete expense data');
 
-    await createExpense(payload);
+    const saved: Expense = await createExpense(payload);
+    useExpenses.getState().addLocal(saved);
     get().handleClose();
   },
 
