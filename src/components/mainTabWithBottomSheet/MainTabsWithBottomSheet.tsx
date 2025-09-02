@@ -14,8 +14,7 @@ const MainTabsWithBottomSheet = () => {
   useEffect(() => {
     loadCategories();
     setBottomSheetRef(bottomSheetRef);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [loadCategories, setBottomSheetRef]);
 
   return (
     <>

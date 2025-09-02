@@ -1,13 +1,27 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 export type TransactionRowProps = {
   text: string;
   onPress: () => void;
+  containerStyle?: StyleProp<ViewStyle>;
+  textStyle?: StyleProp<TextStyle>;
 };
 
-const TransactionRow = ({ text, onPress }: TransactionRowProps) => (
-  <Pressable style={styles.container} onPress={onPress}>
-    <Text style={styles.text}>{text}</Text>
+const TransactionRow = ({
+  text,
+  onPress,
+  containerStyle,
+  textStyle,
+}: TransactionRowProps) => (
+  <Pressable style={containerStyle ?? styles.container} onPress={onPress}>
+    <Text style={textStyle ?? styles.text}>{text}</Text>
   </Pressable>
 );
 

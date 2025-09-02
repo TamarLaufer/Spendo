@@ -5,7 +5,7 @@ import { useExpenses } from '../../zustandState/useExpenses';
 import LastExpenses from '../../components/lastExpenses/LastExpenses';
 
 const Home = () => {
-  const loadExpenses = useExpenses(s => s.loadExpenses);
+  const loadExpenses = useExpenses(state => state.loadExpenses);
 
   useEffect(() => {
     loadExpenses();
@@ -23,7 +23,6 @@ const Home = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: 'blue',
   },
   text: {
     fontFamily: 'Assistant',

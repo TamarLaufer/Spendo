@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useCategory } from '../../zustandState/useCategory';
 import { useExpenses } from '../../zustandState/useExpenses';
 import {
@@ -13,29 +13,18 @@ import TransactionList from '../TransactionList/TransactionList';
 import { STRINGS } from '../../strings/hebrew';
 
 const LastExpenses = () => {
-  const expenses = useExpenses(s => s.expenses);
-  const loading = useExpenses(s => s.loading);
-  const error = useExpenses(s => s.error);
+  const expenses = useExpenses(state => state.expenses);
+  const loading = useExpenses(state => state.loading);
+  const error = useExpenses(state => state.error);
   const { findCategoryById } = useCategory();
-  const loadExpenses = useExpenses(s => s.loadExpenses);
 
-  useEffect(() => {
-    loadExpenses();
-  }, [loadExpenses]);
-
-  const firstExpenses = useMemo(() => expenses.slice(0, 5), [expenses]);
-  // const [fiveFirst, setFiveFirst] = useState();
+  const firstExpenses = useMemo(() => expenses.slice(0, 3), [expenses]);
 
   return (
     <>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={{
-          flex: 1,
-          marginHorizontal: 20,
-          justifyContent: 'center',
-          // backgroundColor: 'pink',
-        }}
+        contentContainerStyle={styles.contentContainter}
       >
         <View style={styles.headerContainer}>
           <Text style={styles.header}>{STRINGS.LAST_EXPENSES}</Text>
@@ -52,7 +41,7 @@ const LastExpenses = () => {
                 findCategoryById(item.categoryId)?.categoryName ?? ''
               }`,
               onPress: () => {
-                // בהמשך: ניווט למסך פרטי הוצאה
+                //TODO: Navigation to DetailExpense screen..
               },
             })}
           />
@@ -76,6 +65,12 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'Assistant',
     fontSize: 24,
+  },
+  contentContainter: {
+    flex: 1,
+    marginHorizontal: 20,
+    justifyContent: 'center',
+    // backgroundColor: 'pink',
   },
 });
 

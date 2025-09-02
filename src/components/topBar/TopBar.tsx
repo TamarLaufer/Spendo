@@ -10,8 +10,6 @@ const TopBar: FC = () => {
   );
 };
 
-export default TopBar;
-
 const styles = StyleSheet.create({
   textContainer: {
     flexDirection: 'row',
@@ -34,3 +32,5 @@ const styles = StyleSheet.create({
     color: theme.color.purple,
   },
 });
+
+export default TopBar;
