@@ -1,3 +1,4 @@
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useMemo } from 'react';
 import { useCategory } from '../../zustandState/useCategory';
 import { useExpenses } from '../../zustandState/useExpenses';
@@ -11,6 +12,10 @@ import {
 import { formatAmount } from '../../functions/functions';
 import TransactionList from '../TransactionList/TransactionList';
 import { STRINGS } from '../../strings/hebrew';
+import { useNavigation } from '@react-navigation/native';
+import type { RootStackParamsType } from '../../navigation/types';
+
+type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
 const LastExpenses = () => {
   const expenses = useExpenses(state => state.expenses);
@@ -18,7 +23,15 @@ const LastExpenses = () => {
   const error = useExpenses(state => state.error);
   const { findCategoryById } = useCategory();
 
+  const navigation = useNavigation<RootNav>();
   const firstExpenses = useMemo(() => expenses.slice(0, 3), [expenses]);
+
+  const handleExpensePress = (expenseId: string, subCategoryId?: string) => {
+    navigation.navigate('DetailsExpense', {
+      expenseId,
+      subCategoryId,
+    });
+  };
 
   return (
     <>
@@ -40,9 +53,8 @@ const LastExpenses = () => {
               text: `${formatAmount(item.amount)} — ${
                 findCategoryById(item.categoryId)?.categoryName ?? ''
               }`,
-              onPress: () => {
-                //TODO: Navigation to DetailExpense screen..
-              },
+              onPress: () =>
+                handleExpensePress(item.id, item.subCategoryId ?? undefined),
             })}
           />
         )}
@@ -70,7 +82,6 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 20,
     justifyContent: 'center',
-    // backgroundColor: 'pink',
   },
 });
 

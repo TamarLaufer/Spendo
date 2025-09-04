@@ -21,7 +21,10 @@ const ContinueButton = ({
 }: ContinueButtonType) => {
   return (
     <TouchableOpacity
-      style={[styles.continueButton, { backgroundColor: theme.color.purple }]}
+      style={[
+        styles.continueButton,
+        { backgroundColor: theme.color.whiteBlue },
+      ]}
       onPress={onPress}
       disabled={disabled || loading}
     >

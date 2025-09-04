@@ -11,9 +11,10 @@ type ExpensesState = {
   addLocal: (e: Expense) => void;
   replaceAll: (list: Expense[]) => void;
   clear: () => void;
+  findExpenseById: (id: string) => Expense | undefined;
 };
 
-export const useExpenses = create<ExpensesState>(set => ({
+export const useExpenses = create<ExpensesState>((set, get) => ({
   expenses: [],
   loading: false,
   error: null,
@@ -27,12 +28,15 @@ export const useExpenses = create<ExpensesState>(set => ({
       set({ error: e?.message || 'Fetch failed', loading: false });
     }
   },
-  addLocal(e) {
-    set(s => ({ expenses: [e, ...s.expenses] }));
+  findExpenseById: (id: string) =>
+    get().expenses.find((element: Expense) => element.id === id),
+
+  addLocal(expense) {
+    set(state => ({ expenses: [expense, ...state.expenses] }));
   },
 
   replaceAll(list) {
-    set({ expenses: list });
+    set(state => (state.expenses === list ? state : { expenses: list }));
   },
 
   clear() {

@@ -17,8 +17,12 @@ export type SubCategoryType = {
 type CategoryStateType = {
   categories: CategoryType[];
   // addCategory: (categoryName: string, maxAmount: number) => void;
-  loadCategories: () => void;
-  findCategoryById: (categoryId: string) => CategoryType | null;
+  loadCategories: () => Promise<void>;
+  findCategoryById: (categoryId: string) => CategoryType | undefined;
+  findSubCategoryById: (
+    categoryId: string,
+    subCategoryId: string | undefined,
+  ) => SubCategoryType | undefined;
   deleteCategory: (categoryId: string) => void;
 };
 
@@ -43,10 +47,22 @@ export const useCategory = create<CategoryStateType>((set, get) => ({
   // },
   findCategoryById: (categoryId: string) => {
     const state = get();
-    return (
-      state.categories.find(category => category.categoryId === categoryId) ||
-      null
+    return state.categories.find(
+      category => category.categoryId === categoryId,
     );
+  },
+  findSubCategoryById: (
+    categoryId: string,
+    subCategoryId: string | undefined,
+  ) => {
+    const state = get();
+    const category = state.categories.find(
+      oneCategory => oneCategory.categoryId === categoryId,
+    );
+    const subCategory = category?.subCategories.find(
+      sub => subCategoryId === sub.subCategoryId,
+    );
+    return subCategory;
   },
   deleteCategory: (categoryId: string) => {
     const state = get();

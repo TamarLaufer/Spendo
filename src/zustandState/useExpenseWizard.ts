@@ -131,6 +131,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
     const state = get();
     const findCategoryById = useCategory.getState().findCategoryById;
     const selectedCategory = findCategoryById(state.categoryId);
+
     switch (state.currentStep) {
       case 'category':
         set({ currentStep: 'amount' });

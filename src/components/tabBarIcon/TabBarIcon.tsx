@@ -34,7 +34,7 @@ const TabBarIcon = ({
     <Ionicons
       name={iconName}
       size={size}
-      color={focused ? theme.color.purple : color}
+      color={focused ? theme.color.whiteBlue : color}
     />
   );
 };

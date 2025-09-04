@@ -19,7 +19,7 @@ const Tab = createBottomTabNavigator<MainBottomTabsParamsListTypes>();
 
 const TAB_BAR_STYLE = { height: 70 } as const;
 const TAB_SCREEN_OPTIONS = {
-  tabBarActiveTintColor: theme.color.purple,
+  tabBarActiveTintColor: theme.color.whiteBlue,
   tabBarInactiveTintColor: 'gray',
   headerShown: false,
   tabBarStyle: TAB_BAR_STYLE,

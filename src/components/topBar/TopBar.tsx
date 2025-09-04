@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     fontFamily: 'PlaypenSansHebrew-Regular',
     fontSize: 24,
     marginRight: 10,
-    color: theme.color.purple,
+    color: theme.color.whiteBlue,
   },
 });
 

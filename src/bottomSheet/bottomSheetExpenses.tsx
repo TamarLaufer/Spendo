@@ -86,23 +86,14 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
       onChange={handleSheetChanges}
       enablePanDownToClose={!isSaving}
       enableDynamicSizing={false}
-      backgroundStyle={{
-        backgroundColor: '#FBFBFB',
-        borderTopRightRadius: 40,
-        borderTopLeftRadius: 40,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: -2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 8,
-        elevation: 18,
-      }}
+      backgroundStyle={styles.bottomSheetBackground}
       style={styles.bottomSheet}
     >
       {!!header && <Text style={styles.header}>{header}</Text>}
 
       <BottomSheetScrollView
         style={styles.bottomScroll}
-        contentContainerStyle={{ paddingBottom: 40 }}
+        contentContainerStyle={styles.bottomSheetView}
       >
         {renderStep()}
       </BottomSheetScrollView>
@@ -141,10 +132,21 @@ const styles = StyleSheet.create({
   bottomSheet: {
     paddingVertical: 5,
   },
+  bottomSheetBackground: {
+    backgroundColor: '#FBFBFB',
+    borderTopRightRadius: 40,
+    borderTopLeftRadius: 40,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 18,
+  },
   bottomScroll: {
     marginTop: 28,
     marginHorizontal: 10,
   },
+  bottomSheetView: { paddingBottom: 40 },
   header: {
     fontSize: 24,
     fontWeight: 'bold',

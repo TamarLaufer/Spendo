@@ -7,5 +7,6 @@ export const theme = {
     dark_purple: '#3D365C',
     light_purple: '#C5B0CD',
     purple: '#9929EA',
+    whiteBlue: '#9bacecff',
   },
 };
