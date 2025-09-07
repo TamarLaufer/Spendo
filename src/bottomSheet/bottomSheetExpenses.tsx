@@ -104,7 +104,7 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
           onPress={handleBack}
           disabled={isSaving}
         >
-          <Icons.BACK width={50} height={50} />
+          <Icons.Back width={50} height={50} />
         </Pressable>
       )}
 

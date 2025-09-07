@@ -1,17 +1,20 @@
 import { create } from 'zustand';
 import { fetchCategories } from '../api/api';
+import { IconKey } from '../assets/icons';
 
 export type CategoryType = {
   categoryId: string;
   categoryName: string;
   maxAmount: number;
   isExceed: boolean;
+  icon?: IconKey;
   subCategories: SubCategoryType[];
 };
 
 export type SubCategoryType = {
   subCategoryId: string;
   subCategoryName: string;
+  icon?: IconKey | undefined;
 };
 
 type CategoryStateType = {

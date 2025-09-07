@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Expense } from '../shared/expense';
 import { getExpenses } from '../api/api';
 
-type ExpensesState = {
+export type ExpensesState = {
   expenses: Expense[];
   loading: boolean;
   error: string | null;

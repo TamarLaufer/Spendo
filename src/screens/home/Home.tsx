@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import ScreenLayout from '../../components/screenLayout/ScreenLayout';
 import { useExpenses } from '../../zustandState/useExpenses';
 import LastExpenses from '../../components/lastExpenses/LastExpenses';
@@ -14,23 +14,23 @@ const Home = () => {
 
   return (
     <ScreenLayout>
-      <View style={styles.logoContainer}>
-        <Logo width={300} height={300} />
-      </View>
-      <View style={styles.container}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.logoContainer}>
+          <Logo width={300} height={300} />
+        </View>
         <LastExpenses />
-      </View>
+      </ScrollView>
     </ScreenLayout>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  scrollView: {
     flex: 1,
   },
   logoContainer: {
+    flex: 1,
     alignItems: 'center',
-    marginTop: 15,
   },
   text: {
     fontFamily: 'Assistant',

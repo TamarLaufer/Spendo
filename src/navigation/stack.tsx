@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { RootStackParamsType } from './types';
 import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
 import DetailsExpense from '../screens/DetailsExpense/DetailsExpense';
+import AllExpenses from '../screens/AllExpenses/AllExpenses';
 
 const Stack = createStackNavigator<RootStackParamsType>();
 const STACK_SCREEN_OPTIONS = { headerShown: false };
@@ -13,6 +14,7 @@ const StackNavigation = () => {
       <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS}>
         <Stack.Screen name="MainTabs" component={MainTabsWithBottomSheet} />
         <Stack.Screen name="DetailsExpense" component={DetailsExpense} />
+        <Stack.Screen name="AllExpenses" component={AllExpenses} />
       </Stack.Navigator>
     </NavigationContainer>
   );

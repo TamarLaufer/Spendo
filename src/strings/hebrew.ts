@@ -8,4 +8,5 @@ export const STRINGS = {
   EXPENSE_SUCCEDED: 'ההוצאה נוספה בהצלחה!',
   EXPENSE_IN: 'הוצאה של',
   LAST_EXPENSES: 'הוצאות אחרונות',
+  TO_ALL_EXPENSES: `לכל ההוצאות >>`,
 };

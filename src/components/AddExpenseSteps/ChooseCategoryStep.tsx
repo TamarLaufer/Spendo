@@ -4,6 +4,7 @@ import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { STRINGS } from '../../strings/hebrew';
 import { useCategory } from '../../zustandState/useCategory';
 import TransactionList from '../TransactionList/TransactionList';
+import { Icons } from '../../assets/icons';
 
 const ChooseCategoryStep = () => {
   const { categoryId, setCategoryId } = useExpenseWizard();
@@ -25,6 +26,7 @@ const ChooseCategoryStep = () => {
           onPress: () => handleCategorySelect(c.categoryId),
           selected: c.categoryId === categoryId,
         })}
+        icon={Icons.Market}
       />
       <Text>{STRINGS.ADD_CATEGORY}</Text>
     </View>
