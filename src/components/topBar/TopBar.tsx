@@ -1,10 +1,11 @@
 import { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { theme } from '../../theme/theme';
-
+import { Icons } from '../../assets/icons';
 const TopBar: FC = () => {
   return (
     <View style={styles.textContainer}>
+      <Icons.Payment width={50} height={50} />
       <Text style={styles.textStyle}>חסכוני</Text>
     </View>
   );
@@ -28,8 +29,8 @@ const styles = StyleSheet.create({
   textStyle: {
     fontFamily: 'PlaypenSansHebrew-Regular',
     fontSize: 24,
-    marginRight: 10,
-    color: theme.color.lightBlue,
+    marginHorizontal: 6,
+    color: theme.color.green,
   },
 });
 

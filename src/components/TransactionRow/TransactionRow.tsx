@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     borderRadius: 15,
-    elevation: 2,
+    elevation: 1.2,
     borderWidth: 2,
     borderColor: 'transparent',
     marginVertical: 5,

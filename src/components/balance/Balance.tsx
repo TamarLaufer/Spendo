@@ -1,0 +1,53 @@
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useMemo } from 'react';
+import { useExpenses } from '../../zustandState/useExpenses';
+import { formatAmount } from '../../functions/functions';
+
+const Balance = () => {
+  const now = new Date();
+  const targetYear = now.getFullYear();
+  const targetMonth1to12 = now.getMonth() + 1;
+  const expenses = useExpenses(state => state.expenses);
+
+  const balanceCalc = useMemo(() => {
+    return expenses.reduce((sum, expense) => {
+      const rawDate = expense?.createdAt;
+      const date = new Date(rawDate);
+
+      if (Number.isNaN(date.getTime())) return sum;
+
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const isThisMonth = month === targetMonth1to12;
+      const isThisYear = year === targetYear;
+      return isThisYear && isThisMonth ? sum + expense.amount : sum;
+    }, 0);
+  }, [expenses, targetYear, targetMonth1to12]);
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>היי, החודש הוצאת</Text>
+      <Text style={styles.balanceAmount}>{formatAmount(balanceCalc)}</Text>
+    </View>
+  );
+};
+
+export default Balance;
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    elevation: 1.2,
+    paddingVertical: 8,
+  },
+  text: {
+    fontSize: 18,
+  },
+  balanceAmount: {
+    fontSize: 38,
+    fontFamily: 'PlaypenSansHebrew-Regular',
+  },
+});

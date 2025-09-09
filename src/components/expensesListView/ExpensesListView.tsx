@@ -53,6 +53,14 @@ const ExpensesListView = ({
     });
   };
 
+  const DATE_OPTS: Intl.DateTimeFormatOptions = {
+    // year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  };
+  const formatIsoDate = (iso: string) =>
+    new Date(iso).toLocaleDateString('he-IL', DATE_OPTS);
+
   return (
     <View style={styles.contentContainer}>
       {header && (
@@ -70,7 +78,7 @@ const ExpensesListView = ({
           mapItem={item => ({
             text: `${formatAmount(item.amount)} — ${
               findCategoryById(item.categoryId)?.categoryName ?? ''
-            }`,
+            } ${formatIsoDate(item.createdAt)}`,
             onPress: () =>
               handleExpensePress(item.id, item.subCategoryId ?? undefined),
           })}
