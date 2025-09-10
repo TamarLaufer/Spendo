@@ -41,6 +41,7 @@ const ExpensesListView = ({
   const { findCategoryById } = useCategory();
 
   const navigation = useNavigation<RootNav>();
+
   const data = useMemo(
     () => (numOfTransactions ? expenses.slice(0, 3) : expenses),
     [expenses, numOfTransactions],
@@ -53,13 +54,20 @@ const ExpensesListView = ({
     });
   };
 
+  const possibleDataFailor = error || loading || data.length === 0;
+
   const DATE_OPTS: Intl.DateTimeFormatOptions = {
     // year: 'numeric',
     month: '2-digit',
     day: '2-digit',
   };
-  const formatIsoDate = (iso: string) =>
-    new Date(iso).toLocaleDateString('he-IL', DATE_OPTS);
+  const formatIsoDate = (input: Date | string | null | undefined): string => {
+    if (input == null) return '';
+    const date = input instanceof Date ? input : new Date(input);
+    if (Number.isNaN(date.getTime())) return '';
+
+    return date.toLocaleDateString('he-IL', DATE_OPTS);
+  };
 
   return (
     <View style={styles.contentContainer}>
@@ -68,10 +76,19 @@ const ExpensesListView = ({
           <Text style={styles.header}>{STRINGS.LAST_EXPENSES}</Text>
         </View>
       )}
-      {loading && <ActivityIndicator />}
-      {error && <Text>{error}</Text>}
-
-      {!loading && !error && (
+      {possibleDataFailor ? (
+        <View style={styles.dataMissingContainer}>
+          {loading && <ActivityIndicator />}
+          {error && (
+            <Text style={styles.serverError}>
+              תקלה בשרת כרגע, אנא נסו במועד מאוחר יותר
+            </Text>
+          )}
+          {data.length === 0 && (
+            <Text style={styles.noExpenses}>אין עדיין הוצאות</Text>
+          )}
+        </View>
+      ) : (
         <TransactionList
           data={data}
           keyExtractor={item => item.id}
@@ -124,6 +141,20 @@ const styles = StyleSheet.create({
   linkToAllExpenses: {
     fontSize: 18,
     color: theme.color.lightBlue,
+  },
+  dataMissingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    // paddingVertical: 10,
+  },
+  noExpenses: {
+    fontFamily: 'Assistant',
+    fontSize: 18,
+  },
+  serverError: {
+    fontFamily: 'Assistant',
+    fontSize: 18,
+    color: 'red',
   },
 });
 

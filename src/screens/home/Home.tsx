@@ -9,9 +9,10 @@ import Balance from '../../components/balance/Balance';
 const Home = () => {
   const loadExpenses = useExpenses(state => state.loadExpenses);
 
+  const householdId = 'SHARED_HOUSEHOLD_ID'; // זמני עד שיהיה בחירה/הזמנה
   useEffect(() => {
-    loadExpenses();
-  }, [loadExpenses]);
+    loadExpenses(householdId);
+  }, [loadExpenses, householdId]);
 
   return (
     <ScreenLayout>
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   lastExpenses: {
-    marginVertical: 5,
+    // marginVertical: 5,
   },
 });
 

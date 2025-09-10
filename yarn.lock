@@ -2106,24 +2106,24 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
-"@react-native-firebase/app@^23.3.0":
-  version "23.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-23.3.0.tgz#5c9630c87840acf8f91fb5304ec7947aa888823e"
-  integrity sha512-30/LjMreBdqTnC1oXEgsT05M4Ri6H3ahfkiqL7AXfP1713Sxl5YVtGI80IwF60mw9k2xoOSq5ygGFH9FZNi7jQ==
+"@react-native-firebase/app@^23.3.1":
+  version "23.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-23.3.1.tgz#5e00d7c8975b0faa824b227c5edd95abcb77083e"
+  integrity sha512-OKhrVFHkEfQEcYPQ+heetj1IgEpS9gTTr+2ZArSYDPPqv347rq1SCDsQHCfJdrpMLcFrpH9aH4uyAhFhfjM+tA==
   dependencies:
     firebase "12.2.1"
 
-"@react-native-firebase/auth@^23.3.0":
-  version "23.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-23.3.0.tgz#9721adff4b1716ecebdd738f7649a90012211852"
-  integrity sha512-/j2K5GxEkxK1DlYWEmgqh20+t5gfrW+kQtOn6vTrkkuioo08oNaF2jBMa7c4V582uNIRFG5dhK9ujR43wwGHtg==
+"@react-native-firebase/auth@^23.3.1":
+  version "23.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-23.3.1.tgz#23617c0d835002c16d5770037647f03e117a36c9"
+  integrity sha512-XegiRpm4okWF7IPp84dSIX6FTjTw4RBTVE3s/Uv3JDzu0PJ+YuEf0GS1pOpkHJe5ChkA4lvFSI6g2NtAPGRmcg==
   dependencies:
     plist "^3.1.0"
 
-"@react-native-firebase/firestore@^23.3.0":
-  version "23.3.0"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-23.3.0.tgz#04894d400674b3b9169d0886a92b6946041b4195"
-  integrity sha512-2eVrilQP0tOEqcdPfIiwBUkZF1Zpvxt8g4KzJAswnf01SicvLXHLtJTdRihLzXLvJNwzC5kiWq8GJbBz3MHOHA==
+"@react-native-firebase/firestore@^23.3.1":
+  version "23.3.1"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-23.3.1.tgz#5c0baeea65f30fb13f1c377f81451a3dc3f1bd35"
+  integrity sha512-TKuPZiFzy0N6woU+XxE46018VbZvoJIeljN8LFWSxVT1Bjx4M0muRLDJ3qW3z56V7qWAOpjA3NtL83bOQvHPMw==
   dependencies:
     react-native-url-polyfill "2.0.0"
 

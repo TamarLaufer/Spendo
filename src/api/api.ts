@@ -1,31 +1,25 @@
-import { categoriesList } from '../mockData/mockData';
-import { Expense, ExpensePayload } from '../shared/expense';
-import { CategoryType } from '../zustandState/useCategory';
-import { API_BASE_URL } from './config';
+import {
+  addExpense,
+  getExpensesOnce,
+  subscribeToExpenses,
+} from '../firebase/services/expenses';
 
-export const fetchCategories = async (): Promise<CategoryType[]> => {
-  return new Promise<CategoryType[]>(resolve => {
-    setTimeout(() => resolve(categoriesList), 500);
-  });
-};
+import type { Expense, NewExpenseInput } from '../firebase/services/expenses';
 
-export async function createExpense(expense: ExpensePayload) {
-  const res = await fetch(`${API_BASE_URL}/expenses`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(expense),
-  });
-
-  if (!res.ok) {
-    const msg = await res.text().catch(() => '');
-    throw new Error(msg || 'Failed to create expense');
-  }
-  return res.json();
+export async function getExpenses(householdId: string): Promise<Expense[]> {
+  return getExpensesOnce(householdId);
 }
 
-export async function getExpenses(): Promise<Expense[]> {
-  const res = await fetch(`${API_BASE_URL}/expenses`);
-  if (!res.ok)
-    throw new Error(await res.text().catch(() => 'Failed to fetch expenses'));
-  return res.json();
+export async function createExpense(input: NewExpenseInput): Promise<string> {
+  // returns the id of the created document
+  return addExpense(input);
+}
+
+export function watchExpenses(
+  householdId: string,
+  onChange: (rows: Expense[]) => void,
+  onError?: (e: Error) => void,
+) {
+  // subscribe to real time, returns a canceling
+  return subscribeToExpenses(householdId, onChange, onError);
 }

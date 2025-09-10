@@ -6,18 +6,19 @@ import { formatAmount } from '../../functions/functions';
 const Balance = () => {
   const now = new Date();
   const targetYear = now.getFullYear();
-  const targetMonth1to12 = now.getMonth() + 1;
+  const targetMonth1to12 = now.getMonth();
   const expenses = useExpenses(state => state.expenses);
 
   const balanceCalc = useMemo(() => {
     return expenses.reduce((sum, expense) => {
-      const rawDate = expense?.createdAt;
-      const date = new Date(rawDate);
+      const date = expense.createdAt;
 
-      if (Number.isNaN(date.getTime())) return sum;
+      if (!(date instanceof Date) || Number.isNaN(date.getTime())) {
+        return sum;
+      }
 
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
+      const year = date?.getFullYear();
+      const month = date.getMonth();
       const isThisMonth = month === targetMonth1to12;
       const isThisYear = year === targetYear;
       return isThisYear && isThisMonth ? sum + expense.amount : sum;
