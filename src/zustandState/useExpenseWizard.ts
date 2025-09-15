@@ -1,13 +1,15 @@
 import { create } from 'zustand';
-import { PAYMENT_METHODS, PaymentMethods, Steps } from '../bottomSheet/types';
+import {
+  PAYMENT_METHODS,
+  type PaymentMethods,
+  type Steps,
+} from '../bottomSheet/types';
 import { useBottomSheet } from './useBottomSheet';
 import { useCategory } from './useCategory';
 import {
-  Expense,
-  ExpensePayloadInput,
-  ExpensePayloadOutput,
-  ExpensePayloadSchema,
-  type ExpensePayload,
+  ExpenseCreateSchema,
+  type ExpenseCreateInput,
+  type ExpenseRecord,
 } from '../shared/expense';
 import { createExpense } from '../api/api';
 import { useExpenses } from './useExpenses';
@@ -15,7 +17,7 @@ import { useExpenses } from './useExpenses';
 type ExpenseWizardStateType = {
   amount: number | null;
   categoryId: string;
-  subCategoryId: string;
+  subCategoryId: string; // ריק = אין תת־קטגוריה (נטפל בזה בבילד)
   currentStep: Steps;
   paymentMethods: readonly PaymentMethods[];
   paymentMethod: PaymentMethods['name'];
@@ -30,7 +32,7 @@ type ExpenseWizardStateType = {
   handleBack: () => void;
   handleContinue: () => void;
   setPaymentMethod: (paymentMethod: PaymentMethods['name']) => void;
-  buildPayload: () => ExpensePayloadOutput | null;
+  buildPayload: () => ExpenseCreateInput | null;
   submitExpense: () => Promise<void>;
   isSubmitReady: () => boolean;
 };
@@ -65,10 +67,11 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
         return state.amount !== null && state.amount > 0;
       case 'category':
         return !!state.categoryId;
-      case 'subCategory':
+      case 'subCategory': {
         const cat = useCategory.getState().findCategoryById(state.categoryId);
         const hasSub = !!cat && cat.subCategories.length > 0;
         return hasSub ? !!state.subCategoryId : true;
+      }
       case 'payMethod':
         return !!state.paymentMethod;
       case 'endProcess':
@@ -78,35 +81,30 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
     }
   },
 
-  buildPayload: (): ExpensePayloadOutput | null => {
+  // ⬇️ בונים בדיוק ExpenseCreateInput (בלי createdAt)
+  buildPayload: (): ExpenseCreateInput | null => {
     const { amount, categoryId, subCategoryId, paymentMethod } = get();
     if (!amount || amount <= 0 || !categoryId || !paymentMethod) return null;
 
-    // before validation — input
-    const expensePayloadInput: ExpensePayloadInput = {
+    // ולידציה עם הסכימה הנכונה (Create)
+    const parsed = ExpenseCreateSchema.safeParse({
       amount,
       categoryId,
-      subCategoryId: subCategoryId || null,
+      subCategoryId: subCategoryId ? subCategoryId : null,
       paymentMethod,
-      createdAt: new Date().toISOString(),
-    };
+      // note: ... אם יש לך שדה כזה בוויזארד
+    });
 
-    // validation
-    const parsed = ExpensePayloadSchema.safeParse(expensePayloadInput);
     if (!parsed.success) return null;
-
-    // after validation — safe payload
-    const expensePayload: ExpensePayload = parsed.data;
-    return expensePayload;
+    return parsed.data; // טיפוס: ExpenseCreateInput
   },
 
+  // ⬇️ מצפה ש-createExpense יחזיר ExpenseRecord
   submitExpense: async () => {
     const payload = get().buildPayload();
-    console.log(payload);
-
     if (!payload) throw new Error('Incomplete expense data');
 
-    const saved: Expense = await createExpense(payload);
+    const saved: ExpenseRecord = await createExpense(payload);
     useExpenses.getState().addLocal(saved);
     get().handleClose();
   },

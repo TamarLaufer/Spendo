@@ -1,19 +1,21 @@
 import { create } from 'zustand';
-import type { Expense } from '../firebase/services/expenses';
-import { getExpenses, /* createExpense, */ watchExpenses } from '../api/api';
+import { getExpenses, watchExpenses } from '../api/api';
+import { ExpenseRecord } from '../shared/expense';
+import { DEV_HOUSEHOLD_ID } from '../config/consts';
 
 export type ExpensesState = {
-  expenses: Expense[];
+  expenses: ExpenseRecord[];
   loading: boolean;
   error: string | null;
 
-  loadExpenses: (householdId: string) => Promise<void>;
+  loadExpenses: () => Promise<void>;
   subscribeExpenses: (householdId: string) => () => void;
-
-  addLocal: (e: Expense) => void;
-  replaceAll: (list: Expense[]) => void;
+  setLoading: (value: boolean) => void;
+  setError: (msg: string | null) => void;
+  addLocal: (e: ExpenseRecord) => void;
+  replaceAll: (list: ExpenseRecord[]) => void;
   clear: () => void;
-  findExpenseById: (id: string) => Expense | undefined;
+  findExpenseById: (id: string) => ExpenseRecord | undefined;
 };
 
 export const useExpenses = create<ExpensesState>((set, get) => ({
@@ -21,11 +23,14 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
   loading: false,
   error: null,
 
-  async loadExpenses(householdId) {
+  setLoading: value => set({ loading: value }),
+  setError: msg => set({ error: msg }),
+
+  async loadExpenses() {
     set({ loading: true, error: null });
     try {
-      const data = await getExpenses(householdId); // ← עכשיו Firebase
-      set({ expenses: data, loading: false });
+      const data = await getExpenses(DEV_HOUSEHOLD_ID);
+      set({ expenses: data, loading: false, error: null });
     } catch (e: any) {
       set({ error: e?.message || 'Fetch failed', loading: false });
     }
@@ -36,14 +41,14 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
     set({ loading: true, error: null });
     const unsubscribe = watchExpenses(
       householdId,
-      rows => set({ expenses: rows, loading: false }),
+      rows => set({ expenses: rows, loading: false, error: null }),
       err => set({ error: err.message, loading: false }),
     );
     return unsubscribe; // חשוב: לקרוא לו ב-cleanup
   },
 
   findExpenseById: (id: string) =>
-    get().expenses.find((element: Expense) => element.id === id),
+    get().expenses.find((element: ExpenseRecord) => element.id === id),
 
   addLocal(expense) {
     set(state => ({ expenses: [expense, ...state.expenses] }));

@@ -2,6 +2,7 @@ import auth from '@react-native-firebase/auth';
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore';
+import { ExpenseCreateInput, ExpenseRecord } from '../../shared/expense';
 
 export type Expense = {
   id: string;
@@ -29,7 +30,9 @@ export async function ensureSignedIn() {
   return auth().currentUser!;
 }
 
-export async function addExpense(input: NewExpenseInput) {
+export async function addExpense(
+  input: ExpenseCreateInput & { householdId: string },
+): Promise<ExpenseRecord> {
   await ensureSignedIn();
 
   const createdBy = auth().currentUser?.uid ?? 'unknown';
@@ -42,7 +45,21 @@ export async function addExpense(input: NewExpenseInput) {
       createdAt: firestore.FieldValue.serverTimestamp(),
     });
 
-  return docRef.id;
+  const snap = await docRef.get();
+  const raw = snap.data()!;
+  const ts = raw.createdAt as FirebaseFirestoreTypes.Timestamp | undefined;
+
+  return {
+    id: docRef.id,
+    householdId: raw.householdId,
+    amount: raw.amount,
+    categoryId: raw.categoryId,
+    subCategoryId: raw.subCategoryId ?? null,
+    paymentMethod: raw.paymentMethod,
+    createdAt: ts?.toDate?.() ?? null,
+    createdBy: raw.createdBy,
+    note: raw.note,
+  };
 }
 
 export async function getExpensesOnce(householdId: string): Promise<Expense[]> {

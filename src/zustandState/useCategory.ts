@@ -1,26 +1,22 @@
 import { create } from 'zustand';
-import { fetchCategories } from '../api/api';
-import { IconKey } from '../assets/icons';
-
-export type CategoryType = {
-  categoryId: string;
-  categoryName: string;
-  maxAmount: number;
-  isExceed: boolean;
-  icon?: IconKey;
-  subCategories: SubCategoryType[];
-};
-
-export type SubCategoryType = {
-  subCategoryId: string;
-  subCategoryName: string;
-  icon?: IconKey | undefined;
-};
+import type { CategoryType, SubCategoryType } from '../shared/categoryType';
+import {
+  fetchCategoriesForHousehold,
+  seedCategoriesIfEmpty,
+  subscribeCategoriesForHousehold,
+} from '../firebase/services/categories';
+import { DEV_HOUSEHOLD_ID } from '../config/consts';
 
 type CategoryStateType = {
   categories: CategoryType[];
+  loading: boolean;
+  error: string | null;
   // addCategory: (categoryName: string, maxAmount: number) => void;
+  setLoading: (value: boolean) => void;
+  setError: (msg: string | null) => void;
   loadCategories: () => Promise<void>;
+  // ריל-טיים: פותח מנוי ומחזיר פונקציית ביטול
+  subscribe: () => () => void;
   findCategoryById: (categoryId: string) => CategoryType | undefined;
   findSubCategoryById: (
     categoryId: string,
@@ -31,10 +27,33 @@ type CategoryStateType = {
 
 export const useCategory = create<CategoryStateType>((set, get) => ({
   categories: [],
+  loading: false,
+  error: null,
+
+  setLoading: value => set({ loading: value }),
+  setError: msg => set({ error: msg }),
+
+  // realtime
+  subscribe: () => {
+    set({ error: null });
+    const unsub = subscribeCategoriesForHousehold(
+      DEV_HOUSEHOLD_ID,
+      rows => set({ categories: rows }),
+      err => set({ error: err.message }),
+    );
+    return unsub;
+  },
 
   loadCategories: async () => {
-    const categories = await fetchCategories();
-    set({ categories });
+    set({ loading: true, error: null });
+    try {
+      await seedCategoriesIfEmpty(DEV_HOUSEHOLD_ID);
+      const rows = await fetchCategoriesForHousehold(DEV_HOUSEHOLD_ID);
+      set({ categories: rows, loading: false });
+      set({ loading: true, error: null });
+    } catch (e: any) {
+      set({ error: e?.message ?? 'Load failed', loading: false });
+    }
   },
   // addCategory: (categoryName: string, maxAmount: number) => {
   //   const newCategory = {

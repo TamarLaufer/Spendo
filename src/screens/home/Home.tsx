@@ -5,14 +5,26 @@ import { useExpenses } from '../../zustandState/useExpenses';
 import LastExpenses from '../../components/lastExpenses/LastExpenses';
 import Logo from '../../assets/icons/graph.svg';
 import Balance from '../../components/balance/Balance';
+import { useCategory } from '../../zustandState/useCategory';
+import { DEV_HOUSEHOLD_ID } from '../../config/consts';
 
 const Home = () => {
   const loadExpenses = useExpenses(state => state.loadExpenses);
+  const subscribeExpenses = useExpenses(state => state.subscribeExpenses);
+  const loadCategories = useCategory(state => state.loadCategories);
+  const subscribeCategories = useCategory(state => state.subscribe);
 
-  const householdId = 'SHARED_HOUSEHOLD_ID'; // זמני עד שיהיה בחירה/הזמנה
   useEffect(() => {
-    loadExpenses(householdId);
-  }, [loadExpenses, householdId]);
+    loadExpenses();
+    loadCategories().catch(console.error);
+
+    const unsubExp = subscribeExpenses(DEV_HOUSEHOLD_ID);
+    const unsubCat = subscribeCategories?.();
+    return () => {
+      unsubExp?.();
+      unsubCat?.();
+    };
+  }, [loadExpenses, loadCategories, subscribeExpenses, subscribeCategories]);
 
   return (
     <ScreenLayout>

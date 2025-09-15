@@ -1,0 +1,1 @@
+export const DEV_HOUSEHOLD_ID = 'HOUSEHOLD_SHARED_ID';

@@ -6,7 +6,7 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native';
-import z from 'zod';
+import { z } from 'zod';
 import { formatAmount } from '../../functions/functions';
 import { theme } from '../../theme/theme';
 import { useForm } from 'react-hook-form';

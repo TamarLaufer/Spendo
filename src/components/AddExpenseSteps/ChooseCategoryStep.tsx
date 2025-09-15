@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { STRINGS } from '../../strings/hebrew';
 import { useCategory } from '../../zustandState/useCategory';
 import TransactionList from '../TransactionList/TransactionList';
 import { Icons } from '../../assets/icons';
+import AddCategory from '../AddCategory';
 
 const ChooseCategoryStep = () => {
   const { categoryId, setCategoryId } = useExpenseWizard();
@@ -28,7 +28,7 @@ const ChooseCategoryStep = () => {
         })}
         icon={Icons.Market}
       />
-      <Text>{STRINGS.ADD_CATEGORY}</Text>
+      <AddCategory />
     </View>
   );
 };

@@ -54,8 +54,6 @@ const ExpensesListView = ({
     });
   };
 
-  const possibleDataFailor = error || loading || data.length === 0;
-
   const DATE_OPTS: Intl.DateTimeFormatOptions = {
     // year: 'numeric',
     month: '2-digit',
@@ -76,18 +74,14 @@ const ExpensesListView = ({
           <Text style={styles.header}>{STRINGS.LAST_EXPENSES}</Text>
         </View>
       )}
-      {possibleDataFailor ? (
-        <View style={styles.dataMissingContainer}>
-          {loading && <ActivityIndicator />}
-          {error && (
-            <Text style={styles.serverError}>
-              תקלה בשרת כרגע, אנא נסו במועד מאוחר יותר
-            </Text>
-          )}
-          {data.length === 0 && (
-            <Text style={styles.noExpenses}>אין עדיין הוצאות</Text>
-          )}
-        </View>
+      {loading ? (
+        <ActivityIndicator />
+      ) : error ? (
+        <Text style={styles.serverError}>
+          תקלה בשרת כרגע, אנא נסו במועד מאוחר יותר
+        </Text>
+      ) : data.length === 0 ? (
+        <Text style={styles.noExpenses}>אין עדיין הוצאות</Text>
       ) : (
         <TransactionList
           data={data}
