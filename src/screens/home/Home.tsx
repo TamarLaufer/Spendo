@@ -13,13 +13,31 @@ const Home = () => {
   const subscribeExpenses = useExpenses(state => state.subscribeExpenses);
   const loadCategories = useCategory(state => state.loadCategories);
   const subscribeCategories = useCategory(state => state.subscribe);
+  const expError = useExpenses(s => s.error);
+  const catError = useCategory(s => s.error);
+
+  React.useEffect(() => {
+    if (expError) console.log('[Home] expenses.error =', expError);
+    if (catError) console.log('[Home] categories.error =', catError);
+  }, [expError, catError]);
 
   useEffect(() => {
-    loadExpenses();
-    loadCategories().catch(console.error);
+    let unsubExp: (() => void) | undefined;
+    let unsubCat: (() => void) | undefined;
 
-    const unsubExp = subscribeExpenses(DEV_HOUSEHOLD_ID);
-    const unsubCat = subscribeCategories?.();
+    (async () => {
+      try {
+        await loadExpenses();
+        await loadCategories();
+
+        unsubExp = subscribeExpenses(DEV_HOUSEHOLD_ID);
+        unsubCat = subscribeCategories?.();
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+
+    // 3) cleanup בעת עזיבת המסך
     return () => {
       unsubExp?.();
       unsubCat?.();

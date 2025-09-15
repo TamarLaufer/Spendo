@@ -9,8 +9,13 @@ import {
 import React, { useState } from 'react';
 import { addCategory } from '../firebase/services/categoriesCrud';
 import { useCategory } from '../zustandState/useCategory';
+import { theme } from '../theme/theme';
 
-const AddCategory = () => {
+type AddCategoryPropsType = {
+  setDisplayAddCategory: (value: boolean) => void;
+};
+
+const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [categoryName, setCategoryName] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
   const [submitLoader, setSubmitLoder] = useState(false);
@@ -18,7 +23,6 @@ const AddCategory = () => {
 
   const setError = useCategory(state => state.setError);
   const loadCategories = useCategory(state => state.loadCategories);
-  const loading = useCategory(state => state.loading);
 
   const handleAddCategoryPress = async () => {
     const amountNum = Number(maxAmount || 0);
@@ -30,6 +34,7 @@ const AddCategory = () => {
       setCategoryName('');
       setMaxAmount('');
       setError(null);
+      setDisplayAddCategory(false);
     } catch (e: any) {
       setSubmitError(e?.message ?? 'Failed to add category');
     } finally {
@@ -59,9 +64,9 @@ const AddCategory = () => {
       <Pressable
         onPress={handleAddCategoryPress}
         style={styles.button}
-        disabled={loading}
+        disabled={submitLoader}
       >
-        <Text style={styles.buttonText}>הוסף קטגוריה</Text>
+        <Text style={styles.buttonText}>הוספה</Text>
       </Pressable>
     </View>
   );
@@ -80,12 +85,12 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 12,
-    backgroundColor: '#321d63',
-    padding: 12,
+    backgroundColor: theme.color.lightGreen,
+    padding: 14,
     borderRadius: 12,
     alignItems: 'center',
   },
-  buttonText: { color: 'white', fontWeight: '700' },
+  buttonText: { color: 'white', fontSize: 18, fontWeight: '700' },
   error: {
     color: 'red',
   },

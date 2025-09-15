@@ -38,13 +38,12 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
 
   //real-time
   subscribeExpenses(householdId) {
-    set({ loading: true, error: null });
     const unsubscribe = watchExpenses(
       householdId,
-      rows => set({ expenses: rows, loading: false, error: null }),
-      err => set({ error: err.message, loading: false }),
+      rows => set({ expenses: rows, error: null }),
+      err => set({ error: err.message }),
     );
-    return unsubscribe; // חשוב: לקרוא לו ב-cleanup
+    return unsubscribe;
   },
 
   findExpenseById: (id: string) =>

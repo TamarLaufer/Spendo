@@ -33,13 +33,12 @@ export const useCategory = create<CategoryStateType>((set, get) => ({
   setLoading: value => set({ loading: value }),
   setError: msg => set({ error: msg }),
 
-  // realtime
   subscribe: () => {
-    set({ error: null });
+    set({ loading: true, error: null });
     const unsub = subscribeCategoriesForHousehold(
       DEV_HOUSEHOLD_ID,
-      rows => set({ categories: rows }),
-      err => set({ error: err.message }),
+      rows => set({ categories: rows, loading: false, error: null }),
+      err => set({ error: err.message, loading: false }),
     );
     return unsub;
   },
@@ -49,8 +48,7 @@ export const useCategory = create<CategoryStateType>((set, get) => ({
     try {
       await seedCategoriesIfEmpty(DEV_HOUSEHOLD_ID);
       const rows = await fetchCategoriesForHousehold(DEV_HOUSEHOLD_ID);
-      set({ categories: rows, loading: false });
-      set({ loading: true, error: null });
+      set({ categories: rows, loading: false, error: null });
     } catch (e: any) {
       set({ error: e?.message ?? 'Load failed', loading: false });
     }

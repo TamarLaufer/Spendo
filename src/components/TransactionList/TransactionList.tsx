@@ -6,8 +6,8 @@ import { SvgProps } from 'react-native-svg';
 
 type TransactionListProps<T> = {
   data: readonly T[];
-  mapItem: (item: T, index: number) => TransactionRowProps;
-  keyExtractor?: (item: T, index: number) => string;
+  mapItem: (item: T) => TransactionRowProps;
+  keyExtractor?: (item: T) => string;
   icon?: React.ComponentType<SvgProps>;
   amount?: number;
 };
@@ -22,8 +22,8 @@ const TransactionList = <T,>({
   return (
     <>
       {data.map((item, index) => {
-        const rowProps = mapItem(item, index);
-        const key = keyExtractor ? keyExtractor(item, index) : String(index);
+        const rowProps = mapItem(item);
+        const key = keyExtractor ? keyExtractor(item) : String(index);
         return (
           <TransactionRow key={key} {...rowProps} icon={icon} amount={amount} />
         );

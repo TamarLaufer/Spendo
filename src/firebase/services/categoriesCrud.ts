@@ -9,15 +9,18 @@ export async function addCategory(input: {
   icon?: string;
 }) {
   const ref = firestore().collection('categories').doc();
+
   await ref.set({
     householdId: DEV_HOUSEHOLD_ID,
     categoryName: input.categoryName,
     maxAmount: input.maxAmount,
-    icon: input?.icon ?? input.icon,
+    icon: input?.icon ?? null,
     order: Date.now(),
     active: true,
     subCategories: [] as Sub[],
   });
+  console.log(ref.id);
+
   return ref.id;
 }
 
