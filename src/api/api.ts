@@ -1,6 +1,6 @@
 import {
   addExpense,
-  getExpensesOnce,
+  fetchExpenses,
   subscribeToExpenses,
 } from '../firebase/services/expenses';
 
@@ -17,7 +17,7 @@ export async function fetchCategories(): Promise<CategoryType[]> {
 export async function getExpenses(
   householdId: string,
 ): Promise<ExpenseRecord[]> {
-  return getExpensesOnce(householdId);
+  return fetchExpenses(householdId);
 }
 
 export async function createExpense(

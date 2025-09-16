@@ -22,15 +22,22 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const setError = useCategory(state => state.setError);
-  const loadCategories = useCategory(state => state.loadCategories);
 
   const handleAddCategoryPress = async () => {
-    const amountNum = Number(maxAmount || 0);
+    if (!categoryName.trim()) {
+      setSubmitError('נא להזין שם קטגוריה');
+      return;
+    }
+    const amountNum = Number(maxAmount);
+    if (!Number.isFinite(amountNum) || amountNum < 0) {
+      setSubmitError('תקציב חייב להיות מספר תקין');
+      return;
+    }
+
     setSubmitLoder(true);
     setSubmitError(null);
     try {
       await addCategory({ categoryName, maxAmount: amountNum });
-      await loadCategories();
       setCategoryName('');
       setMaxAmount('');
       setError(null);

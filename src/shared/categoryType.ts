@@ -3,7 +3,7 @@ import type { IconKey } from '../assets/icons';
 export type SubCategoryType = {
   subCategoryId: string;
   subCategoryName: string;
-  icon?: IconKey;
+  icon?: IconKey | null;
 };
 
 export type CategoryType = {
@@ -11,6 +11,6 @@ export type CategoryType = {
   categoryName: string;
   maxAmount: number;
   isExceed: boolean;
-  icon?: IconKey;
+  icon?: IconKey | null;
   subCategories: SubCategoryType[];
 };

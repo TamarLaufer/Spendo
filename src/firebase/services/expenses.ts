@@ -1,10 +1,49 @@
-import auth from '@react-native-firebase/auth';
-import firestore, {
-  FirebaseFirestoreTypes,
+// src/firebase/services/expenses.ts
+import { getApp } from '@react-native-firebase/app';
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+  Timestamp,
+  type FirebaseFirestoreTypes as FirestoreTypes,
 } from '@react-native-firebase/firestore';
-import { ExpenseCreateInput, ExpenseRecord } from '../../shared/expense';
 
-export type Expense = {
+import {
+  ExpenseCreateSchema,
+  ExpenseUpdateSchema,
+  ExpenseRecordSchema,
+  type ExpenseCreateInput,
+  type ExpenseUpdatePatch,
+} from '../../shared/expense';
+
+// ---------- Firestore init ----------
+const applicationInstance = getApp();
+const firestoreDatabase = getFirestore(applicationInstance);
+
+// ---------- Firestore document shape (DB) ----------
+export type ExpenseFirebaseDoc = {
+  householdId: string;
+  amount: number;
+  categoryId: string;
+  subCategoryId?: string | null;
+  note?: string | null;
+  paymentMethod?: string | null;
+  createdBy?: string | null;
+  createdAt: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
+  updatedAt?: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
+};
+
+// ---------- UI model (what the app uses) ----------
+export type ExpenseModel = {
   id: string;
   householdId: string;
   amount: number;
@@ -13,118 +52,193 @@ export type Expense = {
   paymentMethod: string;
   createdAt: Date | null;
   createdBy?: string;
+  note?: string;
 };
 
-export type NewExpenseInput = {
-  householdId: string;
-  amount: number;
-  categoryId: string;
-  subCategoryId: string | null;
-  paymentMethod: string;
-};
-
-export async function ensureSignedIn() {
-  if (!auth().currentUser) {
-    await auth().signInAnonymously();
-  }
-  return auth().currentUser!;
+// ---------- Helpers ----------
+function convertUiTimeToFirestoreTimestamp(
+  value: Date | string | FirestoreTypes.Timestamp | null | undefined,
+): FirestoreTypes.Timestamp | null {
+  if (value == null) return null;
+  if (value instanceof Date) return Timestamp.fromDate(value);
+  if (typeof value === 'string') return Timestamp.fromDate(new Date(value));
+  return value;
 }
 
-export async function addExpense(
-  input: ExpenseCreateInput & { householdId: string },
-): Promise<ExpenseRecord> {
-  await ensureSignedIn();
+function isFirestoreTimestamp(
+  value: unknown,
+): value is FirestoreTypes.Timestamp {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as any).toDate === 'function'
+  );
+}
 
-  const createdBy = auth().currentUser?.uid ?? 'unknown';
+function isJavaScriptDate(value: unknown): value is Date {
+  return value instanceof Date;
+}
 
-  const docRef = await firestore()
-    .collection('expenses')
-    .add({
-      ...input,
-      createdBy,
-      createdAt: firestore.FieldValue.serverTimestamp(),
-    });
+function convertFirestoreTimeToDate(
+  value:
+    | FirestoreTypes.FieldValue
+    | FirestoreTypes.Timestamp
+    | Date
+    | null
+    | undefined,
+): Date | null {
+  if (value == null) return null;
+  if (isFirestoreTimestamp(value)) return value.toDate();
+  if (isJavaScriptDate(value)) return value;
+  // כאן זה כנראה FieldValue (serverTimestamp) או משהו אחר לא מוכר – נחזיר null ל-UI
+  return null;
+}
 
-  const snap = await docRef.get();
-  const raw = snap.data()!;
-  const ts = raw.createdAt as FirebaseFirestoreTypes.Timestamp | undefined;
+// ---------- Mapper: Firestore → UI ----------
+type ExpenseQueryDocumentSnapshot =
+  FirestoreTypes.QueryDocumentSnapshot<ExpenseFirebaseDoc>;
 
-  return {
-    id: docRef.id,
-    householdId: raw.householdId,
-    amount: raw.amount,
-    categoryId: raw.categoryId,
-    subCategoryId: raw.subCategoryId ?? null,
-    paymentMethod: raw.paymentMethod,
-    createdAt: ts?.toDate?.() ?? null,
-    createdBy: raw.createdBy,
-    note: raw.note,
+function mapExpenseSnapshotToModel(
+  expenseDocumentSnapshot: ExpenseQueryDocumentSnapshot,
+): ExpenseModel {
+  const documentData = expenseDocumentSnapshot.data();
+
+  const mapped: ExpenseModel = {
+    id: expenseDocumentSnapshot.id,
+    householdId: documentData.householdId,
+    amount: documentData.amount,
+    categoryId: documentData.categoryId,
+    subCategoryId: documentData.subCategoryId ?? null,
+    paymentMethod: documentData.paymentMethod ?? '',
+    createdAt: convertFirestoreTimeToDate(documentData.createdAt),
+    createdBy: documentData.createdBy ?? undefined,
+    note: documentData.note ?? undefined,
   };
+
+  // Optional runtime validation for the UI shape
+  ExpenseRecordSchema.parse(mapped);
+  return mapped;
 }
 
-export async function getExpensesOnce(householdId: string): Promise<Expense[]> {
-  await ensureSignedIn();
+// ---------- Queries ----------
+export async function fetchExpenses(householdId: string) {
+  const expensesCollectionReference = collection(firestoreDatabase, 'expenses');
+  const expensesQuery = query(
+    expensesCollectionReference,
+    where('householdId', '==', householdId),
+    orderBy('createdAt', 'desc'),
+  );
 
-  const queryRef = firestore()
-    .collection('expenses')
-    .where('householdId', '==', householdId)
-    .orderBy('createdAt', 'desc');
-
-  const snapshot = await queryRef.get();
-
-  return snapshot.docs.map(docSnap => {
-    const raw = docSnap.data();
-
-    const createdAtTimestamp = raw.createdAt as
-      | FirebaseFirestoreTypes.Timestamp
-      | undefined;
-    const createdAt = createdAtTimestamp?.toDate?.() ?? null;
-
-    return {
-      id: docSnap.id,
-      householdId: raw.householdId,
-      amount: raw.amount,
-      categoryId: raw.categoryId,
-      subCategoryId: raw.subCategoryId ?? null,
-      paymentMethod: raw.paymentMethod,
-      createdAt,
-      createdBy: raw.createdBy,
-    } as Expense;
-  });
+  const expensesQuerySnapshot = await getDocs(expensesQuery);
+  const rows = expensesQuerySnapshot.docs.map(
+    (expenseSnapshot: ExpenseQueryDocumentSnapshot) =>
+      mapExpenseSnapshotToModel(expenseSnapshot),
+  );
+  return rows;
 }
 
 export function subscribeToExpenses(
   householdId: string,
-  onChange: (rows: Expense[]) => void,
-  onError?: (err: Error) => void,
+  onChange: (rows: ExpenseModel[]) => void,
+  onError?: (error: Error) => void,
 ) {
-  const queryRef = firestore()
-    .collection('expenses')
-    .where('householdId', '==', householdId)
-    .orderBy('createdAt', 'desc');
+  const expensesCollectionReference = collection(firestoreDatabase, 'expenses');
+  const expensesQuery = query(
+    expensesCollectionReference,
+    where('householdId', '==', householdId),
+    orderBy('createdAt', 'desc'),
+  );
 
-  const unsubscribe = queryRef.onSnapshot({
-    next: snapshot => {
-      const rows = snapshot.docs.map(docSnap => {
-        const raw = docSnap.data();
-        const ts = raw.createdAt as
-          | FirebaseFirestoreTypes.Timestamp
-          | undefined;
-        return {
-          id: docSnap.id,
-          householdId: raw.householdId,
-          amount: raw.amount,
-          categoryId: raw.categoryId,
-          subCategoryId: raw.subCategoryId ?? null,
-          paymentMethod: raw.paymentMethod,
-          createdAt: ts?.toDate?.() ?? null,
-          createdBy: raw.createdBy,
-        } as Expense;
-      });
+  const unsubscribe = onSnapshot(
+    expensesQuery,
+    snapshot => {
+      const rows = snapshot.docs.map(
+        (expenseSnapshot: ExpenseQueryDocumentSnapshot) =>
+          mapExpenseSnapshotToModel(expenseSnapshot),
+      );
       onChange(rows);
     },
-    error: error => onError?.(error as any),
-  });
+    error => onError?.(error as unknown as Error),
+  );
 
   return unsubscribe;
+}
+
+// ---------- Create ----------
+export async function addExpense(createInput: ExpenseCreateInput) {
+  const validatedCreateInput = ExpenseCreateSchema.parse(createInput);
+
+  const firestorePayload: ExpenseFirebaseDoc = {
+    householdId: validatedCreateInput.householdId,
+    amount: validatedCreateInput.amount,
+    categoryId: validatedCreateInput.categoryId,
+    subCategoryId: validatedCreateInput.subCategoryId ?? null,
+    note: validatedCreateInput.note ?? null,
+    paymentMethod: validatedCreateInput.paymentMethod ?? null,
+    createdBy: null,
+    createdAt: validatedCreateInput.createdAt
+      ? convertUiTimeToFirestoreTimestamp(validatedCreateInput.createdAt)
+      : serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+
+  const newExpenseReference = await addDoc(
+    collection(firestoreDatabase, 'expenses'),
+    firestorePayload,
+  );
+  return newExpenseReference.id;
+}
+
+// ---------- Update (partial) ----------
+export async function updateExpense(
+  expenseId: string,
+  updatePatch: ExpenseUpdatePatch,
+) {
+  const validatedUpdatePatch = ExpenseUpdateSchema.parse(updatePatch);
+  const expenseDocumentReference = doc(
+    firestoreDatabase,
+    'expenses',
+    expenseId,
+  );
+
+  const updatePayload: Partial<ExpenseFirebaseDoc> = {
+    updatedAt: serverTimestamp(),
+  };
+
+  if (validatedUpdatePatch.amount !== undefined) {
+    updatePayload.amount = validatedUpdatePatch.amount;
+  }
+  if (validatedUpdatePatch.categoryId !== undefined) {
+    updatePayload.categoryId = validatedUpdatePatch.categoryId;
+  }
+  if (validatedUpdatePatch.subCategoryId !== undefined) {
+    updatePayload.subCategoryId = validatedUpdatePatch.subCategoryId ?? null;
+  }
+  if (validatedUpdatePatch.note !== undefined) {
+    updatePayload.note = validatedUpdatePatch.note ?? null;
+  }
+  if (validatedUpdatePatch.paymentMethod !== undefined) {
+    updatePayload.paymentMethod = validatedUpdatePatch.paymentMethod ?? null;
+  }
+  if (validatedUpdatePatch.createdBy !== undefined) {
+    updatePayload.createdBy = validatedUpdatePatch.createdBy ?? null;
+  }
+  if (validatedUpdatePatch.createdAt !== undefined) {
+    updatePayload.createdAt =
+      validatedUpdatePatch.createdAt === null
+        ? null
+        : convertUiTimeToFirestoreTimestamp(validatedUpdatePatch.createdAt);
+  }
+
+  await updateDoc(expenseDocumentReference, updatePayload as any);
+}
+
+// ---------- Delete ----------
+export async function deleteExpense(expenseId: string) {
+  const expenseDocumentReference = doc(
+    firestoreDatabase,
+    'expenses',
+    expenseId,
+  );
+  await deleteDoc(expenseDocumentReference);
 }
