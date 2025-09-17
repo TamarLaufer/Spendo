@@ -1,45 +1,31 @@
-import type { SvgProps } from 'react-native-svg';
 import CancelX from './close-svgrepo.svg';
 import Back from './back-comback-hom-svgrepo.svg';
 import Market from './supersal.svg';
 import Payment from './payment.svg';
 import Car from './car.svg';
+import Classes from './classes.svg';
+import Health from './health.svg';
 
+//other icons
 export const Icons = {
   CancelX,
   Back,
   Market,
   Payment,
   Car,
+  Classes,
+  Health,
 };
 
-export type IconKey = 'market' | 'back' | 'cancelX' | 'payment' | 'car';
-
-export const IconRegistry: Record<IconKey, React.ComponentType<SvgProps>> = {
+//categories icons
+export const IconRegistry = {
   market: Market,
   back: Back,
   cancelX: CancelX,
   payment: Payment,
   car: Car,
-};
+  classes: Classes,
+  health: Health,
+} as const;
 
-export function ExpenseIcon({
-  iconId,
-  categoryId,
-  size = 20,
-}: {
-  iconId?: IconKey;
-  categoryId: string;
-  size?: number;
-}) {
-  const candidate = iconId ?? categoryId;
-
-  function isIconKey(key: string): key is IconKey {
-    return key in IconRegistry;
-  }
-
-  if (!candidate || !isIconKey(candidate)) return null;
-  if (!candidate) return null;
-  const Comp = IconRegistry[candidate];
-  return <Comp width={size} height={size} />;
-}
+export type IconKey = keyof typeof IconRegistry;

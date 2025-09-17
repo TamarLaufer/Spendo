@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, { useState } from 'react';
-import { addCategory } from '../firebase/services/categoriesCrud';
+import { addCategory } from '../firebase/services/categories';
 import { useCategory } from '../zustandState/useCategory';
 import { theme } from '../theme/theme';
 
@@ -37,7 +37,9 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
     setSubmitLoder(true);
     setSubmitError(null);
     try {
-      await addCategory({ categoryName, maxAmount: amountNum });
+      await addCategory({ categoryName, maxAmount: Number(maxAmount) });
+      console.log({ categoryName });
+
       setCategoryName('');
       setMaxAmount('');
       setError(null);
@@ -79,8 +81,6 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   );
 };
 
-export default AddCategory;
-
 const styles = StyleSheet.create({
   container: { padding: 16, gap: 10 },
   label: { fontSize: 14, fontWeight: '600' },
@@ -102,3 +102,5 @@ const styles = StyleSheet.create({
     color: 'red',
   },
 });
+
+export default AddCategory;

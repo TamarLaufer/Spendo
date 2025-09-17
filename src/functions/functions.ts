@@ -38,3 +38,30 @@ export const getPaymentMethodLabel = (method: PaymentMethods): string => {
       return 'לא ידוע';
   }
 };
+
+const DATE_OPTS: Intl.DateTimeFormatOptions = {
+  // year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+};
+
+export const formatIsoDate = (
+  input: Date | string | null | undefined,
+): string => {
+  if (input == null) return '';
+  const date = input instanceof Date ? input : new Date(input);
+  if (Number.isNaN(date.getTime())) return '';
+
+  return date.toLocaleDateString('he-IL', DATE_OPTS);
+};
+
+export function formatShortDate(value?: Date | null): string {
+  if (!value) return '';
+  const d = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(d.getTime())) return '';
+  return new Intl.DateTimeFormat('he-IL', {
+    day: 'numeric',
+    month: 'numeric',
+    year: '2-digit',
+  }).format(d);
+}

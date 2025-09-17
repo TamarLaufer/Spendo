@@ -3,9 +3,9 @@ import { View, StyleSheet, Pressable, Text } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useCategory } from '../../zustandState/useCategory';
 import TransactionList from '../TransactionList/TransactionList';
-import { Icons } from '../../assets/icons';
 import AddCategory from '../AddCategory';
 import { theme } from '../../theme/theme';
+import { IconRegistry } from '../../assets/icons';
 
 const ChooseCategoryStep = () => {
   const { categoryId, setCategoryId } = useExpenseWizard();
@@ -23,12 +23,12 @@ const ChooseCategoryStep = () => {
       <TransactionList
         keyExtractor={category => category.categoryId}
         data={categoriesList}
-        mapItem={c => ({
-          text: c.categoryName,
-          onPress: () => handleCategorySelect(c.categoryId),
-          selected: c.categoryId === categoryId,
+        mapItem={category => ({
+          text: category.categoryName,
+          onPress: () => handleCategorySelect(category.categoryId),
+          selected: category.categoryId === categoryId,
+          icon: category?.icon ? IconRegistry[category.icon] : undefined,
         })}
-        icon={Icons.Market}
       />
       {!isdisplayAddCategory && (
         <Pressable

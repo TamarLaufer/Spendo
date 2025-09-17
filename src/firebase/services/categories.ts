@@ -1,6 +1,3 @@
-// src/firebase/services/categories.ts  (MODULAR, drop-in)
-
-// ---- Imports ----
 import { getApp } from '@react-native-firebase/app';
 import {
   getFirestore,
@@ -13,10 +10,16 @@ import {
   writeBatch,
   doc,
   limit,
+  addDoc,
+  updateDoc,
+  arrayUnion,
+  serverTimestamp,
+  type FirebaseFirestoreTypes as FirestoreTypes,
 } from '@react-native-firebase/firestore';
-import type { FirebaseFirestoreTypes as FirestoreTypes } from '@react-native-firebase/firestore';
 import type { IconKey } from '../../assets/icons';
+import { DEV_HOUSEHOLD_ID } from '../../config/consts';
 
+// ---- Types ----
 export type SubCategoryDocType = {
   subCategoryId: string;
   subCategoryName: string;
@@ -33,30 +36,32 @@ export type CategoryFirebaseDoc = {
   order?: number;
   active?: boolean;
   subCategories: SubCategoryDocType[];
+  // אופציונלי: אם תרצי עקבות זמן במסמך
+  createdAt?: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
+  updatedAt?: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
 };
 
 // ---- Firestore init ----
-const appInstance = getApp(); // Inought if there is only one Application
+const appInstance = getApp();
 const firestoreDb = getFirestore(appInstance);
 
 // ---- Helper types ----
-// סנאפשוט שמגיע מרשימה/שאילתה (מסמך שקיים בוודאות)
 type CategoryDocSnap =
   FirestoreTypes.QueryDocumentSnapshot<FirestoreTypes.DocumentData>;
 
-// פונקציית מיפוי למסמך ← מודל שמסך צורך
-function mapDocToCategoryType(docSnap: CategoryDocSnap) {
+// ---- Mapper: Firestore → UI ----
+function mapCategorySnapshotToModel(docSnap: CategoryDocSnap) {
   const data = docSnap.data() as CategoryFirebaseDoc;
   return {
     categoryId: docSnap.id,
     categoryName: data.categoryName,
     maxAmount: data.maxAmount,
-    isExceed: false, // מחושב בקליינט
+    isExceed: false, // מחושב בצד הלקוח
     icon: data.icon,
     subCategories: (data.subCategories ?? []).map(s => ({
       subCategoryId: s.subCategoryId,
       subCategoryName: s.subCategoryName,
-      icon: s.icon,
+      icon: s.icon ?? null,
     })),
   };
 }
@@ -71,15 +76,12 @@ export async function fetchCategoriesForHousehold(householdId: string) {
   );
 
   const querySnapshot = await getDocs(categoriesQuery);
-  const rows = querySnapshot.docs.map((docSnap: CategoryDocSnap) =>
-    mapDocToCategoryType(docSnap),
-  );
-  return rows;
+  return querySnapshot.docs.map(mapCategorySnapshotToModel as any);
 }
 
 export function subscribeCategoriesForHousehold(
   householdId: string,
-  onChange: (rows: ReturnType<typeof mapDocToCategoryType>[]) => void,
+  onChange: (rows: ReturnType<typeof mapCategorySnapshotToModel>[]) => void,
   onError?: (e: Error) => void,
 ) {
   const categoriesRef = collection(firestoreDb, 'categories');
@@ -89,30 +91,63 @@ export function subscribeCategoriesForHousehold(
     orderBy('order', 'asc'),
   );
 
-  // שני ארגומנטים – קריא וברור
   return onSnapshot(
     categoriesQuery,
     snap => {
-      const rows = snap.docs.map((docSnap: CategoryDocSnap) =>
-        mapDocToCategoryType(docSnap),
-      );
+      const rows = snap.docs.map(mapCategorySnapshotToModel as any);
       onChange(rows);
     },
     err => onError?.(err as unknown as Error),
   );
 }
 
-// ---- Seeding (אם אין קטגוריות) ----
-export async function seedCategoriesIfEmpty(householdId: string) {
+// ---- Create category ----
+export async function addCategory(input: {
+  categoryName: string;
+  maxAmount: number;
+  icon?: IconKey | null;
+  order?: number;
+  active?: boolean;
+  householdId?: string; // אם לא תשלחי – נשתמש ב-DEV_HOUSEHOLD_ID
+}) {
   const categoriesRef = collection(firestoreDb, 'categories');
 
-  // check if exist
+  const payload: CategoryFirebaseDoc = {
+    householdId: input.householdId ?? DEV_HOUSEHOLD_ID,
+    categoryName: input.categoryName.trim(),
+    maxAmount: input.maxAmount,
+    icon: input.icon ?? null,
+    order: input.order ?? Date.now(), // חשוב ל-orderBy
+    active: input.active ?? true,
+    subCategories: [],
+    // אופציונלי: עקבות זמן
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  };
+
+  const createdRef = await addDoc(categoriesRef, payload);
+  return createdRef.id; // אין צורך ב-setDoc נוסף כדי לשמור categoryId במסמך
+}
+
+// ---- Add subcategory ----
+export async function addSubCategory(
+  categoryId: string,
+  subCategory: SubCategoryDocType,
+) {
+  await updateDoc(doc(firestoreDb, 'categories', categoryId), {
+    subCategories: arrayUnion(subCategory),
+    updatedAt: serverTimestamp(),
+  });
+}
+
+// ---- Seed (אם אין קטגוריות) ----
+export async function seedCategoriesIfEmpty(householdId: string) {
+  const categoriesRef = collection(firestoreDb, 'categories');
   const existsSnap = await getDocs(
     query(categoriesRef, where('householdId', '==', householdId), limit(1)),
   );
   if (!existsSnap.empty) return;
 
-  // adding a default categories
   const defaults: Omit<CategoryFirebaseDoc, 'householdId'>[] = [
     {
       categoryName: 'מזון',
@@ -142,11 +177,12 @@ export async function seedCategoriesIfEmpty(householdId: string) {
   const batch = writeBatch(firestoreDb);
   defaults.forEach(cat => {
     const newDocRef = doc(categoriesRef); // auto-id
-    batch.set(newDocRef, { ...cat, householdId });
+    batch.set(newDocRef, {
+      ...cat,
+      householdId,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
   });
   await batch.commit();
 }
-
-// const deleteCategory = ()=>{
-
-// }

@@ -9,15 +9,14 @@ import { useCategory } from './useCategory';
 import {
   ExpenseCreateSchema,
   type ExpenseCreateInput,
-  type ExpenseRecord,
 } from '../shared/expense';
 import { createExpense } from '../api/api';
-import { useExpenses } from './useExpenses';
+import { DEV_HOUSEHOLD_ID } from '../config/consts';
 
 type ExpenseWizardStateType = {
   amount: number | null;
   categoryId: string;
-  subCategoryId: string; // ריק = אין תת־קטגוריה (נטפל בזה בבילד)
+  subCategoryId: string;
   currentStep: Steps;
   paymentMethods: readonly PaymentMethods[];
   paymentMethod: PaymentMethods['name'];
@@ -88,6 +87,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
 
     // ולידציה עם הסכימה הנכונה (Create)
     const parsed = ExpenseCreateSchema.safeParse({
+      householdId: DEV_HOUSEHOLD_ID,
       amount,
       categoryId,
       subCategoryId: subCategoryId ? subCategoryId : null,
@@ -99,13 +99,14 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
     return parsed.data; // טיפוס: ExpenseCreateInput
   },
 
-  // ⬇️ מצפה ש-createExpense יחזיר ExpenseRecord
+  // מצפה ש-createExpense יחזיר ExpenseRecord
   submitExpense: async () => {
     const payload = get().buildPayload();
+
     if (!payload) throw new Error('Incomplete expense data');
 
-    const saved: ExpenseRecord = await createExpense(payload);
-    useExpenses.getState().addLocal(saved);
+    await createExpense(payload); // ← לא שומרים ערך מוחזר
+    // אין addLocal — הרשימה תתעדכן אוטומטית מהריל־טיים
     get().handleClose();
   },
 

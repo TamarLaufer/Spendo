@@ -14,8 +14,9 @@ import { useNavigation } from '@react-navigation/native';
 import { theme } from '../../theme/theme';
 import { STRINGS } from '../../strings/hebrew';
 import TransactionList from '../TransactionList/TransactionList';
-import { formatAmount } from '../../functions/functions';
 import { useShallow } from 'zustand/shallow';
+import { IconRegistry } from '../../assets/icons';
+import { SubCategoryType } from '../../shared/categoryType';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
@@ -54,18 +55,10 @@ const ExpensesListView = ({
     });
   };
 
-  const DATE_OPTS: Intl.DateTimeFormatOptions = {
-    // year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  };
-  const formatIsoDate = (input: Date | string | null | undefined): string => {
-    if (input == null) return '';
-    const date = input instanceof Date ? input : new Date(input);
-    if (Number.isNaN(date.getTime())) return '';
-
-    return date.toLocaleDateString('he-IL', DATE_OPTS);
-  };
+  const subCategoryByCategory = (
+    subs?: SubCategoryType[],
+    id?: string | null,
+  ) => subs?.find(s => s.subCategoryId === id);
 
   return (
     <View style={styles.contentContainer}>
@@ -86,13 +79,24 @@ const ExpensesListView = ({
         <TransactionList
           data={data}
           keyExtractor={item => item.id}
-          mapItem={item => ({
-            text: `${formatAmount(item.amount)} — ${
-              findCategoryById(item.categoryId)?.categoryName ?? ''
-            } ${formatIsoDate(item.createdAt)}`,
-            onPress: () =>
-              handleExpensePress(item.id, item.subCategoryId ?? undefined),
-          })}
+          mapItem={item => {
+            const cat = findCategoryById(item.categoryId);
+            const Icon = cat?.icon ? IconRegistry[cat.icon] : undefined;
+            const sub = subCategoryByCategory(
+              cat?.subCategories,
+              item.subCategoryId,
+            );
+
+            return {
+              text: `${cat?.categoryName ?? ''}`,
+              onPress: () =>
+                handleExpensePress(item.id, item.subCategoryId ?? undefined),
+              icon: Icon,
+              createdAt: item.createdAt ?? null,
+              amount: item.amount ?? null,
+              subText: sub?.subCategoryName,
+            };
+          }}
         />
       )}
       {link && (

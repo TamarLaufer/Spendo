@@ -22,8 +22,9 @@ export async function getExpenses(
 
 export async function createExpense(
   input: ExpenseCreateInput,
-): Promise<ExpenseRecord> {
+): Promise<string> {
   // returns the id of the created document
+
   return addExpense({ ...input, householdId: DEV_HOUSEHOLD_ID });
 }
 
