@@ -11,7 +11,7 @@ import { formatAmount, formatShortDate } from '../../functions/functions';
 
 export type TransactionRowProps = {
   text: string;
-  onPress: () => void;
+  onPress?: () => void;
   textStyle?: StyleProp<TextStyle>;
   icon?: React.ComponentType<SvgProps>;
   iconSize?: number;
@@ -30,28 +30,35 @@ const TransactionRow = ({
   createdAt,
   subText,
 }: TransactionRowProps) => (
-  <Pressable style={styles.container} onPress={onPress}>
-    <View style={[styles.colBase, styles.rightContainer]}>
+  <Pressable style={styles.container} onPress={onPress} disabled={!onPress}>
+    {/* טור ימני – אייקון (רוחב קבוע) */}
+    <View style={styles.rightCol}>
       {Icon ? <Icon width={iconSize} height={iconSize} /> : null}
     </View>
 
-    <View style={[styles.colBase, styles.middleContainer]}>
-      <Text style={textStyle ?? styles.text} numberOfLines={1}>
+    {/* טור אמצעי – כותרת + תת-כותרת (גמיש) */}
+    <View style={styles.middleCol}>
+      <Text style={[styles.title, textStyle]} numberOfLines={1}>
         {text}
       </Text>
       {subText ? (
-        <Text style={styles.subText} numberOfLines={1}>
+        <Text style={styles.subTitle} numberOfLines={1}>
           {subText}
         </Text>
       ) : null}
     </View>
 
-    <View style={[styles.colBase, styles.leftContainer]}>
+    {/* טור שמאלי – סכום ותאריך (מותאם-תוכן) */}
+    <View style={styles.leftCol}>
       {typeof amount === 'number' ? (
-        <Text style={styles.textAmount}>{formatAmount(amount)}</Text>
+        <Text style={styles.amount} numberOfLines={1}>
+          {formatAmount(amount)}
+        </Text>
       ) : null}
       {createdAt ? (
-        <Text style={styles.dateText}>{formatShortDate(createdAt)}</Text>
+        <Text style={styles.date} numberOfLines={1}>
+          {formatShortDate(createdAt)}
+        </Text>
       ) : null}
     </View>
   </Pressable>
@@ -59,53 +66,40 @@ const TransactionRow = ({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: 'white',
     borderRadius: 15,
     elevation: 1.2,
     borderWidth: 2,
     borderColor: 'transparent',
     marginVertical: 5,
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    alignItems: 'center',
+    paddingHorizontal: 16,
     paddingVertical: 10,
-    justifyContent: 'center',
-  },
-  colBase: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    minWidth: 0,
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  rightContainer: {
-    // backgroundColor: 'yellow',
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  middleContainer: {
-    // backgroundColor: 'red',
-    alignItems: 'flex-start',
-    gap: 5,
+  rightCol: {
+    width: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginEnd: 8,
   },
-  leftContainer: {
-    // backgroundColor: 'green',
+  middleCol: {
+    flex: 1,
+    minWidth: 0,
+    justifyContent: 'center',
+    gap: 4,
+  },
+  leftCol: {
+    marginStart: 8,
     alignItems: 'flex-end',
-    gap: 5,
+    justifyContent: 'center',
   },
-  subText: {
-    color: '#666',
-  },
-  text: {
-    fontSize: 20,
-  },
-  textAmount: {
-    fontSize: 18,
-  },
-  dateText: {
-    color: '#666',
-  },
+
+  //
+  title: { fontSize: 18, color: '#222' },
+  subTitle: { fontSize: 14, color: '#666' },
+  amount: { fontSize: 16, color: '#222' },
+  date: { fontSize: 12, color: '#666' },
 });
 
 export default TransactionRow;

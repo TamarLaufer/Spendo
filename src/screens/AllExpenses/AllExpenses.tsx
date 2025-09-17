@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   header: {
-    fontSize: 25,
+    fontSize: 22,
+    fontWeight: '700',
   },
 });
 export default AllExpenses;
