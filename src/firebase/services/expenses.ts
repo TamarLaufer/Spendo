@@ -23,7 +23,7 @@ import {
   ExpenseRecordSchema,
   type ExpenseCreateInput,
   type ExpenseUpdatePatch,
-} from '../../shared/expense';
+} from '../../shared/expenseSchema';
 
 // ---------- Firestore init ----------
 const applicationInstance = getApp();

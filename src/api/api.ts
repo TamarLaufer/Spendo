@@ -6,7 +6,7 @@ import {
 
 import type { CategoryType } from '../shared/categoryType';
 import { fetchCategoriesForHousehold } from '../firebase/services/categories';
-import { ExpenseCreateInput, ExpenseRecord } from '../shared/expense';
+import { ExpenseCreateInput, ExpenseRecord } from '../shared/expenseSchema';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
 
 export async function fetchCategories(): Promise<CategoryType[]> {

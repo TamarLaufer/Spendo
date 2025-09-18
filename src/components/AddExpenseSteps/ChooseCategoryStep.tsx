@@ -18,6 +18,10 @@ const ChooseCategoryStep = () => {
     handleContinue();
   };
 
+  const handleDisplayAddingPress = () => {
+    setDisplayAddCategory(true);
+  };
+
   return (
     <View style={styles.container}>
       <TransactionList
@@ -33,7 +37,7 @@ const ChooseCategoryStep = () => {
       {!isdisplayAddCategory && (
         <Pressable
           style={styles.addCategory}
-          onPress={() => setDisplayAddCategory(!isdisplayAddCategory)}
+          onPress={handleDisplayAddingPress}
         >
           <Text style={styles.buttonText}>הוספת קטגוריה חדשה</Text>
         </Pressable>

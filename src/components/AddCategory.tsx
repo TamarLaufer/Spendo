@@ -17,6 +17,7 @@ type AddCategoryPropsType = {
 
 const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [categoryName, setCategoryName] = useState('');
+  const [subCategoryName, setSubCategoryName] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
   const [submitLoader, setSubmitLoder] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -53,13 +54,19 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
 
   return (
     <View style={styles.container}>
+      <Pressable
+        onPress={() => setDisplayAddCategory(false)}
+        style={styles.xContainer}
+      >
+        <Text style={styles.x}>X</Text>
+      </Pressable>
       <Text style={styles.label}>שם קטגוריה</Text>
       {submitLoader && <ActivityIndicator />}
       {submitError && <Text style={styles.error}>{submitError}</Text>}
       <TextInput
         value={categoryName}
         onChangeText={setCategoryName}
-        placeholder="למשל: סופר"
+        placeholder="למשל: מזון"
         style={styles.input}
       />
       <Text style={styles.label}>תקציב מקסימלי</Text>
@@ -68,6 +75,14 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
         onChangeText={setMaxAmount}
         placeholder="1500"
         keyboardType="numeric"
+        style={styles.input}
+      />
+      <Text style={styles.label}>תת-קטגוריה (לא חובה)</Text>
+      <TextInput
+        value={subCategoryName}
+        onChangeText={setSubCategoryName}
+        placeholder="למשל: סופר"
+        keyboardType="default"
         style={styles.input}
       />
       <Pressable
@@ -100,6 +115,14 @@ const styles = StyleSheet.create({
   buttonText: { color: 'white', fontSize: 18, fontWeight: '700' },
   error: {
     color: 'red',
+  },
+  xContainer: {
+    flex: 1,
+  },
+  x: {
+    textAlign: 'right',
+    paddingEnd: 20,
+    fontSize: 20,
   },
 });
 

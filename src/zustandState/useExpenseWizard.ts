@@ -9,7 +9,7 @@ import { useCategory } from './useCategory';
 import {
   ExpenseCreateSchema,
   type ExpenseCreateInput,
-} from '../shared/expense';
+} from '../shared/expenseSchema';
 import { createExpense } from '../api/api';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
 

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { getExpenses, watchExpenses } from '../api/api';
-import { ExpenseRecord } from '../shared/expense';
+import { ExpenseRecord } from '../shared/expenseSchema';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
 
 export type ExpensesState = {

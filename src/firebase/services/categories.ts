@@ -18,8 +18,8 @@ import {
 } from '@react-native-firebase/firestore';
 import type { IconKey } from '../../assets/icons';
 import { DEV_HOUSEHOLD_ID } from '../../config/consts';
+import { CategoryCreateSchema } from '../../shared/categorySchema';
 
-// ---- Types ----
 export type SubCategoryDocType = {
   subCategoryId: string;
   subCategoryName: string;
@@ -36,7 +36,6 @@ export type CategoryFirebaseDoc = {
   order?: number;
   active?: boolean;
   subCategories: SubCategoryDocType[];
-  // אופציונלי: אם תרצי עקבות זמן במסמך
   createdAt?: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
   updatedAt?: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
 };
@@ -108,19 +107,19 @@ export async function addCategory(input: {
   icon?: IconKey | null;
   order?: number;
   active?: boolean;
-  householdId?: string; // אם לא תשלחי – נשתמש ב-DEV_HOUSEHOLD_ID
+  householdId?: string;
 }) {
   const categoriesRef = collection(firestoreDb, 'categories');
+  const parsed = CategoryCreateSchema.parse(input);
 
   const payload: CategoryFirebaseDoc = {
-    householdId: input.householdId ?? DEV_HOUSEHOLD_ID,
-    categoryName: input.categoryName.trim(),
-    maxAmount: input.maxAmount,
-    icon: input.icon ?? null,
-    order: input.order ?? Date.now(), // חשוב ל-orderBy
-    active: input.active ?? true,
-    subCategories: [],
-    // אופציונלי: עקבות זמן
+    householdId: parsed.householdId ?? DEV_HOUSEHOLD_ID,
+    categoryName: parsed.categoryName.trim(),
+    maxAmount: parsed.maxAmount,
+    icon: parsed.icon ?? null,
+    order: parsed.order ?? Date.now(),
+    active: parsed.active ?? true,
+    subCategories: parsed.subCategories,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
