@@ -1,7 +1,5 @@
-// src/shared/category.ts
 import { z } from 'zod';
 
-// אם יש לך IconKey ספציפיים, שימי כאן את הרשימה לפי assets/icons שלך
 export const IconKeySchema = z.enum([
   'market',
   'car',
@@ -19,16 +17,13 @@ export const SubCategoryCreateSchema = z.object({
 });
 
 export const CategoryCreateSchema = z.object({
-  // את יכולה להשאיר optional ולהזריק ברירת מחדל ב-service (DEV_HOUSEHOLD_ID)
   householdId: z.string().min(1).optional(),
   categoryName: z.string().trim().min(1, 'נא להזין שם קטגוריה'),
   maxAmount: z.number().nonnegative(),
   icon: IconKeySchema.nullish(),
   order: z.number().int().nonnegative().optional(),
-  active: z.boolean().optional(),
+  active: z.boolean().default(true).optional(),
   subCategories: z.array(SubCategoryCreateSchema).default([]),
-
-  // אופציונלי: מאפשר לקליינט לשלוח createdAt (בפועל ב-Firestore תשתמשי serverTimestamp)
   createdAt: z.union([z.date(), z.string().datetime()]).optional(),
 });
 export type CategoryCreateInput = z.infer<typeof CategoryCreateSchema>;
@@ -36,7 +31,6 @@ export type CategoryCreateInput = z.infer<typeof CategoryCreateSchema>;
 export const CategoryUpdateSchema = CategoryCreateSchema.partial();
 export type CategoryUpdatePatch = z.infer<typeof CategoryUpdateSchema>;
 
-// מודל תצוגה ל־UI (כמו שיש לך ב-map)
 export const CategoryRecordSchema = z.object({
   categoryId: z.string(),
   categoryName: z.string(),
@@ -52,3 +46,35 @@ export const CategoryRecordSchema = z.object({
   ),
 });
 export type CategoryRecord = z.infer<typeof CategoryRecordSchema>;
+
+export const normalizeName = (value: string) =>
+  value.normalize('NFKC').trim().toLowerCase();
+
+/** בסיס הוולידציה: שדות וצורות */
+export const CategoryUiDraftBaseSchema = z.object({
+  categoryName: z.string().min(1, 'נא להזין שם קטגוריה'),
+  maxAmount: z.coerce
+    .number()
+    .refine(Number.isFinite, { message: 'תקציב חייב להיות מספר תקין' })
+    .nonnegative({ message: 'תקציב חייב להיות 0 או יותר' }),
+});
+
+/**
+ * מפעל סכמות: מחזיר סכמת Zod שמכילה גם בדיקת כפילות שם,
+ * לפי רשימת שמות קיימים שמועברת מבחוץ.
+ */
+export const makeCategoryUiDraftSchema = (existingNames: string[]) =>
+  CategoryUiDraftBaseSchema.superRefine((data, ctx) => {
+    const requested = normalizeName(data.categoryName);
+    const exists = existingNames.map(normalizeName).includes(requested);
+
+    if (exists) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['categoryName'],
+        message: 'קטגוריה בשם זה כבר קיימת',
+      });
+    }
+  });
+
+export type CategoryUiDraft = z.infer<typeof CategoryUiDraftBaseSchema>;

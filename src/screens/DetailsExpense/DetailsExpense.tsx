@@ -4,8 +4,9 @@ import { useExpenses } from '../../zustandState/useExpenses';
 import { useRoute, type RouteProp } from '@react-navigation/native';
 import { RootStackParamsType } from '../../navigation/types';
 import { useCategory } from '../../zustandState/useCategory';
-import { formatAmount, formatHebrewDate } from '../../functions/functions';
+import { formatAmount, formatIsoDate } from '../../functions/functions';
 import Logo from '../../assets/icons/MessyDoodle.svg';
+import { STRINGS } from '../../strings/hebrew';
 
 type DetailsRoute = RouteProp<RootStackParamsType, 'DetailsExpense'>;
 
@@ -21,7 +22,7 @@ const DetailsExpense = () => {
   const expense = findExpenseById(expenseId);
 
   if (!expense) {
-    return <Text>טוען/לא נמצא</Text>;
+    return <Text>{STRINGS.LOADING_OR_NOT_FOUND}</Text>;
   }
   const category = findCategoryById(expense.categoryId);
   const finalSubId = expense.subCategoryId ?? subCategoryId;
@@ -32,7 +33,7 @@ const DetailsExpense = () => {
   const texts = [
     `הוצאה של ${category?.categoryName}`,
     `בסך ${formatAmount(expense.amount)}`,
-    formatHebrewDate(expense.createdAt),
+    formatIsoDate(expense.createdAt),
     subCategory?.subCategoryName,
     `ב${expense.paymentMethod} `,
   ];
@@ -49,6 +50,7 @@ const DetailsExpense = () => {
     <View style={styles.container}>
       <Logo width={280} height={280} />
       <View style={styles.textContainer}>{renderText}</View>
+      <Logo width={80} height={80} />
     </View>
   );
 };

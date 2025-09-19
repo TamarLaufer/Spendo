@@ -1,7 +1,7 @@
 import ExpensesListView from '../expensesListView/ExpensesListView';
 
 const LastExpenses = () => {
-  return <ExpensesListView numOfTransactions header link />;
+  return <ExpensesListView numOfTransactions={3} header link />;
 };
 
 export default LastExpenses;

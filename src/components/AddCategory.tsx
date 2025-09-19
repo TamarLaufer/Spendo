@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -6,10 +7,24 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import React, { useState } from 'react';
-import { addCategory } from '../firebase/services/categories';
-import { useCategory } from '../zustandState/useCategory';
 import { theme } from '../theme/theme';
+import { useCategory } from '../zustandState/useCategory';
+import { addCategory } from '../firebase/services/categories';
+import { getApp } from '@react-native-firebase/app';
+import {
+  getFirestore,
+  collection,
+  doc,
+} from '@react-native-firebase/firestore';
+import {
+  CategoryCreateSchema,
+  type CategoryCreateInput,
+} from '../shared/categorySchema';
+
+const appInstance = getApp();
+const firestoreDb = getFirestore(appInstance);
+
+const generateId = () => doc(collection(firestoreDb, '_ids')).id;
 
 type AddCategoryPropsType = {
   setDisplayAddCategory: (value: boolean) => void;
@@ -17,9 +32,9 @@ type AddCategoryPropsType = {
 
 const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [categoryName, setCategoryName] = useState('');
-  const [subCategoryName, setSubCategoryName] = useState('');
+  const [subcategoriesText, setSubcategoriesText] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
-  const [submitLoader, setSubmitLoder] = useState(false);
+  const [submitLoader, setSubmitLoader] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const setError = useCategory(state => state.setError);
@@ -29,26 +44,63 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       setSubmitError('נא להזין שם קטגוריה');
       return;
     }
-    const amountNum = Number(maxAmount);
-    if (!Number.isFinite(amountNum) || amountNum < 0) {
+    const parsedAmount = Number(maxAmount);
+    if (!Number.isFinite(parsedAmount) || parsedAmount < 0) {
       setSubmitError('תקציב חייב להיות מספר תקין');
       return;
     }
 
-    setSubmitLoder(true);
-    setSubmitError(null);
-    try {
-      await addCategory({ categoryName, maxAmount: Number(maxAmount) });
-      console.log({ categoryName });
+    const uniqueNames = Array.from(
+      new Set(
+        subcategoriesText
+          .split(',')
+          .map(s => s.trim())
+          .filter(Boolean),
+      ),
+    );
 
+    const subCategoryObjects = uniqueNames.map(name => ({
+      subCategoryId: generateId(),
+      subCategoryName: name,
+      icon: null,
+      active: true,
+    }));
+
+    const candidatePayload: CategoryCreateInput = {
+      categoryName: categoryName.trim(),
+      maxAmount: parsedAmount,
+      // icon אופציונלי, אפשר להוסיף בהמשך:
+      // icon: 'car' as any,
+      subCategories: subCategoryObjects,
+      // אפשר להוסיף שדות אופציונליים אם קיימים בסכימה: order/active וכו'
+    };
+
+    // ולידציית Zod מלאה
+    const result = CategoryCreateSchema.safeParse(candidatePayload);
+    if (!result.success) {
+      setSubmitError('שדות לא תקינים, בדקי את הקלט בבקשה');
+      // אם תרצי, אפשר להדפיס ל-console את פירוט השגיאות:
+      // console.log(result.error.format());
+      return;
+    }
+
+    setSubmitLoader(true);
+    setSubmitError(null);
+
+    try {
+      await addCategory(result.data);
+
+      // reset form
       setCategoryName('');
+      setSubcategoriesText('');
       setMaxAmount('');
       setError(null);
+
       setDisplayAddCategory(false);
     } catch (e: any) {
-      setSubmitError(e?.message ?? 'Failed to add category');
+      setSubmitError(e?.message ?? 'נכשלה הוספת קטגוריה');
     } finally {
-      setSubmitLoder(false);
+      setSubmitLoader(false);
     }
   };
 
@@ -60,15 +112,18 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       >
         <Text style={styles.x}>X</Text>
       </Pressable>
-      <Text style={styles.label}>שם קטגוריה</Text>
+
       {submitLoader && <ActivityIndicator />}
       {submitError && <Text style={styles.error}>{submitError}</Text>}
+
+      <Text style={styles.label}>שם קטגוריה</Text>
       <TextInput
         value={categoryName}
         onChangeText={setCategoryName}
         placeholder="למשל: מזון"
         style={styles.input}
       />
+
       <Text style={styles.label}>תקציב מקסימלי</Text>
       <TextInput
         value={maxAmount}
@@ -77,14 +132,16 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
         keyboardType="numeric"
         style={styles.input}
       />
-      <Text style={styles.label}>תת-קטגוריה (לא חובה)</Text>
+
+      <Text style={styles.label}>תתי־קטגוריות (פסיקים בין ערכים)</Text>
       <TextInput
-        value={subCategoryName}
-        onChangeText={setSubCategoryName}
-        placeholder="למשל: סופר"
+        value={subcategoriesText}
+        onChangeText={setSubcategoriesText}
+        placeholder="למשל: סופר, ירקות, מוצרי חלב"
         keyboardType="default"
         style={styles.input}
       />
+
       <Pressable
         onPress={handleAddCategoryPress}
         style={styles.button}
@@ -113,17 +170,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: { color: 'white', fontSize: 18, fontWeight: '700' },
-  error: {
-    color: 'red',
-  },
-  xContainer: {
-    flex: 1,
-  },
-  x: {
-    textAlign: 'right',
-    paddingEnd: 20,
-    fontSize: 20,
-  },
+  error: { color: 'red' },
+  xContainer: { flex: 1 },
+  x: { textAlign: 'right', paddingEnd: 20, fontSize: 20 },
 });
 
 export default AddCategory;

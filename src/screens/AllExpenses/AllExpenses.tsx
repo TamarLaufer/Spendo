@@ -8,7 +8,7 @@ const AllExpenses = () => {
       <View style={styles.headerContainer}>
         <Text style={styles.header}>כל ההוצאות</Text>
       </View>
-      <ExpensesListView />
+      <ExpensesListView groupByMonth />
     </ScrollView>
   );
 };
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   header: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '700',
   },
 });

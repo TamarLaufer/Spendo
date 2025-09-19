@@ -9,4 +9,7 @@ export const STRINGS = {
   EXPENSE_IN: 'הוצאה של',
   LAST_EXPENSES: 'הוצאות אחרונות',
   TO_ALL_EXPENSES: `לכל ההוצאות >>`,
+  NO_EXPENSES_YET: 'אין עדיין הוצאות',
+  ERROE_IN_SERVER: 'תקלה בשרת כרגע, אנא נסו במועד מאוחר יותר',
+  LOADING_OR_NOT_FOUND: 'טוען/לא נמצא',
 };
