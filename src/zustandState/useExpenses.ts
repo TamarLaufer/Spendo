@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { getExpenses, watchExpenses } from '../api/api';
 import { ExpenseRecord } from '../shared/expenseSchema';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
+import { deleteExpenseFromServer } from '../firebase/services/expenses';
 
 export type ExpensesState = {
   expenses: ExpenseRecord[];
@@ -16,6 +17,7 @@ export type ExpensesState = {
   replaceAll: (list: ExpenseRecord[]) => void;
   clear: () => void;
   findExpenseById: (id: string) => ExpenseRecord | undefined;
+  deleteExpense: (id: string) => Promise<void>;
 };
 
 export const useExpenses = create<ExpensesState>((set, get) => ({
@@ -55,6 +57,19 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
 
   replaceAll(list) {
     set(state => (state.expenses === list ? state : { expenses: list }));
+  },
+
+  deleteExpense: async (id: string) => {
+    try {
+      await deleteExpenseFromServer(id); // ודאי שקיים ומחזיר Promise
+      set(state => ({
+        expenses: state.expenses.filter(e => e.id !== id),
+      }));
+    } catch (err: any) {
+      set({ error: err?.message ?? 'Delete failed' });
+      // אופציונלי: אפשר להחזיר reject אם חשוב לתפוס במסך הקורא
+      // throw err;
+    }
   },
 
   clear() {

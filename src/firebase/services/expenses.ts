@@ -234,7 +234,7 @@ export async function updateExpense(
 }
 
 // ---------- Delete ----------
-export async function deleteExpense(expenseId: string) {
+export async function deleteExpenseFromServer(expenseId: string) {
   const expenseDocumentReference = doc(
     firestoreDatabase,
     'expenses',

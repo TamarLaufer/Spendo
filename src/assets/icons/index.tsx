@@ -5,6 +5,8 @@ import Payment from './payment.svg';
 import Car from './car.svg';
 import Classes from './classes.svg';
 import Health from './health.svg';
+import Toys from './toys.svg';
+import Study from './study.svg';
 
 //other icons
 export const Icons = {
@@ -15,6 +17,8 @@ export const Icons = {
   Car,
   Classes,
   Health,
+  Toys,
+  Study,
 };
 
 //categories icons
@@ -26,6 +30,8 @@ export const IconRegistry = {
   car: Car,
   classes: Classes,
   health: Health,
+  toys: Toys,
+  study: Study,
 } as const;
 
 export type IconKey = keyof typeof IconRegistry;
