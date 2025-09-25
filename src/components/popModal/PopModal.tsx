@@ -32,7 +32,7 @@ const PopModal = ({
 }: PopModalPropsType) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent
       visible={visible}
       onRequestClose={onClose}
@@ -73,9 +73,11 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   modalText: {
+    textAlign: 'center',
     fontSize: 18,
   },
   modalView: {
+    justifyContent: 'center',
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
@@ -101,7 +103,8 @@ const styles = StyleSheet.create({
   },
   pressRight: {
     backgroundColor: '#F08787',
-    padding: 12,
+    padding: 14,
+    paddingHorizontal: 18,
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
@@ -116,6 +119,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: theme.color.shadowColor,
     fontSize: 16,
+    fontWeight: '700',
   },
 });
 

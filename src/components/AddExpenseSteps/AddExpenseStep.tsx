@@ -22,7 +22,7 @@ const numbers = [
 
 const AddExpenseStep = () => {
   const [value, setValue] = useState('');
-  const { setAmount } = useExpenseWizard();
+  const setAmount = useExpenseWizard(state => state.setAmount);
 
   const expenseSchema = z.object({
     expenseAmount: z
@@ -65,7 +65,6 @@ const AddExpenseStep = () => {
     }
   };
 
-  // Clear amount when value is empty
   useEffect(() => {
     if (!value) {
       setAmount(0);

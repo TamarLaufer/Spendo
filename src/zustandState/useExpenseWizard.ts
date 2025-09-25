@@ -20,11 +20,13 @@ type ExpenseWizardStateType = {
   currentStep: Steps;
   paymentMethods: readonly PaymentMethods[];
   paymentMethod: PaymentMethods['name'];
+  note?: string;
 
   setAmount: (amount: number) => void;
   setCategoryId: (categoryId: string) => void;
   setSubCategoryId: (subCategoryId: string) => void;
   setCurrentStep: (step: Steps) => void;
+  setNote: (note: string) => void;
   resetWizard: () => void;
   canProceedToNextStep: () => boolean;
   handleClose: () => void;
@@ -43,12 +45,14 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
   currentStep: 'amount',
   paymentMethods: PAYMENT_METHODS,
   paymentMethod: PAYMENT_METHODS[0].name,
+  note: '',
 
   setAmount: amount => set({ amount }),
   setCategoryId: categoryId => set({ categoryId, subCategoryId: '' }),
   setSubCategoryId: subCategoryId => set({ subCategoryId }),
   setCurrentStep: currentStep => set({ currentStep }),
   setPaymentMethod: paymentMethod => set({ paymentMethod }),
+  setNote: note => set({ note }),
 
   resetWizard: () =>
     set({
@@ -57,6 +61,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
       subCategoryId: '',
       currentStep: 'amount',
       paymentMethod: PAYMENT_METHODS[0].name,
+      note: '',
     }),
 
   canProceedToNextStep: () => {
@@ -73,6 +78,8 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
       }
       case 'payMethod':
         return !!state.paymentMethod;
+      case 'AddNoteForExpense':
+        return true;
       case 'endProcess':
         return true;
       default:
@@ -80,33 +87,29 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
     }
   },
 
-  // ⬇️ בונים בדיוק ExpenseCreateInput (בלי createdAt)
   buildPayload: (): ExpenseCreateInput | null => {
-    const { amount, categoryId, subCategoryId, paymentMethod } = get();
+    const { amount, categoryId, subCategoryId, paymentMethod, note } = get();
     if (!amount || amount <= 0 || !categoryId || !paymentMethod) return null;
 
-    // ולידציה עם הסכימה הנכונה (Create)
     const parsed = ExpenseCreateSchema.safeParse({
       householdId: DEV_HOUSEHOLD_ID,
       amount,
       categoryId,
       subCategoryId: subCategoryId ? subCategoryId : null,
       paymentMethod,
-      // note: ... אם יש לך שדה כזה בוויזארד
+      note,
     });
 
     if (!parsed.success) return null;
-    return parsed.data; // טיפוס: ExpenseCreateInput
+
+    return parsed.data;
   },
 
-  // מצפה ש-createExpense יחזיר ExpenseRecord
   submitExpense: async () => {
     const payload = get().buildPayload();
-
     if (!payload) throw new Error('Incomplete expense data');
 
-    await createExpense(payload); // ← לא שומרים ערך מוחזר
-    // אין addLocal — הרשימה תתעדכן אוטומטית מהריל־טיים
+    await createExpense(payload);
     get().handleClose();
   },
 
@@ -145,8 +148,11 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
           set({ currentStep: 'category' });
         }
         break;
-      case 'endProcess':
+      case 'AddNoteForExpense':
         set({ currentStep: 'payMethod' });
+        break;
+      case 'endProcess':
+        set({ currentStep: 'AddNoteForExpense' });
         break;
     }
   },
@@ -172,6 +178,9 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
         set({ currentStep: 'payMethod' });
         break;
       case 'payMethod':
+        set({ currentStep: 'AddNoteForExpense' });
+        break;
+      case 'AddNoteForExpense':
         set({ currentStep: 'endProcess' });
         break;
       case 'endProcess':

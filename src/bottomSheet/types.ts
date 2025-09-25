@@ -3,6 +3,7 @@ export type Steps =
   | 'category'
   | 'subCategory'
   | 'payMethod'
+  | 'AddNoteForExpense'
   | 'endProcess';
 
 export const PAYMENT_METHODS = [
@@ -36,6 +37,11 @@ export const StepsConfig: Record<Steps, StepsProps> = {
   payMethod: {
     header: 'איך שילמת?',
     showButton: false,
+  },
+  AddNoteForExpense: {
+    header: 'הערות?',
+    showButton: true,
+    buttonTitle: 'המשך',
   },
   endProcess: {
     buttonTitle: 'סיום',

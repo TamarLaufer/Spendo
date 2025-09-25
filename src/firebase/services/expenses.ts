@@ -167,6 +167,7 @@ export function subscribeToExpenses(
 // ---------- Create ----------
 export async function addExpense(createInput: ExpenseCreateInput) {
   const validatedCreateInput = ExpenseCreateSchema.parse(createInput);
+  console.log(validatedCreateInput.note, '1111');
 
   const firestorePayload: ExpenseFirebaseDoc = {
     householdId: validatedCreateInput.householdId,

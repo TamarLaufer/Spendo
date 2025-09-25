@@ -24,7 +24,6 @@ export async function createExpense(
   input: ExpenseCreateInput,
 ): Promise<string> {
   // returns the id of the created document
-
   return addExpense({ ...input, householdId: DEV_HOUSEHOLD_ID });
 }
 

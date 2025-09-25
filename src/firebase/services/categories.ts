@@ -125,10 +125,9 @@ export async function addCategory(input: {
   };
 
   const createdRef = await addDoc(categoriesRef, payload);
-  return createdRef.id; // אין צורך ב-setDoc נוסף כדי לשמור categoryId במסמך
+  return createdRef.id;
 }
 
-// ---- Add subcategory ----
 export async function addSubCategory(
   categoryId: string,
   subCategory: SubCategoryDocType,

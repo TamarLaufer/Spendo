@@ -11,6 +11,7 @@ import ContinueButton from '../components/AddExpenseSteps/continueButton/Continu
 import { StepsConfig } from './types';
 import { useExpenseWizard } from '../zustandState/useExpenseWizard';
 import PaymentMethodsScreen from '../components/AddExpenseSteps/PaymentMethodsScreen';
+import AddNoteForExpense from '../components/AddExpenseSteps/AddNoteForExpense';
 
 type PropsType = {
   bottomSheetRef: React.RefObject<BottomSheetMethods | null>;
@@ -48,6 +49,8 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
         return <ChooseSubCategoryStep />;
       case 'payMethod':
         return <PaymentMethodsScreen />;
+      case 'AddNoteForExpense':
+        return <AddNoteForExpense />;
       case 'endProcess':
         return <EndProcessStep />;
       default:

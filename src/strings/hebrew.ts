@@ -12,4 +12,5 @@ export const STRINGS = {
   NO_EXPENSES_YET: 'אין עדיין הוצאות',
   ERROE_IN_SERVER: 'תקלה בשרת כרגע, אנא נסו במועד מאוחר יותר',
   LOADING_OR_NOT_FOUND: 'טוען/לא נמצא',
+  ALL_EXPENSES: 'כל ההוצאות',
 };
