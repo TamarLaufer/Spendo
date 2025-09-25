@@ -13,4 +13,7 @@ export const STRINGS = {
   ERROE_IN_SERVER: 'תקלה בשרת כרגע, אנא נסו במועד מאוחר יותר',
   LOADING_OR_NOT_FOUND: 'טוען/לא נמצא',
   ALL_EXPENSES: 'כל ההוצאות',
+  DO_YOU_WANT_TO_DELETE: 'האם ברצונך למחוק את ההוצאה?',
+  NO_MISTAKE: 'לא, טעות',
+  YES_PLEASE_DELETE: 'כן, מחק בבקשה',
 };

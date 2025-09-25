@@ -46,6 +46,7 @@ const DetailsExpense = () => {
     `בסך של ${formatAmount(expense.amount)}`,
     `בתאריך ${formatShortDate(expense.createdAt)}`,
     `ב${expense.paymentMethod} `,
+    `הערות: ${expense?.note ?? ''}`,
   ];
 
   const handleDeletePress = () => {
@@ -73,11 +74,11 @@ const DetailsExpense = () => {
       <View style={styles.textContainer}>{renderText}</View>
       <Pressable onPress={handleModal} style={styles.deleteContainer}>
         <PopModal
-          modalHeader="האם ברצונך למחוק את ההוצאה?"
+          modalHeader={STRINGS.DO_YOU_WANT_TO_DELETE}
           onClose={handleModal}
           visible={isModalVisible}
-          modalButtonTextRight="לא, טעות"
-          modalButtonTextLeft="כן, מחק בבקשה"
+          modalButtonTextRight={STRINGS.NO_MISTAKE}
+          modalButtonTextLeft={STRINGS.YES_PLEASE_DELETE}
           onConfirm={handleDeletePress}
           onCancel={handleModal}
         />
