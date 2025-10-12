@@ -15,17 +15,19 @@ import Delete from '../../assets/icons/trash.svg';
 import { Pressable } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import PopModal from '../../components/popModal/PopModal';
+import { useSubCategories } from '../../hooks/useSubCategories';
 
 type DetailsRoute = RouteProp<RootStackParamsType, 'DetailsExpense'>;
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
 const DetailsExpense = () => {
   const {
-    params: { expenseId, subCategoryId },
+    params: { expenseId, subCategoryId, categoryId },
   } = useRoute<DetailsRoute>();
 
   const findExpenseById = useExpenses(state => state.findExpenseById);
-  const findSubCategoryById = useCategory(state => state.findSubCategoryById);
+  const { rows: subcats } = useSubCategories(categoryId);
+  const subCat = subcats.find(subC => subC.id === subCategoryId);
   const findCategoryById = useCategory(state => state.findCategoryById);
   const deleteExpense = useExpenses(state => state.deleteExpense);
   const expense = findExpenseById(expenseId);
@@ -33,16 +35,14 @@ const DetailsExpense = () => {
 
   const [isModalVisible, setModalVisible] = useState(false);
 
+  console.log(expense, 'expense');
   if (!expense) {
     return <Text>{STRINGS.LOADING_OR_NOT_FOUND}</Text>;
   }
-  const category = findCategoryById(expense.categoryId);
-  const finalSubId = expense.subCategoryId ?? subCategoryId;
-
-  const subCategory = findSubCategoryById(expense.categoryId, finalSubId);
+  const category = findCategoryById(expense.id);
 
   const texts = [
-    `הוצאה של ${category?.categoryName}, ${subCategory?.subCategoryName ?? ''}`,
+    `הוצאה של ${category?.name}, ${subCat?.name ?? ''}`,
     `בסך של ${formatAmount(expense.amount)}`,
     `בתאריך ${formatShortDate(expense.createdAt)}`,
     `ב${expense.paymentMethod} `,

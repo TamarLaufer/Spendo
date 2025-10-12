@@ -9,26 +9,27 @@ import {
 } from 'react-native';
 import { theme } from '../theme/theme';
 import { useCategory } from '../zustandState/useCategory';
-import { addCategory } from '../firebase/services/categories';
-import { getApp } from '@react-native-firebase/app';
 import {
-  getFirestore,
-  collection,
-  doc,
-} from '@react-native-firebase/firestore';
+  addCategory,
+  upsertSubCategory,
+} from '../firebase/services/categories';
 import {
   CategoryCreateSchema,
   type CategoryCreateInput,
 } from '../shared/categorySchema';
-
-const appInstance = getApp();
-const firestoreDb = getFirestore(appInstance);
-
-const generateId = () => doc(collection(firestoreDb, '_ids')).id;
+import { toId } from '../firebase/services/categories';
+import { DEV_HOUSEHOLD_ID } from '../config/consts';
+import type { IconKey } from '../assets/icons';
 
 type AddCategoryPropsType = {
   setDisplayAddCategory: (value: boolean) => void;
 };
+
+const parseCsv = (raw?: string) =>
+  (raw ?? '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
 
 const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [categoryName, setCategoryName] = useState('');
@@ -36,10 +37,12 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [maxAmount, setMaxAmount] = useState('');
   const [submitLoader, setSubmitLoader] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [icon, setIcon] = useState<IconKey | null>(null);
 
   const setError = useCategory(state => state.setError);
 
   const handleAddCategoryPress = async () => {
+    // ולידציה בסיסית מהירה
     if (!categoryName.trim()) {
       setSubmitError('נא להזין שם קטגוריה');
       return;
@@ -50,37 +53,20 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       return;
     }
 
-    const uniqueNames = Array.from(
-      new Set(
-        subcategoriesText
-          .split(',')
-          .map(s => s.trim())
-          .filter(Boolean),
-      ),
-    );
-
-    const subCategoryObjects = uniqueNames.map(name => ({
-      subCategoryId: generateId(),
-      subCategoryName: name,
-      icon: null,
-      active: true,
-    }));
-
-    const candidatePayload: CategoryCreateInput = {
+    // payload "דק" לפי המודל השטוח – בלי subCategories בתוך הקטגוריה
+    const categoryPayload: CategoryCreateInput = {
       categoryName: categoryName.trim(),
       maxAmount: parsedAmount,
-      // icon אופציונלי, אפשר להוסיף בהמשך:
-      // icon: 'car' as any,
-      subCategories: subCategoryObjects,
-      // אפשר להוסיף שדות אופציונליים אם קיימים בסכימה: order/active וכו'
+      householdId: DEV_HOUSEHOLD_ID,
+      icon, // אם תרצי, עדכני מה-UI
+      order: Date.now(),
+      active: true,
     };
 
     // ולידציית Zod מלאה
-    const result = CategoryCreateSchema.safeParse(candidatePayload);
+    const result = CategoryCreateSchema.safeParse(categoryPayload);
     if (!result.success) {
       setSubmitError('שדות לא תקינים, בדקי את הקלט בבקשה');
-      // אם תרצי, אפשר להדפיס ל-console את פירוט השגיאות:
-      // console.log(result.error.format());
       return;
     }
 
@@ -88,14 +74,34 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
     setSubmitError(null);
 
     try {
-      await addCategory(result.data);
+      // 1) יצירת קטגוריה
+      const categoryId = await addCategory(categoryPayload);
+
+      // 2) (אופציונלי) כתיבת תתי־קטגוריות מ-CSV, כל תת־קטגוריה כ־doc נפרד
+      const names = parseCsv(subcategoriesText);
+      if (names.length) {
+        await Promise.all(
+          names.map((name, idx) =>
+            upsertSubCategory(
+              categoryId,
+              toId(name) || `${Date.now()}-${idx}`,
+              {
+                subCategoryName: name,
+                icon: null,
+                order: idx,
+                active: true,
+              },
+            ),
+          ),
+        );
+      }
 
       // reset form
       setCategoryName('');
       setSubcategoriesText('');
       setMaxAmount('');
+      setIcon(null);
       setError(null);
-
       setDisplayAddCategory(false);
     } catch (e: any) {
       setSubmitError(e?.message ?? 'נכשלה הוספת קטגוריה');

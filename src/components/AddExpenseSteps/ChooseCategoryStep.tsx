@@ -25,12 +25,12 @@ const ChooseCategoryStep = () => {
   return (
     <View style={styles.container}>
       <TransactionList
-        keyExtractor={category => category.categoryId}
+        keyExtractor={category => category.id}
         data={categoriesList}
         mapItem={category => ({
-          text: category.categoryName,
-          onPress: () => handleCategorySelect(category.categoryId),
-          selected: category.categoryId === categoryId,
+          text: category.name,
+          onPress: () => handleCategorySelect(category.id),
+          selected: category.id === categoryId,
           icon: category?.icon ? IconRegistry[category.icon] : undefined,
         })}
       />

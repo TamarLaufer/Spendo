@@ -1,12 +1,18 @@
 import { z } from 'zod';
 
-export const IconKeySchema = z.enum([
+export const ICON_KEYS = [
   'market',
   'car',
   'payment',
   'back',
   'cancelX',
-]);
+  'classes',
+  'health',
+  'toys',
+  'study',
+] as const;
+
+export const IconKeySchema = z.enum(ICON_KEYS);
 
 export const SubCategoryCreateSchema = z.object({
   subCategoryId: z.string().min(1),
@@ -23,7 +29,6 @@ export const CategoryCreateSchema = z.object({
   icon: IconKeySchema.nullish(),
   order: z.number().int().nonnegative().optional(),
   active: z.boolean().default(true).optional(),
-  subCategories: z.array(SubCategoryCreateSchema).default([]),
   createdAt: z.union([z.date(), z.string().datetime()]).optional(),
 });
 export type CategoryCreateInput = z.infer<typeof CategoryCreateSchema>;
@@ -36,14 +41,6 @@ export const CategoryRecordSchema = z.object({
   categoryName: z.string(),
   maxAmount: z.number(),
   isExceed: z.boolean(),
-  icon: IconKeySchema.nullish(),
-  subCategories: z.array(
-    z.object({
-      subCategoryId: z.string(),
-      subCategoryName: z.string(),
-      icon: IconKeySchema.nullish(),
-    }),
-  ),
 });
 export type CategoryRecord = z.infer<typeof CategoryRecordSchema>;
 

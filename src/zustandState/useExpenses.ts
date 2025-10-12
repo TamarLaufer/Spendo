@@ -1,8 +1,11 @@
 import { create } from 'zustand';
-import { getExpenses, watchExpenses } from '../api/api';
 import { ExpenseRecord } from '../shared/expenseSchema';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
-import { deleteExpenseFromServer } from '../firebase/services/expenses';
+import {
+  deleteExpenseFromServer,
+  fetchExpenses,
+  subscribeToExpenses,
+} from '../firebase/services/expenses';
 
 export type ExpensesState = {
   expenses: ExpenseRecord[];
@@ -31,7 +34,7 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
   async loadExpenses() {
     set({ loading: true, error: null });
     try {
-      const data = await getExpenses(DEV_HOUSEHOLD_ID);
+      const data = await fetchExpenses(DEV_HOUSEHOLD_ID);
       set({ expenses: data, loading: false, error: null });
     } catch (e: any) {
       set({ error: e?.message || 'Fetch failed', loading: false });
@@ -40,7 +43,7 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
 
   //real-time
   subscribeExpenses(householdId) {
-    const unsubscribe = watchExpenses(
+    const unsubscribe = subscribeToExpenses(
       householdId,
       rows => set({ expenses: rows, error: null }),
       err => set({ error: err.message }),
@@ -61,14 +64,12 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
 
   deleteExpense: async (id: string) => {
     try {
-      await deleteExpenseFromServer(id); // ודאי שקיים ומחזיר Promise
+      await deleteExpenseFromServer(id);
       set(state => ({
-        expenses: state.expenses.filter(e => e.id !== id),
+        expenses: state.expenses.filter(expense => expense.id !== id),
       }));
     } catch (err: any) {
       set({ error: err?.message ?? 'Delete failed' });
-      // אופציונלי: אפשר להחזיר reject אם חשוב לתפוס במסך הקורא
-      // throw err;
     }
   },
 

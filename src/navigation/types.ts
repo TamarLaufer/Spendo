@@ -8,6 +8,10 @@ export type MainBottomTabsParamsListTypes = {
 
 export type RootStackParamsType = {
   MainTabs: undefined;
-  DetailsExpense: { expenseId: string; subCategoryId?: string };
+  DetailsExpense: {
+    expenseId: string;
+    subCategoryId?: string;
+    categoryId: string;
+  };
   AllExpenses: undefined;
 };

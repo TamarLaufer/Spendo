@@ -1,4 +1,3 @@
-// src/firebase/services/expenses.ts
 import { getApp } from '@react-native-firebase/app';
 import {
   getFirestore,

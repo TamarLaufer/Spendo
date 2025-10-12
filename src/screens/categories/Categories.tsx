@@ -28,7 +28,7 @@ const Categories: FC = () => {
               const Icon = item.icon ? IconRegistry[item.icon] : undefined;
 
               return {
-                text: item.categoryName ?? '',
+                text: item.name ?? '',
                 icon: Icon,
                 amount: item.maxAmount,
               };

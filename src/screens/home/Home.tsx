@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import ScreenLayout from '../../components/screenLayout/ScreenLayout';
 import { useExpenses } from '../../zustandState/useExpenses';
@@ -7,6 +7,7 @@ import Logo from '../../assets/icons/graph.svg';
 import Balance from '../../components/balance/Balance';
 import { useCategory } from '../../zustandState/useCategory';
 import { DEV_HOUSEHOLD_ID } from '../../config/consts';
+import { useEnsureSubcatIndex } from '../../zustandState/useEnsureSubcatIndex';
 
 const Home = () => {
   const loadExpenses = useExpenses(state => state.loadExpenses);
@@ -14,7 +15,17 @@ const Home = () => {
   const loadCategories = useCategory(state => state.loadCategories);
   const subscribeCategories = useCategory(state => state.subscribe);
   const expError = useExpenses(s => s.error);
-  const catError = useCategory(s => s.error);
+  const catError = useCategory(state => state.error);
+  const categories = useCategory(state => state.categories);
+  const categoryIds = React.useMemo(
+    () => categories.map(c => c.id),
+    [categories],
+  );
+
+  //to not open too many subs, it is limited
+  const topIds = useMemo(() => categoryIds.slice(0, 30), [categoryIds]);
+
+  useEnsureSubcatIndex(topIds);
 
   React.useEffect(() => {
     if (expError) console.log('[Home] expenses.error =', expError);

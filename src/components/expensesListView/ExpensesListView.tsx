@@ -21,8 +21,9 @@ import { IconRegistry } from '../../assets/icons';
 import { STRINGS } from '../../strings/hebrew';
 import { theme } from '../../theme/theme';
 import type { RootStackParamsType } from '../../navigation/types';
-import type { SubCategoryType } from '../../shared/categoryType';
 import type { ExpenseModel } from '../../firebase/services/expenses';
+import { useEnsureSubcatIndex } from '../../zustandState/useEnsureSubcatIndex';
+import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
@@ -40,20 +41,25 @@ const ExpensesListView = ({
   groupByMonth,
 }: ExpensesListViewPropsType) => {
   // Zustand selector (prevent re-renders)
-  const select = (state: ExpensesState) => ({
+  const expensesSelect = (state: ExpensesState) => ({
     expenses: state.expenses,
     error: state.error,
     loading: state.loading,
   });
-  const { expenses, error, loading } = useExpenses(useShallow(select));
 
-  const { findCategoryById } = useCategory();
+  const { expenses, error, loading } = useExpenses(useShallow(expensesSelect));
   const navigation = useNavigation<RootNav>();
 
   const data = useMemo(
     () => (numOfTransactions ? expenses.slice(0, numOfTransactions) : expenses),
     [expenses, numOfTransactions],
   );
+
+  useEnsureSubcatIndex(data.map(e => e.categoryId));
+
+  // ➋ לוקחים את האינדקס לשימוש מהיר
+  const subIndex = useSubcatIndex(s => s.index);
+  const findCategoryById = useCategory(state => state.findCategoryById);
 
   const monthKey = (date: Date | null) => {
     if (!date) return 'unknown';
@@ -68,11 +74,6 @@ const ExpensesListView = ({
     const d = new Date(y, (m ?? 1) - 1, 1);
     return d.toLocaleDateString('he-IL', { month: 'long', year: 'numeric' });
   };
-
-  const subCategoryByCategory = (
-    subs?: SubCategoryType[],
-    id?: string | null,
-  ) => subs?.find(s => s.subCategoryId === id);
 
   const sections = useMemo(() => {
     if (!groupByMonth) return [];
@@ -95,8 +96,16 @@ const ExpensesListView = ({
       }));
   }, [groupByMonth, data]);
 
-  const handleExpensePress = (expenseId: string, subCategoryId?: string) => {
-    navigation.navigate('DetailsExpense', { expenseId, subCategoryId });
+  const handleExpensePress = (
+    categoryId: string,
+    expenseId: string,
+    subCategoryId?: string,
+  ) => {
+    navigation.navigate('DetailsExpense', {
+      categoryId,
+      expenseId,
+      subCategoryId,
+    });
   };
 
   return (
@@ -125,22 +134,19 @@ const ExpensesListView = ({
                 mapItem={item => {
                   const cat = findCategoryById(item.categoryId);
                   const Icon = cat?.icon ? IconRegistry[cat.icon] : undefined;
-                  const sub = subCategoryByCategory(
-                    cat?.subCategories,
-                    item.subCategoryId,
-                  );
+
+                  const subName = item.subCategoryId
+                    ? subIndex[item.categoryId]?.[item.subCategoryId]?.name
+                    : undefined;
 
                   return {
-                    text: `${cat?.categoryName ?? ''}`,
-                    onPress: () =>
-                      handleExpensePress(
-                        item.id,
-                        item.subCategoryId ?? undefined,
-                      ),
+                    text: cat?.name ?? '',
+                    subText: subName, // ← הנה שם התת־קטגוריה
                     icon: Icon,
                     createdAt: item.createdAt ?? null,
                     amount: item.amount,
-                    subText: sub?.subCategoryName,
+                    onPress: () =>
+                      handleExpensePress(item.id, item.subCategoryId ?? ''),
                   };
                 }}
               />
@@ -154,19 +160,15 @@ const ExpensesListView = ({
           mapItem={item => {
             const cat = findCategoryById(item.categoryId);
             const Icon = cat?.icon ? IconRegistry[cat.icon] : undefined;
-            const sub = subCategoryByCategory(
-              cat?.subCategories,
-              item.subCategoryId,
-            );
 
             return {
-              text: `${cat?.categoryName ?? ''}`,
+              text: cat?.name ?? '', // ← לא categoryName
               onPress: () =>
-                handleExpensePress(item.id, item.subCategoryId ?? undefined),
+                handleExpensePress(item.id, item.subCategoryId ?? ''),
               icon: Icon,
               createdAt: item.createdAt ?? null,
               amount: item.amount,
-              subText: sub?.subCategoryName,
+              // subText: idem
             };
           }}
         />

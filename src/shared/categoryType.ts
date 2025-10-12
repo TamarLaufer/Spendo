@@ -1,16 +1,21 @@
 import type { IconKey } from '../assets/icons';
 
-export type SubCategoryType = {
-  subCategoryId: string;
-  subCategoryName: string;
-  icon?: IconKey | null;
-};
-
-export type CategoryType = {
+export type SubCategory = {
+  id: string;
   categoryId: string;
-  categoryName: string;
-  maxAmount: number;
-  isExceed: boolean;
+  name: string;
   icon?: IconKey | null;
-  subCategories: SubCategoryType[];
+  order?: number;
+  active?: boolean;
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
+};
+export type Category = {
+  id: string;
+  name: string;
+  maxAmount: number;
+  isExceed: boolean; // computed in UI
+  icon?: IconKey | null;
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
 };

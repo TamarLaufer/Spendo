@@ -2,7 +2,6 @@ import { getApp } from '@react-native-firebase/app';
 import {
   getFirestore,
   collection,
-  query,
   where,
   orderBy,
   getDocs,
@@ -11,71 +10,115 @@ import {
   doc,
   limit,
   addDoc,
-  updateDoc,
-  arrayUnion,
   serverTimestamp,
   type FirebaseFirestoreTypes as FirestoreTypes,
+  setDoc,
+  query,
 } from '@react-native-firebase/firestore';
 import type { IconKey } from '../../assets/icons';
 import { DEV_HOUSEHOLD_ID } from '../../config/consts';
 import { CategoryCreateSchema } from '../../shared/categorySchema';
 
-export type SubCategoryDocType = {
-  subCategoryId: string;
+export type SubCategoryDocRead = {
   subCategoryName: string;
   icon?: IconKey | null;
   order?: number;
   active?: boolean;
+  categoryId?: string;
+  createdAt?: FirestoreTypes.Timestamp | null;
+  updatedAt?: FirestoreTypes.Timestamp | null;
 };
 
-export type CategoryFirebaseDoc = {
+export type SubCategoryDocWrite = {
+  subCategoryName: string;
+  icon?: IconKey | null;
+  order?: number;
+  active?: boolean;
+  categoryId?: string;
+  createdAt?: FirestoreTypes.FieldValue;
+  updatedAt?: FirestoreTypes.FieldValue;
+};
+
+export type CategoryDocRead = {
   householdId: string;
   categoryName: string;
   maxAmount: number;
   icon?: IconKey | null;
   order?: number;
   active?: boolean;
-  subCategories: SubCategoryDocType[];
-  createdAt?: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
-  updatedAt?: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
+  createdAt?: FirestoreTypes.Timestamp | null;
+  updatedAt?: FirestoreTypes.Timestamp | null;
 };
+
+type CategoryDocWrite = {
+  householdId: string;
+  categoryName: string;
+  maxAmount: number;
+  icon?: IconKey | null;
+  order?: number;
+  active?: boolean;
+  createdAt?: FirestoreTypes.FieldValue; // בדרך כלל serverTimestamp()
+  updatedAt?: FirestoreTypes.FieldValue;
+};
+
+type CatColRefRead = FirestoreTypes.CollectionReference<CategoryDocRead>;
+type CatColRefWrite = FirestoreTypes.CollectionReference<CategoryDocWrite>;
+type SubColRefRead = FirestoreTypes.CollectionReference<SubCategoryDocRead>;
+type SubColRefWrite = FirestoreTypes.CollectionReference<SubCategoryDocWrite>;
+type SubDocRefWrite = FirestoreTypes.DocumentReference<SubCategoryDocWrite>;
 
 // ---- Firestore init ----
 const appInstance = getApp();
 const firestoreDb = getFirestore(appInstance);
 
 // ---- Helper types ----
-type CategoryDocSnap =
-  FirestoreTypes.QueryDocumentSnapshot<FirestoreTypes.DocumentData>;
+
+const categoriesColRead = (): CatColRefRead =>
+  collection(firestoreDb, 'categories') as CatColRefRead;
+
+const categoriesColWrite = (): CatColRefWrite =>
+  collection(firestoreDb, 'categories') as CatColRefWrite;
+
+const subCategoriesColRead = (categoryId: string): SubColRefRead =>
+  collection(
+    firestoreDb,
+    'categories',
+    categoryId,
+    'subCategories',
+  ) as SubColRefRead;
+
+const subCategoriesColWrite = (categoryId: string): SubColRefWrite =>
+  collection(
+    firestoreDb,
+    'categories',
+    categoryId,
+    'subCategories',
+  ) as SubColRefWrite;
 
 // ---- Mapper: Firestore → UI ----
-function mapCategorySnapshotToModel(docSnap: CategoryDocSnap) {
-  const data = docSnap.data() as CategoryFirebaseDoc;
+function mapCategorySnapshotToModel(
+  docSnap: FirestoreTypes.QueryDocumentSnapshot<CategoryDocRead>,
+) {
+  const data = docSnap.data();
   return {
-    categoryId: docSnap.id,
-    categoryName: data.categoryName,
+    id: docSnap.id,
+    name: data.categoryName,
     maxAmount: data.maxAmount,
-    isExceed: false, // מחושב בצד הלקוח
-    icon: data.icon,
-    subCategories: (data.subCategories ?? []).map(s => ({
-      subCategoryId: s.subCategoryId,
-      subCategoryName: s.subCategoryName,
-      icon: s.icon ?? null,
-    })),
+    isExceed: false,
+    icon: data.icon ?? null,
   };
 }
 
 // ---- Queries ----
 export async function fetchCategoriesForHousehold(householdId: string) {
-  const categoriesRef = collection(firestoreDb, 'categories');
   const categoriesQuery = query(
-    categoriesRef,
+    categoriesColRead(),
     where('householdId', '==', householdId),
     orderBy('order', 'asc'),
   );
 
   const querySnapshot = await getDocs(categoriesQuery);
-  return querySnapshot.docs.map(mapCategorySnapshotToModel as any);
+  return querySnapshot.docs.map(mapCategorySnapshotToModel);
 }
 
 export function subscribeCategoriesForHousehold(
@@ -83,19 +126,15 @@ export function subscribeCategoriesForHousehold(
   onChange: (rows: ReturnType<typeof mapCategorySnapshotToModel>[]) => void,
   onError?: (e: Error) => void,
 ) {
-  const categoriesRef = collection(firestoreDb, 'categories');
   const categoriesQuery = query(
-    categoriesRef,
+    categoriesColRead(),
     where('householdId', '==', householdId),
     orderBy('order', 'asc'),
   );
 
   return onSnapshot(
     categoriesQuery,
-    snap => {
-      const rows = snap.docs.map(mapCategorySnapshotToModel as any);
-      onChange(rows);
-    },
+    snap => onChange(snap.docs.map(mapCategorySnapshotToModel)),
     err => onError?.(err as unknown as Error),
   );
 }
@@ -109,33 +148,142 @@ export async function addCategory(input: {
   active?: boolean;
   householdId?: string;
 }) {
-  const categoriesRef = collection(firestoreDb, 'categories');
   const parsed = CategoryCreateSchema.parse(input);
 
-  const payload: CategoryFirebaseDoc = {
+  const payload: CategoryDocWrite = {
     householdId: parsed.householdId ?? DEV_HOUSEHOLD_ID,
     categoryName: parsed.categoryName.trim(),
     maxAmount: parsed.maxAmount,
     icon: parsed.icon ?? null,
     order: parsed.order ?? Date.now(),
     active: parsed.active ?? true,
-    subCategories: parsed.subCategories,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
 
-  const createdRef = await addDoc(categoriesRef, payload);
+  const createdRef = await addDoc(categoriesColWrite(), payload);
   return createdRef.id;
 }
 
-export async function addSubCategory(
+// helper ליצירת id מֵשם (או תשתמשי ב-id אקראי)
+export const toId = (name: string) =>
+  name
+    .normalize('NFKC')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9\-]/g, '')
+    .slice(0, 48);
+
+export async function upsertSubCategory(
   categoryId: string,
-  subCategory: SubCategoryDocType,
+  subCategoryId: string,
+  data: Omit<SubCategoryDocWrite, 'createdAt' | 'updatedAt'>,
 ) {
-  await updateDoc(doc(firestoreDb, 'categories', categoryId), {
-    subCategories: arrayUnion(subCategory),
+  const ref = doc(
+    subCategoriesColWrite(categoryId),
+    subCategoryId,
+  ) as SubDocRefWrite;
+
+  await setDoc(
+    ref,
+    { ...data, categoryId, updatedAt: serverTimestamp() },
+    { merge: true },
+  );
+}
+
+export async function fetchSubCategoriesForCategory(categoryId: string) {
+  const queryOrder = query(
+    subCategoriesColRead(categoryId),
+    orderBy('order', 'asc'),
+  );
+  const getDocsSubCat = await getDocs(queryOrder);
+  return getDocsSubCat.docs.map(
+    (subDoc: FirestoreTypes.QueryDocumentSnapshot<SubCategoryDocRead>) => ({
+      id: subDoc.id,
+      categoryId,
+      ...subDoc.data(),
+    }),
+  );
+}
+
+export function subscribeSubCategoriesForCategory(
+  categoryId: string,
+  onChange: (
+    rows: Array<{ id: string } & SubCategoryDocRead & { categoryId: string }>,
+  ) => void,
+  onError?: (e: Error) => void,
+) {
+  const querySub = query(
+    subCategoriesColRead(categoryId),
+    orderBy('order', 'asc'),
+  );
+  return onSnapshot(
+    querySub,
+    snap => {
+      const rows = snap.docs.map(
+        (subDoc: FirestoreTypes.QueryDocumentSnapshot<SubCategoryDocRead>) => ({
+          id: subDoc.id,
+          categoryId,
+          ...subDoc.data(),
+        }),
+      );
+      onChange(rows);
+    },
+    err => onError?.(err as unknown as Error),
+  );
+}
+
+const parseCsv = (raw?: string) =>
+  (raw ?? '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+export async function addCategoryWithCsvSubcats(input: {
+  categoryName: string;
+  maxAmount: number;
+  icon?: IconKey | null;
+  order?: number;
+  active?: boolean;
+  householdId?: string;
+  subcatsCsv?: string; // ← מגיע מהטופס
+}) {
+  const categoriesRef = collection(firestoreDb, 'categories');
+
+  const payload: CategoryDocWrite = {
+    householdId: input.householdId ?? DEV_HOUSEHOLD_ID,
+    categoryName: input.categoryName.trim(),
+    maxAmount: input.maxAmount,
+    icon: input.icon ?? null,
+    order: input.order ?? Date.now(),
+    active: input.active ?? true,
+    createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),
+  };
+
+  // יצירת הקטגוריה
+  const catRef = await addDoc(categoriesRef, payload);
+  const categoryId = catRef.id;
+
+  // כתיבת תתי־קטגוריות כ-docs בתת־אוסף (batch אופציונלי)
+  const names = parseCsv(input.subcatsCsv);
+  const batch = writeBatch(firestoreDb);
+  names.forEach((name, idx) => {
+    const subId = toId(name) || `${Date.now()}-${idx}`;
+    const ref = doc(subCategoriesColWrite(categoryId), subId) as SubDocRefWrite;
+    batch.set(ref, {
+      subCategoryName: name,
+      order: idx,
+      active: true,
+      categoryId,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
   });
+  await batch.commit();
+
+  return categoryId;
 }
 
 // ---- Seed (אם אין קטגוריות) ----
@@ -146,17 +294,13 @@ export async function seedCategoriesIfEmpty(householdId: string) {
   );
   if (!existsSnap.empty) return;
 
-  const defaults: Omit<CategoryFirebaseDoc, 'householdId'>[] = [
+  const defaults: Omit<CategoryDocRead, 'householdId'>[] = [
     {
       categoryName: 'מזון',
       maxAmount: 2000,
       icon: 'market',
       order: 1,
       active: true,
-      subCategories: [
-        { subCategoryId: 'mark', subCategoryName: 'סופר' },
-        { subCategoryId: 'rest', subCategoryName: 'אוכל בחוץ ומסעדות' },
-      ],
     },
     {
       categoryName: 'רכב',
@@ -164,11 +308,6 @@ export async function seedCategoriesIfEmpty(householdId: string) {
       icon: 'car',
       order: 2,
       active: true,
-      subCategories: [
-        { subCategoryId: 'fuel', subCategoryName: 'דלק' },
-        { subCategoryId: 'service', subCategoryName: 'טיפול' },
-        { subCategoryId: 'wash', subCategoryName: 'שטיפה' },
-      ],
     },
   ];
 

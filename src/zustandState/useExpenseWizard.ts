@@ -5,13 +5,15 @@ import {
   type Steps,
 } from '../bottomSheet/types';
 import { useBottomSheet } from './useBottomSheet';
-import { useCategory } from './useCategory';
 import {
   ExpenseCreateSchema,
   type ExpenseCreateInput,
 } from '../shared/expenseSchema';
 import { createExpense } from '../api/api';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
+
+// ✅ חדש: נשתמש באינדקס גלובלי של תתי־קטגוריות (counts לפי categoryId)
+import { useSubcatIndex } from './useSubCategoriesIndex';
 
 type ExpenseWizardStateType = {
   amount: number | null;
@@ -38,154 +40,149 @@ type ExpenseWizardStateType = {
   isSubmitReady: () => boolean;
 };
 
-export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => ({
-  amount: null,
-  categoryId: '',
-  subCategoryId: '',
-  currentStep: 'amount',
-  paymentMethods: PAYMENT_METHODS,
-  paymentMethod: PAYMENT_METHODS[0].name,
-  note: '',
+export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
+  // helper פנימי: האם לקטגוריה יש תתי־קטגוריות לפי האינדקס הגלובלי
+  const hasSubs = (catId: string) => {
+    if (!catId) return false;
+    const counts = useSubcatIndex.getState().counts;
+    return (counts[catId] ?? 0) > 0;
+  };
 
-  setAmount: amount => set({ amount }),
-  setCategoryId: categoryId => set({ categoryId, subCategoryId: '' }),
-  setSubCategoryId: subCategoryId => set({ subCategoryId }),
-  setCurrentStep: currentStep => set({ currentStep }),
-  setPaymentMethod: paymentMethod => set({ paymentMethod }),
-  setNote: note => set({ note }),
+  return {
+    amount: null,
+    categoryId: '',
+    subCategoryId: '',
+    currentStep: 'amount',
+    paymentMethods: PAYMENT_METHODS,
+    paymentMethod: PAYMENT_METHODS[0].name,
+    note: '',
 
-  resetWizard: () =>
-    set({
-      amount: null,
-      categoryId: '',
-      subCategoryId: '',
-      currentStep: 'amount',
-      paymentMethod: PAYMENT_METHODS[0].name,
-      note: '',
-    }),
+    setAmount: amount => set({ amount }),
+    setCategoryId: categoryId => set({ categoryId, subCategoryId: '' }),
+    setSubCategoryId: subCategoryId => set({ subCategoryId }),
+    setCurrentStep: currentStep => set({ currentStep }),
+    setPaymentMethod: paymentMethod => set({ paymentMethod }),
+    setNote: note => set({ note }),
 
-  canProceedToNextStep: () => {
-    const state = get();
-    switch (state.currentStep) {
-      case 'amount':
-        return state.amount !== null && state.amount > 0;
-      case 'category':
-        return !!state.categoryId;
-      case 'subCategory': {
-        const cat = useCategory.getState().findCategoryById(state.categoryId);
-        const hasSub = !!cat && cat.subCategories.length > 0;
-        return hasSub ? !!state.subCategoryId : true;
+    resetWizard: () =>
+      set({
+        amount: null,
+        categoryId: '',
+        subCategoryId: '',
+        currentStep: 'amount',
+        paymentMethod: PAYMENT_METHODS[0].name,
+        note: '',
+      }),
+
+    canProceedToNextStep: () => {
+      const s = get();
+      switch (s.currentStep) {
+        case 'amount':
+          return s.amount !== null && s.amount > 0;
+        case 'category':
+          return !!s.categoryId;
+        case 'subCategory': {
+          const needSub = hasSubs(s.categoryId);
+          return needSub ? !!s.subCategoryId : true;
+        }
+        case 'payMethod':
+          return !!s.paymentMethod;
+        case 'AddNoteForExpense':
+        case 'endProcess':
+          return true;
+        default:
+          return false;
       }
-      case 'payMethod':
-        return !!state.paymentMethod;
-      case 'AddNoteForExpense':
-        return true;
-      case 'endProcess':
-        return true;
-      default:
-        return false;
-    }
-  },
+    },
 
-  buildPayload: (): ExpenseCreateInput | null => {
-    const { amount, categoryId, subCategoryId, paymentMethod, note } = get();
-    if (!amount || amount <= 0 || !categoryId || !paymentMethod) return null;
+    buildPayload: (): ExpenseCreateInput | null => {
+      const { amount, categoryId, subCategoryId, paymentMethod, note } = get();
+      if (!amount || amount <= 0 || !categoryId || !paymentMethod) return null;
 
-    const parsed = ExpenseCreateSchema.safeParse({
-      householdId: DEV_HOUSEHOLD_ID,
-      amount,
-      categoryId,
-      subCategoryId: subCategoryId ? subCategoryId : null,
-      paymentMethod,
-      note,
-    });
+      const parsed = ExpenseCreateSchema.safeParse({
+        householdId: DEV_HOUSEHOLD_ID,
+        amount,
+        categoryId,
+        subCategoryId: subCategoryId ? subCategoryId : null,
+        paymentMethod,
+        note,
+      });
 
-    if (!parsed.success) return null;
+      if (!parsed.success) return null;
+      return parsed.data;
+    },
 
-    return parsed.data;
-  },
+    submitExpense: async () => {
+      const payload = get().buildPayload();
+      if (!payload) throw new Error('Incomplete expense data');
+      await createExpense(payload);
+      get().handleClose();
+    },
 
-  submitExpense: async () => {
-    const payload = get().buildPayload();
-    if (!payload) throw new Error('Incomplete expense data');
+    isSubmitReady: () => {
+      const s = get();
+      if (!s.amount || s.amount <= 0) return false;
+      if (!s.categoryId) return false;
+      const needSub = hasSubs(s.categoryId);
+      if (needSub && !s.subCategoryId) return false;
+      if (!s.paymentMethod) return false;
+      return true;
+    },
 
-    await createExpense(payload);
-    get().handleClose();
-  },
+    handleClose: () => {
+      const closeBottomSheet = useBottomSheet.getState().closeBottomSheet;
+      closeBottomSheet();
+    },
 
-  isSubmitReady: () => {
-    const s = get();
-    if (!s.amount || s.amount <= 0) return false;
-    if (!s.categoryId) return false;
-    const cat = useCategory.getState().findCategoryById(s.categoryId);
-    const hasSubs = !!cat && cat.subCategories.length > 0;
-    if (hasSubs && !s.subCategoryId) return false;
-    if (!s.paymentMethod) return false;
-    return true;
-  },
+    handleBack: () => {
+      const s = get();
+      const needSub = hasSubs(s.categoryId);
 
-  handleClose: () => {
-    const closeBottomSheet = useBottomSheet.getState().closeBottomSheet;
-    closeBottomSheet();
-  },
-
-  handleBack: () => {
-    const state = get();
-    const findCategoryById = useCategory.getState().findCategoryById;
-    const selectedCategory = findCategoryById(state.categoryId);
-
-    switch (state.currentStep) {
-      case 'category':
-        set({ currentStep: 'amount' });
-        break;
-      case 'subCategory':
-        set({ currentStep: 'category' });
-        break;
-      case 'payMethod':
-        if (selectedCategory && selectedCategory.subCategories.length > 0) {
-          set({ currentStep: 'subCategory' });
-        } else {
+      switch (s.currentStep) {
+        case 'category':
+          set({ currentStep: 'amount' });
+          break;
+        case 'subCategory':
           set({ currentStep: 'category' });
-        }
-        break;
-      case 'AddNoteForExpense':
-        set({ currentStep: 'payMethod' });
-        break;
-      case 'endProcess':
-        set({ currentStep: 'AddNoteForExpense' });
-        break;
-    }
-  },
-
-  handleContinue: () => {
-    const state = get();
-    const findCategoryById = useCategory.getState().findCategoryById;
-    const selectedCategory = findCategoryById(state.categoryId);
-    if (!get().canProceedToNextStep()) return;
-
-    switch (state.currentStep) {
-      case 'amount':
-        set({ currentStep: 'category' });
-        break;
-      case 'category':
-        if (selectedCategory && selectedCategory?.subCategories?.length > 0) {
-          set({ currentStep: 'subCategory' });
-        } else {
+          break;
+        case 'payMethod':
+          set({ currentStep: needSub ? 'subCategory' : 'category' });
+          break;
+        case 'AddNoteForExpense':
           set({ currentStep: 'payMethod' });
-        }
-        break;
-      case 'subCategory':
-        set({ currentStep: 'payMethod' });
-        break;
-      case 'payMethod':
-        set({ currentStep: 'AddNoteForExpense' });
-        break;
-      case 'AddNoteForExpense':
-        set({ currentStep: 'endProcess' });
-        break;
-      case 'endProcess':
-        get().handleClose();
-        break;
-    }
-  },
-}));
+          break;
+        case 'endProcess':
+          set({ currentStep: 'AddNoteForExpense' });
+          break;
+      }
+    },
+
+    handleContinue: () => {
+      const s = get();
+      if (!get().canProceedToNextStep()) return;
+
+      const needSub = hasSubs(s.categoryId);
+
+      switch (s.currentStep) {
+        case 'amount':
+          set({ currentStep: 'category' });
+          break;
+        case 'category':
+          set({ currentStep: needSub ? 'subCategory' : 'payMethod' });
+          break;
+        case 'subCategory':
+          set({ currentStep: 'payMethod' });
+          break;
+        case 'payMethod':
+          set({ currentStep: 'AddNoteForExpense' });
+          break;
+        case 'AddNoteForExpense':
+          set({ currentStep: 'endProcess' });
+          break;
+        case 'endProcess':
+          get().handleClose();
+          break;
+      }
+    },
+  };
+});

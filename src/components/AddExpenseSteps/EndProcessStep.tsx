@@ -3,23 +3,18 @@ import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useCategory } from '../../zustandState/useCategory';
 import { STRINGS } from '../../strings/hebrew';
 import { formatAmount } from '../../functions/functions';
+import { useSubCategories } from '../../hooks/useSubCategories';
 
 const EndProcessStep = () => {
-  const subCategoryId = useExpenseWizard(state => state.subCategoryId);
   const categoryId = useExpenseWizard(state => state.categoryId);
+  const subCatPerCategory = useSubCategories(categoryId);
   const amount = useExpenseWizard(state => state.amount);
 
   const findCategoryById = useCategory(state => state.findCategoryById);
   const expenseObj = findCategoryById(categoryId);
   const paymentMethod = useExpenseWizard(state => state.paymentMethod);
 
-  const currentSubCategory = expenseObj?.subCategories.find(
-    item => item.subCategoryId === subCategoryId,
-  );
-
-  const isSubExist = currentSubCategory
-    ? currentSubCategory?.subCategoryName
-    : '';
+  const SubExist = subCatPerCategory ? subCatPerCategory.rows : '';
 
   const isAmountExist = amount ? formatAmount(amount) : '';
 
@@ -28,8 +23,8 @@ const EndProcessStep = () => {
       <View style={styles.textContainer}>
         <Text style={styles.text}>{STRINGS.EXPENSE_SUCCEDED}</Text>
         <Text style={styles.text}>{`${STRINGS.EXPENSE_IN}: ${
-          expenseObj?.categoryName
-        } ${isSubExist ? `- ${isSubExist}` : ''}`}</Text>
+          expenseObj?.name
+        } ${SubExist ? `- ${SubExist}` : ''}`}</Text>
       </View>
       <Text
         style={styles.amountText}
