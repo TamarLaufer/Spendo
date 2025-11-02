@@ -4,14 +4,16 @@ import { useSubcatIndex } from '../zustandState/useSubCategoriesIndex';
 import type { SubCategory } from '../shared/categoryType';
 
 function uniqSorted(ids: string[]) {
-  return Array.from(new Set(ids.filter(Boolean))).sort();
+  return Array.from(new Set(ids.filter(x => x != null && x !== ''))).sort();
 }
 
 export function useEnsureSubcatIndex(categoryIds: string[]) {
-  const putMany = useSubcatIndex(s => s.putMany);
+  const putMany = useSubcatIndex(state => state.putMany);
   const removeCategory = useSubcatIndex(state => state.removeCategory);
   const subsRef = useRef<Record<string, () => void>>({});
+
   const ids = useMemo(() => uniqSorted(categoryIds), [categoryIds]);
+  const idsKey = useMemo(() => ids.join('|'), [ids]);
 
   useEffect(() => {
     const current = new Set(Object.keys(subsRef.current));
@@ -48,5 +50,5 @@ export function useEnsureSubcatIndex(categoryIds: string[]) {
       Object.values(subsRef.current).forEach(unsub => unsub());
       subsRef.current = {};
     };
-  }, [ids, putMany, removeCategory]);
+  }, [ids, idsKey, putMany, removeCategory]);
 }

@@ -8,7 +8,6 @@ const ChooseSubCategoryStep = () => {
   const { categoryId, setSubCategoryId } = useExpenseWizard();
   const handleContinue = useExpenseWizard(state => state.handleContinue);
 
-  // הוק שמביא את רשימת התתי־קטגוריות לקטגוריה שנבחרה
   const { rows, loading, error } = useSubCategories(categoryId);
 
   const handleSelect = (subId: string) => {

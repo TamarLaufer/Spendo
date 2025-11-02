@@ -55,10 +55,9 @@ const ExpensesListView = ({
     [expenses, numOfTransactions],
   );
 
-  useEnsureSubcatIndex(data.map(e => e.categoryId));
+  useEnsureSubcatIndex(data.map(expense => expense.categoryId));
 
-  // ➋ לוקחים את האינדקס לשימוש מהיר
-  const subIndex = useSubcatIndex(s => s.index);
+  const subIndex = useSubcatIndex(state => state.index);
   const findCategoryById = useCategory(state => state.findCategoryById);
 
   const monthKey = (date: Date | null) => {
@@ -96,15 +95,19 @@ const ExpensesListView = ({
       }));
   }, [groupByMonth, data]);
 
-  const handleExpensePress = (
-    categoryId: string,
-    expenseId: string,
-    subCategoryId?: string,
-  ) => {
+  const handleExpensePress = ({
+    expenseId,
+    categoryId,
+    subCategoryId,
+  }: {
+    expenseId: string;
+    categoryId: string;
+    subCategoryId?: string;
+  }) => {
     navigation.navigate('DetailsExpense', {
-      categoryId,
       expenseId,
       subCategoryId,
+      categoryId,
     });
   };
 
@@ -146,7 +149,11 @@ const ExpensesListView = ({
                     createdAt: item.createdAt ?? null,
                     amount: item.amount,
                     onPress: () =>
-                      handleExpensePress(item.id, item.subCategoryId ?? ''),
+                      handleExpensePress({
+                        expenseId: item.id,
+                        categoryId: item.categoryId,
+                        subCategoryId: item.subCategoryId ?? '',
+                      }),
                   };
                 }}
               />
@@ -164,7 +171,11 @@ const ExpensesListView = ({
             return {
               text: cat?.name ?? '', // ← לא categoryName
               onPress: () =>
-                handleExpensePress(item.id, item.subCategoryId ?? ''),
+                handleExpensePress({
+                  expenseId: item.id,
+                  categoryId: item.categoryId,
+                  subCategoryId: item.subCategoryId ?? '',
+                }),
               icon: Icon,
               createdAt: item.createdAt ?? null,
               amount: item.amount,

@@ -1,16 +1,25 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamsType } from './types';
-import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
-import DetailsExpense from '../screens/DetailsExpense/DetailsExpense';
 import AllExpenses from '../screens/AllExpenses/AllExpenses';
+import DetailsExpense from '../screens/DetailsExpense/DetailsExpense';
+import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
 
-const Stack = createStackNavigator<RootStackParamsType>();
-const STACK_SCREEN_OPTIONS = { headerShown: false };
+const theme = {
+  ...DefaultTheme,
+  colors: { ...DefaultTheme.colors, background: '#fff' },
+};
+const Stack = createNativeStackNavigator<RootStackParamsType>();
 
-const StackNavigation = () => {
+const STACK_SCREEN_OPTIONS = {
+  headerShown: false,
+  contentStyle: { backgroundColor: '#fff' },
+  animation: 'default',
+} as const;
+
+export default function StackNavigation() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={theme}>
       <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS}>
         <Stack.Screen name="MainTabs" component={MainTabsWithBottomSheet} />
         <Stack.Screen name="DetailsExpense" component={DetailsExpense} />
@@ -18,6 +27,4 @@ const StackNavigation = () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
-};
-
-export default StackNavigation;
+}

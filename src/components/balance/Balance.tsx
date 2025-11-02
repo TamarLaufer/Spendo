@@ -6,7 +6,7 @@ import { formatAmount } from '../../functions/functions';
 const Balance = () => {
   const now = new Date();
   const targetYear = now.getFullYear();
-  const targetMonth1to12 = now.getMonth();
+  const month0to11 = now.getMonth();
   const expenses = useExpenses(state => state.expenses);
 
   const balanceCalc = useMemo(() => {
@@ -19,11 +19,11 @@ const Balance = () => {
 
       const year = date?.getFullYear();
       const month = date.getMonth();
-      const isThisMonth = month === targetMonth1to12;
+      const isThisMonth = month === month0to11;
       const isThisYear = year === targetYear;
       return isThisYear && isThisMonth ? sum + expense.amount : sum;
     }, 0);
-  }, [expenses, targetYear, targetMonth1to12]);
+  }, [expenses, targetYear, month0to11]);
 
   return (
     <View style={styles.container}>

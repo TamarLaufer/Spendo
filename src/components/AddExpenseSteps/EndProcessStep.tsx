@@ -7,14 +7,14 @@ import { useSubCategories } from '../../hooks/useSubCategories';
 
 const EndProcessStep = () => {
   const categoryId = useExpenseWizard(state => state.categoryId);
-  const subCatPerCategory = useSubCategories(categoryId);
   const amount = useExpenseWizard(state => state.amount);
+  const subCategoryId = useExpenseWizard(state => state.subCategoryId);
+  const { rows: subcats } = useSubCategories(categoryId);
+  const subCat = subcats.find(subC => subC.id === subCategoryId);
 
   const findCategoryById = useCategory(state => state.findCategoryById);
   const expenseObj = findCategoryById(categoryId);
   const paymentMethod = useExpenseWizard(state => state.paymentMethod);
-
-  const SubExist = subCatPerCategory ? subCatPerCategory.rows : '';
 
   const isAmountExist = amount ? formatAmount(amount) : '';
 
@@ -24,7 +24,7 @@ const EndProcessStep = () => {
         <Text style={styles.text}>{STRINGS.EXPENSE_SUCCEDED}</Text>
         <Text style={styles.text}>{`${STRINGS.EXPENSE_IN}: ${
           expenseObj?.name
-        } ${SubExist ? `- ${SubExist}` : ''}`}</Text>
+        } ${subCat?.name ? `- ${subCat?.name}` : ''}`}</Text>
       </View>
       <Text
         style={styles.amountText}

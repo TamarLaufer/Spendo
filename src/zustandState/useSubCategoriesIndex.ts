@@ -15,6 +15,7 @@ type SubcatIndexState = {
 export const useSubcatIndex = create<SubcatIndexState>(set => ({
   index: {},
   counts: {},
+
   putMany: (categoryId, subs) =>
     set(state => ({
       index: {
@@ -23,11 +24,13 @@ export const useSubcatIndex = create<SubcatIndexState>(set => ({
       },
       counts: { ...state.counts, [categoryId]: subs.length },
     })),
+
   removeCategory: categoryId =>
     set(state => {
       const { [categoryId]: _1, ...restIdx } = state.index;
       const { [categoryId]: _2, ...restCnt } = state.counts;
       return { index: restIdx, counts: restCnt };
     }),
+
   clear: () => set({ index: {}, counts: {} }),
 }));

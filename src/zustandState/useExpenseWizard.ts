@@ -11,8 +11,6 @@ import {
 } from '../shared/expenseSchema';
 import { createExpense } from '../api/api';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
-
-// ✅ חדש: נשתמש באינדקס גלובלי של תתי־קטגוריות (counts לפי categoryId)
 import { useSubcatIndex } from './useSubCategoriesIndex';
 
 type ExpenseWizardStateType = {
@@ -41,7 +39,7 @@ type ExpenseWizardStateType = {
 };
 
 export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
-  // helper פנימי: האם לקטגוריה יש תתי־קטגוריות לפי האינדקס הגלובלי
+  // has subCategory to Category:
   const hasSubs = (catId: string) => {
     if (!catId) return false;
     const counts = useSubcatIndex.getState().counts;
@@ -75,18 +73,17 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
       }),
 
     canProceedToNextStep: () => {
-      const s = get();
-      switch (s.currentStep) {
+      const state = get();
+      switch (state.currentStep) {
         case 'amount':
-          return s.amount !== null && s.amount > 0;
+          return state.amount !== null && state.amount > 0;
         case 'category':
-          return !!s.categoryId;
-        case 'subCategory': {
-          const needSub = hasSubs(s.categoryId);
-          return needSub ? !!s.subCategoryId : true;
-        }
+          return !!state.categoryId;
+        case 'subCategory':
+          const needSub = hasSubs(state.categoryId);
+          return needSub ? !!state.subCategoryId : true;
         case 'payMethod':
-          return !!s.paymentMethod;
+          return !!state.paymentMethod;
         case 'AddNoteForExpense':
         case 'endProcess':
           return true;
@@ -120,12 +117,12 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
     },
 
     isSubmitReady: () => {
-      const s = get();
-      if (!s.amount || s.amount <= 0) return false;
-      if (!s.categoryId) return false;
-      const needSub = hasSubs(s.categoryId);
-      if (needSub && !s.subCategoryId) return false;
-      if (!s.paymentMethod) return false;
+      const state = get();
+      if (!state.amount || state.amount <= 0) return false;
+      if (!state.categoryId) return false;
+      const needSub = hasSubs(state.categoryId);
+      if (needSub && !state.subCategoryId) return false;
+      if (!state.paymentMethod) return false;
       return true;
     },
 
@@ -135,10 +132,11 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
     },
 
     handleBack: () => {
-      const s = get();
-      const needSub = hasSubs(s.categoryId);
+      const state = get();
+      const needSub = hasSubs(state.categoryId);
+      console.log(useSubcatIndex.getState().counts);
 
-      switch (s.currentStep) {
+      switch (state.currentStep) {
         case 'category':
           set({ currentStep: 'amount' });
           break;
@@ -158,12 +156,12 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
     },
 
     handleContinue: () => {
-      const s = get();
+      const state = get();
       if (!get().canProceedToNextStep()) return;
 
-      const needSub = hasSubs(s.categoryId);
+      const needSub = hasSubs(state.categoryId);
 
-      switch (s.currentStep) {
+      switch (state.currentStep) {
         case 'amount':
           set({ currentStep: 'category' });
           break;

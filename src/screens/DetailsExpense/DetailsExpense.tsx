@@ -39,14 +39,14 @@ const DetailsExpense = () => {
   if (!expense) {
     return <Text>{STRINGS.LOADING_OR_NOT_FOUND}</Text>;
   }
-  const category = findCategoryById(expense.id);
+  const category = findCategoryById(expense.categoryId);
 
   const texts = [
     `הוצאה של ${category?.name}, ${subCat?.name ?? ''}`,
     `בסך של ${formatAmount(expense.amount)}`,
     `בתאריך ${formatShortDate(expense.createdAt)}`,
     `ב${expense.paymentMethod} `,
-    `הערות: ${expense?.note ?? ''}`,
+    `${expense?.note ?? ''}`,
   ];
 
   const handleDeletePress = () => {
@@ -65,6 +65,8 @@ const DetailsExpense = () => {
   const handleModal = () => {
     setModalVisible(prev => !prev);
   };
+
+  if (!category) return <Text>טוען קטגוריה...</Text>;
 
   return (
     <View style={styles.container}>

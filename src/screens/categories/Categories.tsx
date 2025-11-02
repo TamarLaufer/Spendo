@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginHorizontal: 10,
+    marginBottom: 40,
   },
   header: {
     fontSize: 23,

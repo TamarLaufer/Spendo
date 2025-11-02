@@ -23,6 +23,7 @@ const TAB_SCREEN_OPTIONS = {
   tabBarInactiveTintColor: 'gray',
   headerShown: false,
   tabBarStyle: TAB_BAR_STYLE,
+  sceneContainerStyle: { backgroundColor: '#fff' },
 } as const;
 
 const IconHome = ({ focused, color, size }: TabIconProps) => (
