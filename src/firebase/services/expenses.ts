@@ -190,7 +190,7 @@ export async function addExpense(createInput: ExpenseCreateInput) {
 }
 
 // ---------- Update (partial) ----------
-export async function updateExpense(
+export async function updateExpenseService(
   expenseId: string,
   updatePatch: ExpenseUpdatePatch,
 ) {

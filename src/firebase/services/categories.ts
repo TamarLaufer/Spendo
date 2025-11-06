@@ -21,7 +21,7 @@ import { CategoryCreateSchema } from '../../shared/categorySchema';
 
 export type SubCategoryDocRead = {
   subCategoryName: string;
-  icon?: IconKey | null;
+  icon: IconKey;
   order?: number;
   active?: boolean;
   categoryId?: string;
@@ -31,7 +31,7 @@ export type SubCategoryDocRead = {
 
 export type SubCategoryDocWrite = {
   subCategoryName: string;
-  icon?: IconKey | null;
+  icon: IconKey;
   order?: number;
   active?: boolean;
   categoryId?: string;
@@ -43,7 +43,7 @@ export type CategoryDocRead = {
   householdId: string;
   categoryName: string;
   maxAmount: number;
-  icon?: IconKey | null;
+  icon?: IconKey;
   order?: number;
   active?: boolean;
   createdAt?: FirestoreTypes.Timestamp | null;
@@ -54,10 +54,10 @@ type CategoryDocWrite = {
   householdId: string;
   categoryName: string;
   maxAmount: number;
-  icon?: IconKey | null;
+  icon?: IconKey;
   order?: number;
   active?: boolean;
-  createdAt?: FirestoreTypes.FieldValue; // בדרך כלל serverTimestamp()
+  createdAt?: FirestoreTypes.FieldValue;
   updatedAt?: FirestoreTypes.FieldValue;
 };
 
@@ -105,7 +105,7 @@ function mapCategorySnapshotToModel(
     name: data.categoryName,
     maxAmount: data.maxAmount,
     isExceed: false,
-    icon: data.icon ?? null,
+    icon: data.icon || 'defaultIcon',
   };
 }
 
@@ -143,7 +143,7 @@ export function subscribeCategoriesForHousehold(
 export async function addCategory(input: {
   categoryName: string;
   maxAmount: number;
-  icon?: IconKey | null;
+  icon: IconKey;
   order?: number;
   active?: boolean;
   householdId?: string;
@@ -154,7 +154,7 @@ export async function addCategory(input: {
     householdId: parsed.householdId ?? DEV_HOUSEHOLD_ID,
     categoryName: parsed.categoryName.trim(),
     maxAmount: parsed.maxAmount,
-    icon: parsed.icon ?? null,
+    icon: parsed.icon ?? 'defaultIcon',
     order: parsed.order ?? Date.now(),
     active: parsed.active ?? true,
     createdAt: serverTimestamp(),
@@ -243,7 +243,7 @@ const parseCsv = (raw?: string) =>
 export async function addCategoryWithCsvSubcats(input: {
   categoryName: string;
   maxAmount: number;
-  icon?: IconKey | null;
+  icon?: IconKey;
   order?: number;
   active?: boolean;
   householdId?: string;
@@ -255,7 +255,7 @@ export async function addCategoryWithCsvSubcats(input: {
     householdId: input.householdId ?? DEV_HOUSEHOLD_ID,
     categoryName: input.categoryName.trim(),
     maxAmount: input.maxAmount,
-    icon: input.icon ?? null,
+    icon: input.icon || 'defaultIcon',
     order: input.order ?? Date.now(),
     active: input.active ?? true,
     createdAt: serverTimestamp(),
@@ -276,6 +276,7 @@ export async function addCategoryWithCsvSubcats(input: {
       subCategoryName: name,
       order: idx,
       active: true,
+      icon: 'defaultIcon',
       categoryId,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),

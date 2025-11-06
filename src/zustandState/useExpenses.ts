@@ -1,10 +1,11 @@
 import { create } from 'zustand';
-import { ExpenseRecord } from '../shared/expenseSchema';
+import { ExpenseRecord, ExpenseUpdatePatch } from '../shared/expenseSchema';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
 import {
   deleteExpenseFromServer,
   fetchExpenses,
   subscribeToExpenses,
+  updateExpenseService,
 } from '../firebase/services/expenses';
 
 export type ExpensesState = {
@@ -21,6 +22,7 @@ export type ExpensesState = {
   clear: () => void;
   findExpenseById: (id: string) => ExpenseRecord | undefined;
   deleteExpense: (id: string) => Promise<void>;
+  updateExpense: (id: string, patch: ExpenseUpdatePatch) => Promise<void>;
 };
 
 export const useExpenses = create<ExpensesState>((set, get) => ({
@@ -70,6 +72,19 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
       }));
     } catch (err: any) {
       set({ error: err?.message ?? 'Delete failed' });
+    }
+  },
+
+  updateExpense: async (id: string, patch: ExpenseUpdatePatch) => {
+    try {
+      await updateExpenseService(id, patch);
+      set(state => ({
+        expenses: state.expenses.map(exp =>
+          exp.id === id ? { ...exp, ...patch } : exp,
+        ),
+      }));
+    } catch (err) {
+      console.error('❌ failed to update expense', err);
     }
   },
 

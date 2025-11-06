@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useCategory } from '../../zustandState/useCategory';
 import { useBottomSheet } from '../../zustandState/useBottomSheet';
 import BottomSheetExpenses from '../../bottomSheet/bottomSheetExpenses';
-import MainTabs from '../../navigation/bottom';
+import MainTabsBottomNav from '../../navigation/bottomNavigation';
 
 const MainTabsWithBottomSheet = () => {
   const bottomSheetRef = useRef<BottomSheetMethods | null>(null);
@@ -18,7 +18,7 @@ const MainTabsWithBottomSheet = () => {
 
   return (
     <>
-      <MainTabs openBottomSheet={openBottomSheet} />
+      <MainTabsBottomNav openBottomSheet={openBottomSheet} />
       <BottomSheetExpenses bottomSheetRef={bottomSheetRef} />
     </>
   );

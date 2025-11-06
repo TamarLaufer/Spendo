@@ -75,7 +75,7 @@ const DummyComponent = () => null;
 
 type PropsType = { openBottomSheet: () => void };
 
-const MainTabs = ({ openBottomSheet }: PropsType) => {
+const MainTabsBottomNav = ({ openBottomSheet }: PropsType) => {
   const renderAddButton = useCallback(
     () => <AddButton onPress={openBottomSheet} />,
     [openBottomSheet],
@@ -109,4 +109,4 @@ const MainTabs = ({ openBottomSheet }: PropsType) => {
   );
 };
 
-export default MainTabs;
+export default MainTabsBottomNav;

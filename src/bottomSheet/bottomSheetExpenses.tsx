@@ -32,12 +32,14 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
 
   const { header, buttonTitle, showButton } = StepsConfig[currentStep];
   const [isSaving, setIsSaving] = useState(false);
-  const handleSheetChanges = useCallback((index: number) => {
-    if (index === -1) {
-      resetWizard();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleSheetChanges = useCallback(
+    (index: number) => {
+      if (index === -1) {
+        resetWizard();
+      }
+    },
+    [resetWizard],
+  );
 
   const renderStep = () => {
     switch (currentStep) {
@@ -110,12 +112,6 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
           <Icons.Back width={50} height={50} />
         </Pressable>
       )}
-
-      {/* {currentStep !== 'endProcess' && (
-        <Pressable style={styles.cancelXButton} onPress={handleClose}>
-          <Icons.CANCEL_X width={32} height={32} />
-        </Pressable>
-      )} */}
 
       {showButton && !!primaryTitle && (
         <View style={styles.actions}>

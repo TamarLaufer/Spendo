@@ -19,7 +19,7 @@ import {
 } from '../shared/categorySchema';
 import { toId } from '../firebase/services/categories';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
-import type { IconKey } from '../assets/icons';
+import { type IconKey } from '../assets/icons';
 
 type AddCategoryPropsType = {
   setDisplayAddCategory: (value: boolean) => void;
@@ -37,7 +37,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [maxAmount, setMaxAmount] = useState('');
   const [submitLoader, setSubmitLoader] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [icon, setIcon] = useState<IconKey | null>(null);
+  const [icon, setIcon] = useState<IconKey>('defaultIcon');
 
   const setError = useCategory(state => state.setError);
 
@@ -58,7 +58,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       categoryName: categoryName.trim(),
       maxAmount: parsedAmount,
       householdId: DEV_HOUSEHOLD_ID,
-      icon, // אם תרצי, עדכני מה-UI
+      icon: icon ?? 'defaultIcon',
       order: Date.now(),
       active: true,
     };
@@ -87,7 +87,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
               toId(name) || `${Date.now()}-${idx}`,
               {
                 subCategoryName: name,
-                icon: null,
+                icon: 'defaultIcon',
                 order: idx,
                 active: true,
               },
@@ -100,7 +100,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       setCategoryName('');
       setSubcategoriesText('');
       setMaxAmount('');
-      setIcon(null);
+      setIcon('defaultIcon');
       setError(null);
       setDisplayAddCategory(false);
     } catch (e: any) {

@@ -10,12 +10,13 @@ import React from 'react';
 import { theme } from '../../theme/theme';
 
 type PopModalPropsType = {
-  visible?: boolean;
-  onClose: () => void;
   modalHeader: string;
+  children?: React.ReactNode;
   modalSecondaryText?: string;
+  visible?: boolean;
   modalButtonTextRight?: string;
   modalButtonTextLeft?: string;
+  onClose: () => void;
   onConfirm: (event: GestureResponderEvent) => void;
   onCancel: () => void;
 };
@@ -24,11 +25,11 @@ const PopModal = ({
   visible,
   onClose,
   modalHeader,
-  modalSecondaryText,
   modalButtonTextRight,
   modalButtonTextLeft,
   onConfirm,
   onCancel,
+  children,
 }: PopModalPropsType) => {
   return (
     <Modal
@@ -41,7 +42,7 @@ const PopModal = ({
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Text style={styles.modalText}>{modalHeader}</Text>
-            <Text style={styles.modalText}>{modalSecondaryText}</Text>
+            {children}
             <View style={styles.buttonsContainer}>
               <Pressable style={styles.pressRight} onPress={onCancel}>
                 <Text style={styles.buttonText}>{modalButtonTextRight}</Text>
@@ -58,13 +59,6 @@ const PopModal = ({
 };
 
 const styles = StyleSheet.create({
-  modal: {
-    width: '50%',
-    height: '50%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'red',
-  },
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.35)',
@@ -74,7 +68,9 @@ const styles = StyleSheet.create({
   },
   modalText: {
     textAlign: 'center',
-    fontSize: 18,
+    fontSize: 22,
+    fontFamily: 'PlaypenSansHebrew-Regular',
+    marginBottom: 15,
   },
   modalView: {
     justifyContent: 'center',
@@ -91,6 +87,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
+    width: 335,
   },
   centeredView: {
     flex: 1,
@@ -99,27 +96,32 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    gap: 18,
+    gap: 12,
+    marginTop: 15,
   },
   pressRight: {
     backgroundColor: '#F08787',
-    padding: 14,
-    paddingHorizontal: 18,
-    borderRadius: 30,
+    padding: 8,
+    paddingHorizontal: 22,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
+    width: 112,
+    height: 58,
   },
   pressLeft: {
     backgroundColor: '#BBDCE5',
-    padding: 12,
-    borderRadius: 30,
+    padding: 8,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
+    width: 150,
+    height: 58,
   },
   buttonText: {
     color: theme.color.shadowColor,
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 18,
+    fontFamily: 'PlaypenSansHebrew-Regular',
   },
 });
 

@@ -31,12 +31,9 @@ const TransactionRow = ({
   subText,
 }: TransactionRowProps) => (
   <Pressable style={styles.container} onPress={onPress} disabled={!onPress}>
-    {/* טור ימני – אייקון (רוחב קבוע) */}
     <View style={styles.rightCol}>
       {Icon ? <Icon width={iconSize} height={iconSize} /> : null}
     </View>
-
-    {/* טור אמצעי – כותרת + תת-כותרת (גמיש) */}
     <View style={styles.middleCol}>
       <Text style={[styles.title, textStyle]} numberOfLines={1}>
         {text}
@@ -47,8 +44,6 @@ const TransactionRow = ({
         </Text>
       ) : null}
     </View>
-
-    {/* טור שמאלי – סכום ותאריך (מותאם-תוכן) */}
     <View style={styles.leftCol}>
       {typeof amount === 'number' ? (
         <Text style={styles.amount} numberOfLines={1}>
@@ -94,8 +89,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
-
-  //
   title: { fontSize: 18, color: '#222' },
   subTitle: { fontSize: 14, color: '#666' },
   amount: { fontSize: 16, color: '#222' },

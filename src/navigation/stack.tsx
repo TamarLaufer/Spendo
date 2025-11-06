@@ -2,8 +2,9 @@ import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamsType } from './types';
 import AllExpenses from '../screens/AllExpenses/AllExpenses';
-import DetailsExpense from '../screens/DetailsExpense/DetailsExpense';
+import DetailsExpense from '../screens/ExpenseDetails/ExpenseDetails';
 import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
+import EditExpenseScreen from '../screens/EditExpenseScreen';
 
 const theme = {
   ...DefaultTheme,
@@ -24,6 +25,11 @@ export default function StackNavigation() {
         <Stack.Screen name="MainTabs" component={MainTabsWithBottomSheet} />
         <Stack.Screen name="DetailsExpense" component={DetailsExpense} />
         <Stack.Screen name="AllExpenses" component={AllExpenses} />
+        <Stack.Screen
+          name="EditExpenseScreen"
+          component={EditExpenseScreen}
+          options={{ title: 'עריכת הוצאה' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

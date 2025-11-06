@@ -26,7 +26,7 @@ export const ExpenseUpdateSchema = z.object({
   paymentMethod: z.string().trim().min(1).optional(),
   note: z.string().trim().optional(),
   createdBy: z.string().trim().optional(),
-  createdAt: z.union([z.date(), z.string().datetime(), z.null()]).optional(),
+  createdAt: z.union([z.date(), z.null()]).optional(),
 });
 export type ExpenseUpdatePatch = z.infer<typeof ExpenseUpdateSchema>;
 

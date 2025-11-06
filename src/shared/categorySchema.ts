@@ -10,6 +10,7 @@ export const ICON_KEYS = [
   'health',
   'toys',
   'study',
+  'defaultIcon',
 ] as const;
 
 export const IconKeySchema = z.enum(ICON_KEYS);
@@ -17,7 +18,7 @@ export const IconKeySchema = z.enum(ICON_KEYS);
 export const SubCategoryCreateSchema = z.object({
   subCategoryId: z.string().min(1),
   subCategoryName: z.string().min(1),
-  icon: IconKeySchema.nullish(), // string | null | undefined
+  icon: IconKeySchema.nullish().or(z.literal('defaultIcon')),
   order: z.number().int().nonnegative().optional(),
   active: z.boolean().optional(),
 });
@@ -26,7 +27,7 @@ export const CategoryCreateSchema = z.object({
   householdId: z.string().min(1).optional(),
   categoryName: z.string().trim().min(1, 'נא להזין שם קטגוריה'),
   maxAmount: z.number().nonnegative(),
-  icon: IconKeySchema.nullish(),
+  icon: IconKeySchema.or(z.literal('defaultIcon')),
   order: z.number().int().nonnegative().optional(),
   active: z.boolean().default(true).optional(),
   createdAt: z.union([z.date(), z.string().datetime()]).optional(),

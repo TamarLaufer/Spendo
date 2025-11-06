@@ -12,6 +12,7 @@ import { formatAmount, formatShortDate } from '../../functions/functions';
 import Messy from '../../assets/icons/MessyDoodle.svg';
 import { STRINGS } from '../../strings/hebrew';
 import Delete from '../../assets/icons/trash.svg';
+import Edit from '../../assets/icons/edit.svg';
 import { Pressable } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import PopModal from '../../components/popModal/PopModal';
@@ -20,7 +21,7 @@ import { useSubCategories } from '../../hooks/useSubCategories';
 type DetailsRoute = RouteProp<RootStackParamsType, 'DetailsExpense'>;
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
-const DetailsExpense = () => {
+const ExpenseDetails = () => {
   const {
     params: { expenseId, subCategoryId, categoryId },
   } = useRoute<DetailsRoute>();
@@ -32,10 +33,12 @@ const DetailsExpense = () => {
   const deleteExpense = useExpenses(state => state.deleteExpense);
   const expense = findExpenseById(expenseId);
   const { goBack } = useNavigation<RootNav>();
+  const [activeModal, setActiveModal] = useState<null | 'delete' | 'edit'>(
+    null,
+  );
 
-  const [isModalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation<RootNav>();
 
-  console.log(expense, 'expense');
   if (!expense) {
     return <Text>{STRINGS.LOADING_OR_NOT_FOUND}</Text>;
   }
@@ -49,9 +52,9 @@ const DetailsExpense = () => {
     `${expense?.note ?? ''}`,
   ];
 
-  const handleDeletePress = () => {
+  const handleDeleteFinalPress = () => {
+    setActiveModal(null);
     deleteExpense(expense.id);
-    setModalVisible(false);
     goBack();
   };
   const renderText = texts.map((text, i) => {
@@ -62,11 +65,19 @@ const DetailsExpense = () => {
     );
   });
 
-  const handleModal = () => {
-    setModalVisible(prev => !prev);
+  const handleDeletePress = () => {
+    setActiveModal('delete');
   };
 
-  if (!category) return <Text>טוען קטגוריה...</Text>;
+  const handleModal = () => {
+    setActiveModal(null);
+  };
+
+  const handleEditPress = () => {
+    navigation.navigate('EditExpenseScreen', { expenseId, categoryId });
+  };
+
+  if (!category) return <Text>{STRINGS.LOADING_CATEGORY}</Text>;
 
   return (
     <View style={styles.container}>
@@ -74,18 +85,27 @@ const DetailsExpense = () => {
         <Messy width={280} height={280} />
       </View>
       <View style={styles.textContainer}>{renderText}</View>
-      <Pressable onPress={handleModal} style={styles.deleteContainer}>
+      {activeModal === 'delete' && (
         <PopModal
           modalHeader={STRINGS.DO_YOU_WANT_TO_DELETE}
           onClose={handleModal}
-          visible={isModalVisible}
+          visible={activeModal === 'delete'}
           modalButtonTextRight={STRINGS.NO_MISTAKE}
           modalButtonTextLeft={STRINGS.YES_PLEASE_DELETE}
-          onConfirm={handleDeletePress}
+          onConfirm={handleDeleteFinalPress}
           onCancel={handleModal}
-        />
-        <Delete width={40} height={40} />
-      </Pressable>
+        >
+          <Delete width={80} height={80} />
+        </PopModal>
+      )}
+      <View style={styles.elements}>
+        <Pressable onPress={handleDeletePress} style={styles.deleteContainer}>
+          <Delete width={36} height={36} />
+        </Pressable>
+        <Pressable onPress={handleEditPress} style={styles.deleteContainer}>
+          <Edit width={33} height={33} />
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -112,6 +132,10 @@ const styles = StyleSheet.create({
     paddingStart: 40,
     paddingBottom: 30,
   },
+  elements: {
+    flexDirection: 'row',
+    gap: 30,
+  },
 });
 
-export default DetailsExpense;
+export default ExpenseDetails;

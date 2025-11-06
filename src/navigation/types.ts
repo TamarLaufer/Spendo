@@ -14,4 +14,5 @@ export type RootStackParamsType = {
     subCategoryId?: string;
   };
   AllExpenses: undefined;
+  EditExpenseScreen: { expenseId: string; categoryId: string };
 };

@@ -17,7 +17,6 @@ const ICONS: Record<RouteName, { active: string; inactive: string }> = {
   Categories: { active: 'list', inactive: 'list-outline' },
   Receipts: { active: 'receipt', inactive: 'receipt-outline' },
   Settings: { active: 'settings', inactive: 'settings-outline' },
-  // Just in case:
   Add: { active: 'add', inactive: 'add-outline' },
 };
 

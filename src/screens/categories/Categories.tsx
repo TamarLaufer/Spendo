@@ -6,6 +6,7 @@ import { useCategory } from '../../zustandState/useCategory';
 import { IconRegistry } from '../../assets/icons';
 import AddCategory from '../../components/AddCategory';
 import { theme } from '../../theme/theme';
+import { STRINGS } from '../../strings/hebrew';
 
 const Categories: FC = () => {
   const categories = useCategory(state => state.categories);
@@ -15,22 +16,24 @@ const Categories: FC = () => {
     setDisplayAdding(true);
   };
 
+  const onCategoryPress = () => {};
+
   return (
     <ScreenLayout>
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.headerContainer}>
-            <Text style={styles.header}>קטגוריות</Text>
+            <Text style={styles.header}>{STRINGS.CATEGORIES}</Text>
           </View>
           <TransactionList
             data={categories}
             mapItem={item => {
               const Icon = item.icon ? IconRegistry[item.icon] : undefined;
-
               return {
                 text: item.name ?? '',
                 icon: Icon,
                 amount: item.maxAmount,
+                onPress: onCategoryPress,
               };
             }}
           />
@@ -39,7 +42,7 @@ const Categories: FC = () => {
           )}
           {!displayAdding && (
             <Pressable style={styles.addCategory} onPress={handleDisplayPress}>
-              <Text style={styles.buttonText}>הוספת קטגוריה חדשה</Text>
+              <Text style={styles.buttonText}>{STRINGS.ADD_NEW_CATEGORY}</Text>
             </Pressable>
           )}
         </View>
