@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useCategory } from '../../zustandState/useCategory';
 import { STRINGS } from '../../strings/hebrew';
-import { formatAmount } from '../../functions/functions';
+import { formatAmount } from '../../utils/formatting';
 import { useSubCategories } from '../../hooks/useSubCategories';
 
 const EndProcessStep = () => {

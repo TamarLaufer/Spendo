@@ -1,0 +1,76 @@
+import styled from 'styled-components/native';
+import { theme } from '../../theme/theme';
+
+export const Screen = styled.View`
+  flex: 1;
+  background-color: #f6f7f9;
+`;
+
+export const HeaderContainer = styled.View`
+  height: 80px;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const HeaderText = styled.Text`
+  font-size: 22px;
+  font-weight: 700;
+`;
+
+export const Content = styled.View`
+  flex: 1;
+  padding: 20px;
+  gap: 20px;
+  background-color: white;
+  margin: 16px;
+  border-radius: 24px;
+`;
+
+export const InputWrapper = styled.View`
+  gap: 6px;
+`;
+
+export const StyledInput = styled.TextInput`
+  height: 52px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 17px;
+  background-color: #fafafa;
+`;
+
+export const ErrorText = styled.Text`
+  color: red;
+  font-size: 12px;
+`;
+
+export const ChangeCategoryButton = styled.Pressable`
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px dashed #c7c7cc;
+  align-items: center;
+  background-color: transparent;
+`;
+
+export const ChangeCategoryText = styled.Text`
+  font-size: 16px;
+  color: #3a3a3c;
+`;
+
+export const Footer = styled.View`
+  padding: 20px;
+`;
+
+export const SaveButton = styled.Pressable<{ disabled?: boolean }>`
+  padding: 16px;
+  border-radius: 20px;
+  background-color: ${({ disabled }) =>
+    disabled ? '#c7c7cc' : theme.color.lightBlue};
+  align-items: center;
+`;
+
+export const SaveText = styled.Text`
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+`;

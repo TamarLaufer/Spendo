@@ -1,10 +1,10 @@
 import { FC, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import ScreenLayout from '../../components/screenLayout/ScreenLayout';
-import TransactionList from '../../components/TransactionList/TransactionList';
+import TransactionList from '../../components/transactionList/TransactionList';
 import { useCategory } from '../../zustandState/useCategory';
 import { IconRegistry } from '../../assets/icons';
-import AddCategory from '../../components/AddCategory';
+import AddCategory from '../../components/addCategory/AddCategory';
 import { theme } from '../../theme/theme';
 import { STRINGS } from '../../strings/hebrew';
 

@@ -9,7 +9,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import TransactionList from '../TransactionList/TransactionList';
+import TransactionList from '../transactionList/TransactionList';
 import { useShallow } from 'zustand/shallow';
 import {
   useExpenses,

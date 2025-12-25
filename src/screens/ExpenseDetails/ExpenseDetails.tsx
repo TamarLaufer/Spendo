@@ -8,7 +8,7 @@ import {
 } from '@react-navigation/native';
 import { RootStackParamsType } from '../../navigation/types';
 import { useCategory } from '../../zustandState/useCategory';
-import { formatAmount, formatShortDate } from '../../functions/functions';
+import { formatAmount, formatShortDate } from '../../utils/formatting';
 import Messy from '../../assets/icons/MessyDoodle.svg';
 import { STRINGS } from '../../strings/hebrew';
 import Delete from '../../assets/icons/trash.svg';

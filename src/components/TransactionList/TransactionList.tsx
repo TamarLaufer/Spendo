@@ -1,7 +1,7 @@
 import React from 'react';
 import TransactionRow, {
   TransactionRowProps,
-} from '../TransactionRow/TransactionRow';
+} from '../transactionRow/TransactionRow';
 import { View } from 'react-native';
 
 type TransactionListProps<T> = {

@@ -1,11 +1,12 @@
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { PaymentMethods } from '../../bottomSheet/types';
-import TransactionList from '../TransactionList/TransactionList';
+import TransactionList from '../transactionList/TransactionList';
 import { StyleSheet, View } from 'react-native';
+import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
 
 const PaymentMethodsScreen = () => {
   const paymentMethods = useExpenseWizard(state => state.paymentMethods);
-  const handleContinue = useExpenseWizard(state => state.handleContinue);
+  const { handleContinue } = useExpenseWizardNavigation();
   const setPaymentMethod = useExpenseWizard(state => state.setPaymentMethod);
 
   const handlePaymentChoose = (selectedPayment: PaymentMethods['name']) => {

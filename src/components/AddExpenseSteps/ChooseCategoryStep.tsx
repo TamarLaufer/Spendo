@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useCategory } from '../../zustandState/useCategory';
-import TransactionList from '../TransactionList/TransactionList';
-import AddCategory from '../AddCategory';
+import TransactionList from '../transactionList/TransactionList';
+import AddCategory from '../addCategory/AddCategory';
 import { theme } from '../../theme/theme';
 import { IconRegistry } from '../../assets/icons';
+import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
 
 const ChooseCategoryStep = () => {
-  const { categoryId, setCategoryId } = useExpenseWizard();
-  const handleContinue = useExpenseWizard(state => state.handleContinue);
+  const categoryId = useExpenseWizard(state => state.categoryId);
+  const setCategoryId = useExpenseWizard(state => state.setCategoryId);
+  const { handleContinue } = useExpenseWizardNavigation();
   const categoriesList = useCategory(state => state.categories);
   const [isdisplayAddCategory, setDisplayAddCategory] = useState(false);
 

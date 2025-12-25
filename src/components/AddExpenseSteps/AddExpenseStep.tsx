@@ -7,7 +7,7 @@ import {
   TextInput,
 } from 'react-native';
 import { z } from 'zod';
-import { formatAmount } from '../../functions/functions';
+import { formatAmount } from '../../utils/formatting';
 import { theme } from '../../theme/theme';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

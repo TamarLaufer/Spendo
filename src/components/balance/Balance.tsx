@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useMemo } from 'react';
 import { useExpenses } from '../../zustandState/useExpenses';
-import { formatAmount } from '../../functions/functions';
+import { formatAmount } from '../../utils/formatting';
 
 const Balance = () => {
   const now = new Date();

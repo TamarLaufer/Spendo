@@ -14,6 +14,7 @@ export const ICON_KEYS = [
 ] as const;
 
 export const IconKeySchema = z.enum(ICON_KEYS);
+export type CategoryIcon = (typeof ICON_KEYS)[number];
 
 export const SubCategoryCreateSchema = z.object({
   subCategoryId: z.string().min(1),

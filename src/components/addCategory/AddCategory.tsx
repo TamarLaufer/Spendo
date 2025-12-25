@@ -7,19 +7,19 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { theme } from '../theme/theme';
-import { useCategory } from '../zustandState/useCategory';
+import { theme } from '../../theme/theme';
+import { useCategory } from '../../zustandState/useCategory';
 import {
   addCategory,
   upsertSubCategory,
-} from '../firebase/services/categories';
+} from '../../firebase/services/categories';
 import {
   CategoryCreateSchema,
+  CategoryIcon,
   type CategoryCreateInput,
-} from '../shared/categorySchema';
-import { toId } from '../firebase/services/categories';
-import { DEV_HOUSEHOLD_ID } from '../config/consts';
-import { type IconKey } from '../assets/icons';
+} from '../../shared/categorySchema';
+import { toId } from '../../firebase/services/categories';
+import { DEV_HOUSEHOLD_ID } from '../../config/consts';
 
 type AddCategoryPropsType = {
   setDisplayAddCategory: (value: boolean) => void;
@@ -37,7 +37,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [maxAmount, setMaxAmount] = useState('');
   const [submitLoader, setSubmitLoader] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [icon, setIcon] = useState<IconKey>('defaultIcon');
+  const [icon, setIcon] = useState<CategoryIcon>('defaultIcon');
 
   const setError = useCategory(state => state.setError);
 
@@ -53,12 +53,11 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       return;
     }
 
-    // payload "דק" לפי המודל השטוח – בלי subCategories בתוך הקטגוריה
     const categoryPayload: CategoryCreateInput = {
       categoryName: categoryName.trim(),
       maxAmount: parsedAmount,
       householdId: DEV_HOUSEHOLD_ID,
-      icon: icon ?? 'defaultIcon',
+      icon: icon,
       order: Date.now(),
       active: true,
     };

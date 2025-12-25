@@ -1,12 +1,13 @@
 import React from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import TransactionList from '../TransactionList/TransactionList';
+import TransactionList from '../transactionList/TransactionList';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useSubCategories } from '../../hooks/useSubCategories';
+import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
 
 const ChooseSubCategoryStep = () => {
   const { categoryId, setSubCategoryId } = useExpenseWizard();
-  const handleContinue = useExpenseWizard(state => state.handleContinue);
+  const { handleContinue } = useExpenseWizardNavigation();
 
   const { rows, loading, error } = useSubCategories(categoryId);
 

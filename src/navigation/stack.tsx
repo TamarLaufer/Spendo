@@ -1,10 +1,10 @@
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamsType } from './types';
-import AllExpenses from '../screens/AllExpenses/AllExpenses';
-import DetailsExpense from '../screens/ExpenseDetails/ExpenseDetails';
+import AllExpenses from '../screens/allExpenses/AllExpenses';
+import DetailsExpense from '../screens/expenseDetails/ExpenseDetails';
 import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
-import EditExpenseScreen from '../screens/EditExpenseScreen';
+import EditExpenseScreen from '../screens/editExpenseScreen/EditExpenseScreen';
 
 const theme = {
   ...DefaultTheme,

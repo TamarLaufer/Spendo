@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { SvgProps } from 'react-native-svg';
-import { formatAmount, formatShortDate } from '../../functions/functions';
+import { formatAmount, formatShortDate } from '../../utils/formatting';
 
 export type TransactionRowProps = {
   text: string;

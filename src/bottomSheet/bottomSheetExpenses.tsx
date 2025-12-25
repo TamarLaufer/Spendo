@@ -12,6 +12,7 @@ import { StepsConfig } from './types';
 import { useExpenseWizard } from '../zustandState/useExpenseWizard';
 import PaymentMethodsScreen from '../components/AddExpenseSteps/PaymentMethodsScreen';
 import AddNoteForExpense from '../components/AddExpenseSteps/AddNoteForExpense';
+import { useExpenseWizardNavigation } from '../hooks/useExpenseWizardNavigation';
 
 type PropsType = {
   bottomSheetRef: React.RefObject<BottomSheetMethods | null>;
@@ -19,13 +20,13 @@ type PropsType = {
 
 const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
   const snapPoints = useMemo(() => ['75%'], []);
+  const { handleBack, handleContinue, handleClose } =
+    useExpenseWizardNavigation();
 
   const {
     currentStep,
     resetWizard,
     canProceedToNextStep,
-    handleContinue,
-    handleBack,
     isSubmitReady,
     submitExpense,
   } = useExpenseWizard();
@@ -71,6 +72,7 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
       setIsSaving(true);
       await submitExpense();
       Alert.alert('נשמר!', 'ההוצאה נשמרה בהצלחה');
+      handleClose();
     } catch (error) {
       Alert.alert('שגיאה', 'שמירה נכשלה');
     } finally {
