@@ -52,12 +52,12 @@
 		B4FD7754BE6F480E8A54F6F5 /* Assistant-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6EEC7E6385EB4A8CA43967A0 /* Assistant-Light.ttf */; };
 		50AD8F38E92146FDAE77D0D3 /* Assistant-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CD2892C6C8D147FB844868D5 /* Assistant-Medium.ttf */; };
 		46CB1CB55A1749E49F6EDE9A /* Assistant-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D794AB383C2B48CEA7599FD3 /* Assistant-SemiBold.ttf */; };
-		114FB491434B4C16ACA5F5AA /* LinBiolinum_RB.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1EADC341DBE14478B1ABA345 /* LinBiolinum_RB.otf */; };
-		A2A0E010CF17454E848E3175 /* LinBiolinum_RI.otf in Resources */ = {isa = PBXBuildFile; fileRef = 03DD46BFD2184E6DBD3941F6 /* LinBiolinum_RI.otf */; };
-		13D1FFF05928492F8746422A /* LinBiolinum.otf in Resources */ = {isa = PBXBuildFile; fileRef = 030F13CD39FC4CA19ECAF91A /* LinBiolinum.otf */; };
 		098E3B5BA5A74CD297DCD9BF /* Assistant.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 232ABDE363F747318EA385C6 /* Assistant.ttf */; };
 		26EEEA81DE86416CB82A62EA /* Fredoka.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7BB93F50B8FC4CB9B120D1D2 /* Fredoka.ttf */; };
 		FB613B0C79F648CC96916933 /* Huninn.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 18834359907340C092F0D184 /* Huninn.ttf */; };
+		9838197772744074A56BA94D /* LinBiolinum.otf in Resources */ = {isa = PBXBuildFile; fileRef = EA187337718245158BE9CAE0 /* LinBiolinum.otf */; };
+		8D585691E64F47C491CB80CA /* LinBiolinum_RB.otf in Resources */ = {isa = PBXBuildFile; fileRef = 705ABE05CB92465F839FE349 /* LinBiolinum_RB.otf */; };
+		35183612B50345B4B9E8C246 /* LinBiolinum_RI.otf in Resources */ = {isa = PBXBuildFile; fileRef = E3B40752EF384A949518B4BD /* LinBiolinum_RI.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -123,12 +123,12 @@
 		6EEC7E6385EB4A8CA43967A0 /* Assistant-Light.ttf */ = {isa = PBXFileReference; name = "Assistant-Light.ttf"; path = "../src/assets/fonts/Assistant-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		CD2892C6C8D147FB844868D5 /* Assistant-Medium.ttf */ = {isa = PBXFileReference; name = "Assistant-Medium.ttf"; path = "../src/assets/fonts/Assistant-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		D794AB383C2B48CEA7599FD3 /* Assistant-SemiBold.ttf */ = {isa = PBXFileReference; name = "Assistant-SemiBold.ttf"; path = "../src/assets/fonts/Assistant-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		1EADC341DBE14478B1ABA345 /* LinBiolinum_RB.otf */ = {isa = PBXFileReference; name = "LinBiolinum_RB.otf"; path = "../src/assets/fonts/LinBiolinum_RB.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		03DD46BFD2184E6DBD3941F6 /* LinBiolinum_RI.otf */ = {isa = PBXFileReference; name = "LinBiolinum_RI.otf"; path = "../src/assets/fonts/LinBiolinum_RI.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		030F13CD39FC4CA19ECAF91A /* LinBiolinum.otf */ = {isa = PBXFileReference; name = "LinBiolinum.otf"; path = "../src/assets/fonts/LinBiolinum.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		232ABDE363F747318EA385C6 /* Assistant.ttf */ = {isa = PBXFileReference; name = "Assistant.ttf"; path = "../src/assets/fonts/Assistant.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		7BB93F50B8FC4CB9B120D1D2 /* Fredoka.ttf */ = {isa = PBXFileReference; name = "Fredoka.ttf"; path = "../src/assets/fonts/Fredoka.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		18834359907340C092F0D184 /* Huninn.ttf */ = {isa = PBXFileReference; name = "Huninn.ttf"; path = "../src/assets/fonts/Huninn.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EA187337718245158BE9CAE0 /* LinBiolinum.otf */ = {isa = PBXFileReference; name = "LinBiolinum.otf"; path = "../src/assets/fonts/LinBiolinum.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		705ABE05CB92465F839FE349 /* LinBiolinum_RB.otf */ = {isa = PBXFileReference; name = "LinBiolinum_RB.otf"; path = "../src/assets/fonts/LinBiolinum_RB.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E3B40752EF384A949518B4BD /* LinBiolinum_RI.otf */ = {isa = PBXFileReference; name = "LinBiolinum_RI.otf"; path = "../src/assets/fonts/LinBiolinum_RI.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,12 +255,12 @@
 				6EEC7E6385EB4A8CA43967A0 /* Assistant-Light.ttf */,
 				CD2892C6C8D147FB844868D5 /* Assistant-Medium.ttf */,
 				D794AB383C2B48CEA7599FD3 /* Assistant-SemiBold.ttf */,
-				1EADC341DBE14478B1ABA345 /* LinBiolinum_RB.otf */,
-				03DD46BFD2184E6DBD3941F6 /* LinBiolinum_RI.otf */,
-				030F13CD39FC4CA19ECAF91A /* LinBiolinum.otf */,
 				232ABDE363F747318EA385C6 /* Assistant.ttf */,
 				7BB93F50B8FC4CB9B120D1D2 /* Fredoka.ttf */,
 				18834359907340C092F0D184 /* Huninn.ttf */,
+				EA187337718245158BE9CAE0 /* LinBiolinum.otf */,
+				705ABE05CB92465F839FE349 /* LinBiolinum_RB.otf */,
+				E3B40752EF384A949518B4BD /* LinBiolinum_RI.otf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -376,12 +376,12 @@
 				B4FD7754BE6F480E8A54F6F5 /* Assistant-Light.ttf in Resources */,
 				50AD8F38E92146FDAE77D0D3 /* Assistant-Medium.ttf in Resources */,
 				46CB1CB55A1749E49F6EDE9A /* Assistant-SemiBold.ttf in Resources */,
-				114FB491434B4C16ACA5F5AA /* LinBiolinum_RB.otf in Resources */,
-				A2A0E010CF17454E848E3175 /* LinBiolinum_RI.otf in Resources */,
-				13D1FFF05928492F8746422A /* LinBiolinum.otf in Resources */,
 				098E3B5BA5A74CD297DCD9BF /* Assistant.ttf in Resources */,
 				26EEEA81DE86416CB82A62EA /* Fredoka.ttf in Resources */,
 				FB613B0C79F648CC96916933 /* Huninn.ttf in Resources */,
+				9838197772744074A56BA94D /* LinBiolinum.otf in Resources */,
+				8D585691E64F47C491CB80CA /* LinBiolinum_RB.otf in Resources */,
+				35183612B50345B4B9E8C246 /* LinBiolinum_RI.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

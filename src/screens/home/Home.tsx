@@ -2,18 +2,19 @@ import { useEffect, useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import ScreenLayout from '../../components/screenLayout/ScreenLayout';
 import { useExpenses } from '../../zustandState/useExpenses';
-import LastExpenses from '../../components/lastExpenses/LastExpenses';
-import Logo from '../../assets/icons/graph.svg';
 import Balance from '../../components/balance/Balance';
 import { useCategory } from '../../zustandState/useCategory';
 import { DEV_HOUSEHOLD_ID } from '../../config/consts';
-import { useEnsureSubcatIndex } from '../../zustandState/useEnsureSubcatIndex';
+import { useEnsureSubcatIndex } from '../../hooks/useEnsureSubcatIndex';
+import ExpensesListView from '../../components/expensesListView/ExpensesListView';
+import TrackingExpensesCarousel from '../../components/trackingExpensesCarousel/TrackingExpensesCarousel';
 
 const Home = () => {
   const loadExpenses = useExpenses(state => state.loadExpenses);
   const subscribeExpenses = useExpenses(state => state.subscribeExpenses);
   const loadCategories = useCategory(state => state.loadCategories);
   const subscribeCategories = useCategory(state => state.subscribe);
+
   const expError = useExpenses(state => state.error);
   const catError = useCategory(state => state.error);
   const categories = useCategory(state => state.categories);
@@ -47,7 +48,6 @@ const Home = () => {
       }
     })();
 
-    // 3) cleanup בעת עזיבת המסך
     return () => {
       unsubExp?.();
       unsubCat?.();
@@ -56,15 +56,15 @@ const Home = () => {
 
   return (
     <ScreenLayout>
-      <ScrollView style={styles.scrollView}>
+      <ScrollView>
         <View style={styles.balanceContainer}>
           <Balance />
         </View>
-        <View style={styles.logoContainer}>
-          <Logo width={150} height={150} />
+        <View style={styles.caruselContainer}>
+          <TrackingExpensesCarousel categories={categories} />
         </View>
         <View style={styles.lastExpenses}>
-          <LastExpenses />
+          <ExpensesListView numOfTransactions={3} header link />
         </View>
       </ScrollView>
     </ScreenLayout>
@@ -75,10 +75,6 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
-  logoContainer: {
-    flex: 1,
-    alignItems: 'center',
-  },
   balanceContainer: {
     margin: 20,
   },
@@ -88,6 +84,9 @@ const styles = StyleSheet.create({
   },
   lastExpenses: {
     // marginVertical: 5,
+  },
+  caruselContainer: {
+    alignItems: 'center',
   },
 });
 

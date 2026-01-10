@@ -2,6 +2,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useMemo } from 'react';
 import { useExpenses } from '../../zustandState/useExpenses';
 import { formatAmount } from '../../utils/formatting';
+import { theme } from '../../theme/theme';
 
 const Balance = () => {
   const now = new Date();
@@ -27,7 +28,8 @@ const Balance = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>היי, החודש הוצאת</Text>
+      <Text style={styles.headerText}>היי תמר,</Text>
+      <Text style={styles.text}>החודש הוצאת</Text>
       <Text style={styles.balanceAmount}>{formatAmount(balanceCalc)}</Text>
     </View>
   );
@@ -39,16 +41,22 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
-    borderRadius: 20,
-    elevation: 1.2,
-    paddingVertical: 8,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    backgroundColor: theme.color.lightGreen,
+    marginHorizontal: 30,
+  },
+  headerText: {
+    fontSize: 24,
+    fontFamily: 'MPLUSRounded1c-Bold',
   },
   text: {
-    fontSize: 18,
+    fontSize: 22,
+    fontFamily: 'MPLUSRounded1c-Regular',
   },
   balanceAmount: {
-    fontSize: 38,
-    fontFamily: 'PlaypenSansHebrew-Regular',
+    paddingTop: 10,
+    fontSize: 36,
+    fontFamily: 'MPLUSRounded1c-Regular',
   },
 });

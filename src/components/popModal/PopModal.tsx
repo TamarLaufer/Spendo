@@ -44,11 +44,11 @@ const PopModal = ({
             <Text style={styles.modalText}>{modalHeader}</Text>
             {children}
             <View style={styles.buttonsContainer}>
-              <Pressable style={styles.pressRight} onPress={onCancel}>
-                <Text style={styles.buttonText}>{modalButtonTextRight}</Text>
-              </Pressable>
               <Pressable style={styles.pressLeft} onPress={onConfirm}>
                 <Text style={styles.buttonText}>{modalButtonTextLeft}</Text>
+              </Pressable>
+              <Pressable style={styles.pressRight} onPress={onCancel}>
+                <Text style={styles.buttonText}>{modalButtonTextRight}</Text>
               </Pressable>
             </View>
           </View>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 20,
     backgroundColor: 'white',
-    borderRadius: 20,
+    borderRadius: 10,
     padding: 35,
     alignItems: 'center',
     shadowColor: '#000',
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   pressRight: {
-    backgroundColor: '#F08787',
+    backgroundColor: theme.color.lightBlue,
     padding: 8,
     paddingHorizontal: 22,
     borderRadius: 18,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     height: 58,
   },
   pressLeft: {
-    backgroundColor: '#BBDCE5',
+    backgroundColor: theme.color.pink,
     padding: 8,
     borderRadius: 18,
     justifyContent: 'center',
@@ -119,9 +119,9 @@ const styles = StyleSheet.create({
     height: 58,
   },
   buttonText: {
-    color: theme.color.shadowColor,
+    color: 'white',
     fontSize: 18,
-    fontFamily: 'PlaypenSansHebrew-Regular',
+    fontFamily: 'MPLUSRounded1c-Regular',
   },
 });
 

@@ -1,9 +1,16 @@
 import React from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
-import TransactionList from '../transactionList/TransactionList';
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useSubCategories } from '../../hooks/useSubCategories';
 import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
+import { SubCategory } from '../../shared/categoryType';
 
 const ChooseSubCategoryStep = () => {
   const { categoryId, setSubCategoryId } = useExpenseWizard();
@@ -32,15 +39,20 @@ const ChooseSubCategoryStep = () => {
     return <Text style={styles.msg}>אין תתי־קטגוריות לקטגוריה זו</Text>;
   }
 
+  const renderItem = ({ item }: { item: SubCategory }) => {
+    return (
+      <Pressable onPress={() => handleSelect(item.id)}>
+        <Text>{item.name}</Text>
+      </Pressable>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <TransactionList
+      <FlatList
         data={rows}
-        keyExtractor={c => c.id}
-        mapItem={c => ({
-          text: c.name,
-          onPress: () => handleSelect(c.id),
-        })}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
       />
     </View>
   );

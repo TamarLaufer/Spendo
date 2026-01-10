@@ -4,7 +4,7 @@ import { theme } from '../../theme/theme';
 import { Icons } from '../../assets/icons';
 const TopBar: FC = () => {
   return (
-    <View style={styles.textContainer}>
+    <View style={styles.container}>
       <Icons.Payment width={50} height={50} />
       <Text style={styles.textStyle}>חסכוני</Text>
     </View>
@@ -12,7 +12,7 @@ const TopBar: FC = () => {
 };
 
 const styles = StyleSheet.create({
-  textContainer: {
+  container: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',

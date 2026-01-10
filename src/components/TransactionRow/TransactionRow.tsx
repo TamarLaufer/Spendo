@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { SvgProps } from 'react-native-svg';
 import { formatAmount, formatShortDate } from '../../utils/formatting';
+import { theme } from '../../theme/theme';
 
 export type TransactionRowProps = {
   text: string;
@@ -62,15 +63,14 @@ const TransactionRow = ({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
-    borderRadius: 15,
-    elevation: 1.2,
-    borderWidth: 2,
-    borderColor: 'transparent',
-    marginVertical: 5,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
     flexDirection: 'row',
+    elevation: 12,
+    borderWidth: 0.5,
+    borderColor: theme.color.shadowColor,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
     alignItems: 'center',
+    marginVertical: 0.2,
   },
   rightCol: {
     width: 36,
@@ -80,19 +80,21 @@ const styles = StyleSheet.create({
   },
   middleCol: {
     flex: 1,
-    minWidth: 0,
     justifyContent: 'center',
-    gap: 4,
   },
   leftCol: {
     marginStart: 8,
     alignItems: 'flex-end',
     justifyContent: 'center',
   },
-  title: { fontSize: 18, color: '#222' },
-  subTitle: { fontSize: 14, color: '#666' },
-  amount: { fontSize: 16, color: '#222' },
-  date: { fontSize: 12, color: '#666' },
+  title: { fontSize: 18, color: '#222', fontFamily: 'MPLUSRounded1c-Regular' },
+  subTitle: {
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'MPLUSRounded1c-Regular',
+  },
+  amount: { fontSize: 16, color: '#222', fontFamily: 'MPLUSRounded1c-Regular' },
+  date: { fontSize: 12, color: '#666', fontFamily: 'MPLUSRounded1c-Regular' },
 });
 
 export default TransactionRow;

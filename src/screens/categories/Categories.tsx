@@ -1,61 +1,65 @@
 import { FC, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import ScreenLayout from '../../components/screenLayout/ScreenLayout';
-import TransactionList from '../../components/transactionList/TransactionList';
 import { useCategory } from '../../zustandState/useCategory';
-import { IconRegistry } from '../../assets/icons';
 import AddCategory from '../../components/addCategory/AddCategory';
 import { theme } from '../../theme/theme';
 import { STRINGS } from '../../strings/hebrew';
+import { Category } from '../../shared/categoryType';
 
 const Categories: FC = () => {
   const categories = useCategory(state => state.categories);
   const [displayAdding, setDisplayAdding] = useState(false);
 
-  const handleDisplayPress = () => {
-    setDisplayAdding(true);
+  const onCategoryPress = (categoryId: string) => {
+    console.log(categoryId);
   };
 
-  const onCategoryPress = () => {};
+  const renderItem = ({ item }: { item: Category }) => (
+    <Pressable style={styles.row} onPress={() => onCategoryPress(item.id)}>
+      <Text style={styles.rowText}>{item.name}</Text>
+    </Pressable>
+  );
 
   return (
     <ScreenLayout>
-      <ScrollView>
-        <View style={styles.container}>
+      <FlatList
+        data={categories}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.container}
+        ListHeaderComponent={
           <View style={styles.headerContainer}>
             <Text style={styles.header}>{STRINGS.CATEGORIES}</Text>
           </View>
-          <TransactionList
-            data={categories}
-            mapItem={item => {
-              const Icon = item.icon ? IconRegistry[item.icon] : undefined;
-              return {
-                text: item.name ?? '',
-                icon: Icon,
-                amount: item.maxAmount,
-                onPress: onCategoryPress,
-              };
-            }}
-          />
-          {displayAdding && (
-            <AddCategory setDisplayAddCategory={setDisplayAdding} />
-          )}
-          {!displayAdding && (
-            <Pressable style={styles.addCategory} onPress={handleDisplayPress}>
-              <Text style={styles.buttonText}>{STRINGS.ADD_NEW_CATEGORY}</Text>
-            </Pressable>
-          )}
-        </View>
-      </ScrollView>
+        }
+        ListFooterComponent={
+          <>
+            {displayAdding && (
+              <AddCategory setDisplayAddCategory={setDisplayAdding} />
+            )}
+
+            {!displayAdding && (
+              <Pressable
+                style={styles.addCategory}
+                onPress={() => setDisplayAdding(true)}
+              >
+                <Text style={styles.buttonText}>
+                  {STRINGS.ADD_NEW_CATEGORY}
+                </Text>
+              </Pressable>
+            )}
+          </>
+        }
+      />
     </ScreenLayout>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginHorizontal: 10,
-    marginBottom: 40,
+    paddingHorizontal: 10,
+    paddingBottom: 40,
   },
   header: {
     fontSize: 23,
@@ -66,6 +70,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 15,
   },
+  row: {
+    padding: 14,
+    borderRadius: 12,
+    backgroundColor: 'white',
+    marginBottom: 8,
+  },
+  rowText: {
+    fontSize: 18,
+  },
   addCategory: {
     marginTop: 12,
     backgroundColor: theme.color.lightBlue,
@@ -73,7 +86,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
   },
-  buttonText: { color: 'white', fontSize: 18, fontWeight: '700' },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '700',
+  },
 });
 
 export default Categories;

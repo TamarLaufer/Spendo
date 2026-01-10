@@ -8,6 +8,6 @@ export const theme = {
     light_purple: '#C5B0CD',
     purple: '#9929EA',
     lightBlue: '#9bacecff',
-    lightGreen: '#67C090',
+    lightGreen: 'rgba(186, 236, 209, 0.28)',
   },
 };

@@ -1,16 +1,24 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import ExpensesListView from '../../components/expensesListView/ExpensesListView';
 import { STRINGS } from '../../strings/hebrew';
 
 const AllExpenses = () => {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      setReady(true);
+    });
+  }, []);
+
   return (
-    <ScrollView>
+    <>
       <View style={styles.headerContainer}>
         <Text style={styles.header}>{STRINGS.ALL_EXPENSES}</Text>
       </View>
-      <ExpensesListView groupByMonth />
-    </ScrollView>
+      {ready && <ExpensesListView groupByMonth />}
+    </>
   );
 };
 

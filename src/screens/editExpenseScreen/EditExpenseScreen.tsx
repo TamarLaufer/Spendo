@@ -1,101 +1,68 @@
-import z from 'zod';
-import { Alert, View } from 'react-native';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Alert, FlatList, Pressable, StyleSheet, Text } from 'react-native';
+import React, { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 import { useExpenses } from '../../zustandState/useExpenses';
 import { useCategory } from '../../zustandState/useCategory';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { RootStackParamsType } from '../../navigation/types';
 import { STRINGS } from '../../strings/hebrew';
-import BottomSheet from '@gorhom/bottom-sheet';
-import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
-import { useBottomSheet } from '../../zustandState/useBottomSheet';
-import TransactionList from '../../components/transactionList/TransactionList';
 import { IconRegistry } from '../../assets/icons';
+import { PAYMENT_METHODS } from '../../bottomSheet/types';
+
 import {
-  ChangeCategoryButton,
-  ChangeCategoryText,
-  Content,
-  ErrorText,
-  Footer,
+  Screen,
   HeaderContainer,
   HeaderText,
+  Content,
   InputWrapper,
+  StyledInput,
+  ErrorText,
+  ChangeCategoryButton,
+  ChangeCategoryText,
+  Footer,
   SaveButton,
   SaveText,
-  Screen,
-  StyledInput,
 } from './EditExpenseScreen.styles';
-import { editExpenseUiSchema } from '../../shared/editExpenseUiSchema';
 
-type EditExpenseUiDraft = z.infer<typeof editExpenseUiSchema>;
+import {
+  editExpenseUiSchema,
+  EditExpenseUiDraft,
+} from '../../shared/editExpenseUiSchema';
+
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 type EditExpenseRoute = RouteProp<RootStackParamsType, 'EditExpenseScreen'>;
+type SheetMode = 'category' | 'payment' | null;
+
 const EditExpenseScreen = () => {
   const {
     params: { expenseId, categoryId },
   } = useRoute<EditExpenseRoute>();
+
+  const navigation = useNavigation<RootNav>();
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const [sheetMode, setSheetMode] = useState<SheetMode>(null);
+
+  const snapPoints = useMemo(() => ['75%'], []);
+  const categories = useCategory(state => state.categories);
+  const findCategoryById = useCategory(state => state.findCategoryById);
+
   const findExpenseById = useExpenses(state => state.findExpenseById);
   const updateExpense = useExpenses(state => state.updateExpense);
-  const findCategoryById = useCategory(state => state.findCategoryById);
-  const resetWizard = useExpenseWizard(state => state.resetWizard);
-  const currentCategory = findCategoryById(categoryId);
+
   const expense = findExpenseById(expenseId);
-  const navigation = useNavigation<RootNav>();
-  const bottomSheetRef = useRef<BottomSheetMethods | null>(null);
-  const setBottomSheetRef = useBottomSheet(state => state.setBottomSheetRef);
-  const openBottomSheet = useBottomSheet(state => state.openBottomSheet);
-  const closeBottomSheet = useBottomSheet(state => state.closeBottomSheet);
-  const snapPoints = useMemo(() => ['75%'], []);
-  const [isSaving, setIsSaving] = useState(false);
-  const categoriesList = useCategory(state => state.categories);
-
-  useEffect(() => {
-    setBottomSheetRef(bottomSheetRef);
-  }, [setBottomSheetRef]);
-
-  const handleSheetChanges = useCallback(
-    (index: number) => {
-      if (index === -1) {
-        resetWizard();
-      }
-    },
-    [resetWizard],
-  );
-
-  const submitLogic = async (data: EditExpenseUiDraft) => {
-    try {
-      updateExpense(expenseId, {
-        categoryId: data.categoryId,
-        amount: Number(data.amountText) ?? 0,
-        paymentMethod: data.paymentMethod ?? '',
-        note: data.noteText ?? '',
-      });
-      setIsSaving(true);
-      Alert.alert('נשמר!', 'עדכון ההוצאה נשמר בהצלחה');
-    } catch (error) {
-      console.log(error);
-      Alert.alert('משהו השתבש, נסו שוב עוד מספר דקות');
-    }
-    setIsSaving(true);
-    navigation.goBack();
-  };
+  const currentCategory = findCategoryById(categoryId);
 
   const {
     register,
     watch,
     setValue,
-    formState: { isValid, errors },
     handleSubmit,
+    formState: { errors, isValid },
   } = useForm<EditExpenseUiDraft>({
     resolver: zodResolver(editExpenseUiSchema),
     mode: 'onChange',
@@ -107,84 +74,134 @@ const EditExpenseScreen = () => {
     },
   });
 
-  const inputConfig = [
-    {
-      name: 'amountText' as const,
-      placeholder: 'סכום',
-      keyboardType: 'numeric' as const,
-      validateOnChange: true,
-    },
-    {
-      name: 'noteText' as const,
-      placeholder: 'הערה',
-      keyboardType: 'default' as const,
-      validateOnChange: false,
-    },
-  ];
+  const openSheet = (mode: SheetMode) => {
+    setSheetMode(mode);
+    bottomSheetRef.current?.expand();
+  };
 
-  const inputs = inputConfig.map(input => (
-    <View key={input.name}>
-      <StyledInput
-        {...register(input.name)}
-        value={watch(input.name)}
-        onChangeText={v =>
-          setValue(input.name, v, {
-            shouldValidate: input.validateOnChange,
-          })
-        }
-        placeholder={input.placeholder}
-        keyboardType={input.keyboardType}
-      />
+  const closeSheet = () => {
+    bottomSheetRef.current?.close();
+    setSheetMode(null);
+  };
 
-      {errors[input.name] && (
-        <ErrorText>{errors[input.name]?.message as string}</ErrorText>
-      )}
-    </View>
-  ));
+  const submitLogic = async (data: EditExpenseUiDraft) => {
+    try {
+      updateExpense(expenseId, {
+        categoryId: data.categoryId,
+        amount: Number(data.amountText),
+        paymentMethod: data.paymentMethod,
+        note: data.noteText ?? '',
+      });
+
+      Alert.alert('נשמר!', 'עדכון ההוצאה נשמר בהצלחה');
+      navigation.goBack();
+    } catch {
+      Alert.alert('שגיאה', 'נסי שוב בעוד כמה דקות');
+    }
+  };
 
   return (
     <Screen>
       <HeaderContainer>
         <HeaderText>{STRINGS.EDIT_EXPENSE}</HeaderText>
       </HeaderContainer>
+
       <Content>
-        <ChangeCategoryButton onPress={openBottomSheet}>
+        <ChangeCategoryButton onPress={() => openSheet('category')}>
           <ChangeCategoryText>שינוי קטגוריה</ChangeCategoryText>
         </ChangeCategoryButton>
 
-        <InputWrapper>{inputs}</InputWrapper>
-      </Content>
-      <ChangeCategoryButton onPress={openPaymentMethodSheet}>
-        <ChangeCategoryText>
-          {watch('paymentMethod') || 'בחירת אמצעי תשלום'}
-        </ChangeCategoryText>
-      </ChangeCategoryButton>
-      {bottomSheetRef && (
-        <BottomSheet
-          ref={bottomSheetRef}
-          index={-1}
-          snapPoints={snapPoints}
-          onChange={handleSheetChanges}
-          enablePanDownToClose={!isSaving}
-          enableDynamicSizing={false}
-        >
-          <TransactionList
-            keyExtractor={category => category.id}
-            data={categoriesList}
-            mapItem={category => ({
-              text: category.name,
-              onPress: () => {
-                setValue('categoryId', category.id, { shouldValidate: true });
-                closeBottomSheet();
-              },
-              selected: category.id === watch('categoryId'),
-              icon: category?.icon ? IconRegistry[category.icon] : undefined,
-            })}
+        <ChangeCategoryButton onPress={() => openSheet('payment')}>
+          <ChangeCategoryText>
+            {watch('paymentMethod') || 'בחירת אמצעי תשלום'}
+          </ChangeCategoryText>
+        </ChangeCategoryButton>
+
+        <InputWrapper>
+          <StyledInput
+            {...register('amountText')}
+            value={watch('amountText')}
+            onChangeText={v =>
+              setValue('amountText', v, { shouldValidate: true })
+            }
+            placeholder="סכום"
+            keyboardType="numeric"
           />
-        </BottomSheet>
-      )}
+          {errors.amountText && (
+            <ErrorText>{errors.amountText.message}</ErrorText>
+          )}
+
+          <StyledInput
+            {...register('noteText')}
+            value={watch('noteText')}
+            onChangeText={v => setValue('noteText', v)}
+            placeholder="הערה"
+          />
+        </InputWrapper>
+      </Content>
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        onClose={closeSheet}
+        enablePanDownToClose
+        enableDynamicSizing={false}
+      >
+        <BottomSheetScrollView>
+          {sheetMode === 'category' && (
+            <FlatList
+              data={categories}
+              keyExtractor={category => category.id}
+              renderItem={({ item }) => {
+                const Icon = item.icon ? IconRegistry[item.icon] : undefined;
+
+                const isSelected = item.id === watch('categoryId');
+
+                return (
+                  <Pressable
+                    style={[styles.sheetRow, isSelected && styles.selectedRow]}
+                    onPress={() => {
+                      setValue('categoryId', item.id, { shouldValidate: true });
+                      closeSheet();
+                    }}
+                  >
+                    {Icon && <Icon width={24} height={24} />}
+                    <Text style={styles.sheetRowText}>{item.name}</Text>
+                  </Pressable>
+                );
+              }}
+            />
+          )}
+
+          {sheetMode === 'payment' && (
+            <FlatList
+              data={PAYMENT_METHODS}
+              keyExtractor={payment => payment.id}
+              renderItem={({ item }) => {
+                const isSelected = item.name === watch('paymentMethod');
+
+                return (
+                  <Pressable
+                    style={[styles.sheetRow, isSelected && styles.selectedRow]}
+                    onPress={() => {
+                      setValue('paymentMethod', item.name, {
+                        shouldValidate: true,
+                      });
+                      closeSheet();
+                    }}
+                  >
+                    <Text style={styles.sheetRowText}>{item.name}</Text>
+                  </Pressable>
+                );
+              }}
+            />
+          )}
+        </BottomSheetScrollView>
+      </BottomSheet>
+
       <Footer>
-        <SaveButton onPress={handleSubmit(submitLogic)} disabled={!isValid}>
+        <SaveButton disabled={!isValid} onPress={handleSubmit(submitLogic)}>
           <SaveText>שמור</SaveText>
         </SaveButton>
       </Footer>
@@ -193,3 +210,22 @@ const EditExpenseScreen = () => {
 };
 
 export default EditExpenseScreen;
+
+const styles = StyleSheet.create({
+  sheetRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: 'white',
+    marginBottom: 8,
+  },
+  selectedRow: {
+    borderWidth: 2,
+    borderColor: '#4da6ff',
+  },
+  sheetRowText: {
+    fontSize: 18,
+    marginStart: 12,
+  },
+});

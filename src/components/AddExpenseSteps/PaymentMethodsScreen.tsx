@@ -1,7 +1,6 @@
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { PaymentMethods } from '../../bottomSheet/types';
-import TransactionList from '../transactionList/TransactionList';
-import { StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
 
 const PaymentMethodsScreen = () => {
@@ -14,15 +13,20 @@ const PaymentMethodsScreen = () => {
     handleContinue();
   };
 
+  const renderItem = ({ item }: { item: PaymentMethods }) => {
+    return (
+      <Pressable onPress={() => handlePaymentChoose(item.name)}>
+        <Text>{item.name}</Text>
+      </Pressable>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <TransactionList
+      <FlatList
         keyExtractor={item => item.id}
         data={paymentMethods}
-        mapItem={item => ({
-          onPress: () => handlePaymentChoose(item.name),
-          text: item.name,
-        })}
+        renderItem={renderItem}
       />
     </View>
   );

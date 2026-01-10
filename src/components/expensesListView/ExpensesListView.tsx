@@ -1,29 +1,32 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import {
   View,
   Text,
   Pressable,
   StyleSheet,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-
-import TransactionList from '../transactionList/TransactionList';
 import { useShallow } from 'zustand/shallow';
+
+import TransactionRow from '../transactionRow/TransactionRow';
+
 import {
   useExpenses,
   type ExpensesState,
 } from '../../zustandState/useExpenses';
 import { useCategory } from '../../zustandState/useCategory';
+import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
+import { useEnsureSubcatIndex } from '../../hooks/useEnsureSubcatIndex';
 
 import { IconRegistry } from '../../assets/icons';
 import { STRINGS } from '../../strings/hebrew';
 import { theme } from '../../theme/theme';
+
 import type { RootStackParamsType } from '../../navigation/types';
 import type { ExpenseModel } from '../../firebase/services/expenses';
-import { useEnsureSubcatIndex } from '../../zustandState/useEnsureSubcatIndex';
-import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
@@ -40,15 +43,21 @@ const ExpensesListView = ({
   link,
   groupByMonth,
 }: ExpensesListViewPropsType) => {
-  // Zustand selector (prevent re-renders)
   const expensesSelect = (state: ExpensesState) => ({
     expenses: state.expenses,
     error: state.error,
     loading: state.loading,
   });
 
-  const { expenses, error, loading } = useExpenses(useShallow(expensesSelect));
+  const { expenses, error } = useExpenses(useShallow(expensesSelect));
   const navigation = useNavigation<RootNav>();
+  const [isPreparingView, setIsPreparingView] = useState(true);
+
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      setIsPreparingView(false);
+    });
+  }, []);
 
   const data = useMemo(
     () => (numOfTransactions ? expenses.slice(0, numOfTransactions) : expenses),
@@ -95,21 +104,53 @@ const ExpensesListView = ({
       }));
   }, [groupByMonth, data]);
 
-  const handleExpensePress = ({
-    expenseId,
-    categoryId,
-    subCategoryId,
-  }: {
-    expenseId: string;
-    categoryId: string;
-    subCategoryId?: string;
-  }) => {
-    navigation.navigate('DetailsExpense', {
+  const handleExpensePress = useCallback(
+    ({
       expenseId,
-      subCategoryId,
       categoryId,
-    });
-  };
+      subCategoryId,
+    }: {
+      expenseId: string;
+      categoryId: string;
+      subCategoryId?: string;
+    }) => {
+      navigation.navigate('DetailsExpense', {
+        expenseId,
+        categoryId,
+        subCategoryId,
+      });
+    },
+    [navigation],
+  );
+
+  const renderTransaction = useCallback(
+    (item: ExpenseModel) => {
+      const category = findCategoryById(item.categoryId);
+      const Icon = category?.icon ? IconRegistry[category.icon] : undefined;
+
+      const subCategoryName = item.subCategoryId
+        ? subIndex[item.categoryId]?.[item.subCategoryId]?.name
+        : undefined;
+
+      return (
+        <TransactionRow
+          text={category?.name ?? ''}
+          subText={subCategoryName}
+          icon={Icon}
+          amount={item.amount}
+          createdAt={item.createdAt ?? null}
+          onPress={() =>
+            handleExpensePress({
+              expenseId: item.id,
+              categoryId: item.categoryId,
+              subCategoryId: item.subCategoryId ?? '',
+            })
+          }
+        />
+      );
+    },
+    [findCategoryById, subIndex, handleExpensePress],
+  );
 
   return (
     <View style={styles.contentContainer}>
@@ -119,8 +160,10 @@ const ExpensesListView = ({
         </View>
       )}
 
-      {loading ? (
-        <ActivityIndicator />
+      {isPreparingView ? (
+        <View style={styles.loadingIndicatorContainer}>
+          <ActivityIndicator size="large" color={theme.color.lightBlue} />
+        </View>
       ) : error ? (
         <Text style={styles.serverError}>{STRINGS.ERROE_IN_SERVER}</Text>
       ) : data.length === 0 ? (
@@ -130,58 +173,21 @@ const ExpensesListView = ({
           {sections.map(section => (
             <View key={section.key} style={styles.sectionBlock}>
               <Text style={styles.monthHeader}>{section.title}</Text>
-
-              <TransactionList
+              <FlatList
                 data={section.data}
                 keyExtractor={item => item.id}
-                mapItem={item => {
-                  const cat = findCategoryById(item.categoryId);
-                  const Icon = cat?.icon ? IconRegistry[cat.icon] : undefined;
-
-                  const subName = item.subCategoryId
-                    ? subIndex[item.categoryId]?.[item.subCategoryId]?.name
-                    : undefined;
-
-                  return {
-                    text: cat?.name ?? '',
-                    subText: subName, // ← הנה שם התת־קטגוריה
-                    icon: Icon,
-                    createdAt: item.createdAt ?? null,
-                    amount: item.amount,
-                    onPress: () =>
-                      handleExpensePress({
-                        expenseId: item.id,
-                        categoryId: item.categoryId,
-                        subCategoryId: item.subCategoryId ?? '',
-                      }),
-                  };
-                }}
+                renderItem={({ item }) => renderTransaction(item)}
+                scrollEnabled={false}
               />
             </View>
           ))}
         </>
       ) : (
-        <TransactionList
+        <FlatList
           data={data}
           keyExtractor={item => item.id}
-          mapItem={item => {
-            const cat = findCategoryById(item.categoryId);
-            const Icon = cat?.icon ? IconRegistry[cat.icon] : undefined;
-
-            return {
-              text: cat?.name ?? '', // ← לא categoryName
-              onPress: () =>
-                handleExpensePress({
-                  expenseId: item.id,
-                  categoryId: item.categoryId,
-                  subCategoryId: item.subCategoryId ?? '',
-                }),
-              icon: Icon,
-              createdAt: item.createdAt ?? null,
-              amount: item.amount,
-              // subText: idem
-            };
-          }}
+          renderItem={({ item }) => renderTransaction(item)}
+          scrollEnabled={false}
         />
       )}
 
@@ -202,13 +208,14 @@ const ExpensesListView = ({
 const styles = StyleSheet.create({
   contentContainer: {
     marginHorizontal: 20,
+    marginBottom: 25,
   },
   headerContainer: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   header: {
-    fontFamily: 'Assistant',
+    fontFamily: 'MPLUSRounded1c-Regular',
     fontSize: 22,
     paddingBottom: 5,
   },
@@ -225,11 +232,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-end',
     paddingEnd: 10,
-    paddingTop: 5,
+    marginTop: 20,
   },
   linkToAllExpenses: {
     fontSize: 18,
     color: theme.color.lightBlue,
+    fontFamily: 'MPLUSRounded1c-Regular',
   },
   monthHeader: {
     fontSize: 18,
@@ -242,6 +250,12 @@ const styles = StyleSheet.create({
   },
   sectionBlock: {
     marginTop: 8,
+  },
+  loadingIndicatorContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    flex: 1,
   },
 });
 

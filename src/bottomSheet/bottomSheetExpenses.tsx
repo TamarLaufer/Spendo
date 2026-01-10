@@ -33,6 +33,7 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
 
   const { header, buttonTitle, showButton } = StepsConfig[currentStep];
   const [isSaving, setIsSaving] = useState(false);
+
   const handleSheetChanges = useCallback(
     (index: number) => {
       if (index === -1) {
