@@ -1,36 +1,21 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import ExpensesListView from '../../components/expensesListView/ExpensesListView';
+import React from 'react';
+
 import { STRINGS } from '../../strings/hebrew';
+import useExpensesByMonth from '../../hooks/useExpensesByMonth';
+import ExpenseByMonthListView from '../../components/expenseByMonthListView/ExpenseByMonthListView';
+import { Container, Header, HeaderContainer } from './AllExpenses.styles';
 
 const AllExpenses = () => {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      setReady(true);
-    });
-  }, []);
+  const sections = useExpensesByMonth();
 
   return (
-    <>
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>{STRINGS.ALL_EXPENSES}</Text>
-      </View>
-      {ready && <ExpensesListView groupByMonth />}
-    </>
+    <Container>
+      <HeaderContainer>
+        <Header>{STRINGS.ALL_EXPENSES}</Header>
+      </HeaderContainer>
+      <ExpenseByMonthListView sections={sections.sections} />
+    </Container>
   );
 };
 
-const styles = StyleSheet.create({
-  headerContainer: {
-    flex: 1,
-    alignItems: 'center',
-    marginVertical: 15,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: '700',
-  },
-});
 export default AllExpenses;

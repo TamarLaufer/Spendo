@@ -21,4 +21,8 @@ export const STRINGS = {
   EDIT_EXPENSE: 'עריכת הוצאה:',
   CANCEL: 'ביטול',
   EDIT: 'עריכה',
+  ERROR_IN_LOADING_EXPENSES: 'שגיאה טעינת ההוצאות, בבקשה נסו מאוחר יותר',
+  ERROR_IN_LOADING_CATEGORIES: 'שגיאה בטעינת הקטגוריות, בבקשה נסו מאוחר יותר',
+  HELLO_USER: 'היי {{name}},',
+  MONTH_EXPENSES_TEXT: 'החודש הוצאת',
 };

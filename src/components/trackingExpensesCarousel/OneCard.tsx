@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginRight: 10,
     width: CARD_WIDTH,
-    height: 100,
+    height: 130,
     justifyContent: 'center',
     alignItems: 'center',
   },

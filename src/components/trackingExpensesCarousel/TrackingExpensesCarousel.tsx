@@ -31,9 +31,10 @@ export default TrackingExpensesCarousel;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: 'center',
     borderRadius: 10,
-    marginVertical: 20,
+    marginVertical: 10,
     justifyContent: 'center',
   },
 });
