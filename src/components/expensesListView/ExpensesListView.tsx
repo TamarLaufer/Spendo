@@ -24,7 +24,8 @@ import {
   NoExpensesText,
   Separator,
 } from './ExpensesListView.styles';
-import TransactionRowSkeleton from '../transactionRowSkeleton/TransactionRowSkeleton';
+import WithSkeleton from '../skeleton/withSkeleton/WithSkeleton';
+import RowSkeleton from '../skeleton/rowSkeleton/RowSkeleton';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
@@ -65,19 +66,19 @@ const ExpensesListView = ({ data, header, link }: ExpensesListViewProps) => {
       ? subIndex[item.categoryId]?.[item.subCategoryId]?.name
       : undefined;
 
-    const isReady = category && (item.subCategoryId ? subCategoryName : true);
+    const isReady = !!category && (!item.subCategoryId || !!subCategoryName);
 
-    return isReady ? (
-      <TransactionRow
-        text={category?.name ?? ''}
-        subText={subCategoryName}
-        icon={Icon}
-        amount={item.amount}
-        createdAt={item.createdAt ?? null}
-        onPress={() => handleExpensePress(item)}
-      />
-    ) : (
-      <TransactionRowSkeleton />
+    return (
+      <WithSkeleton ready={isReady} skeleton={<RowSkeleton />}>
+        <TransactionRow
+          text={category?.name ?? ''}
+          subText={subCategoryName}
+          icon={Icon}
+          amount={item.amount}
+          createdAt={item.createdAt ?? null}
+          onPress={() => handleExpensePress(item)}
+        />
+      </WithSkeleton>
     );
   };
 

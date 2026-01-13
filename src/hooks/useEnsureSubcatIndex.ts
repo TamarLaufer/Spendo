@@ -8,6 +8,10 @@ function uniqSorted(ids: string[]) {
 }
 
 export function useEnsureSubcatIndex(categoryIds: string[]) {
+  //ה־hook הזה מקבל categoryIds
+  //ופותח מאזינים רק לקטגוריות שצריך
+  //ושומר את תתי־הקטגוריות בזוסטנד
+  //ומנקה מאזינים כשכבר לא צריך
   const putMany = useSubcatIndex(state => state.putMany);
   const removeCategory = useSubcatIndex(state => state.removeCategory);
   const subsRef = useRef<Record<string, () => void>>({});
