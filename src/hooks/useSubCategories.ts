@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { subscribeSubCategoriesForCategory } from '../firebase/services/categories';
+import { subscribeSubCategoriesForCategory } from '../firebase/services/categoriesService';
 import type { SubCategory } from '../shared/categoryType';
 import { useSubcatIndex } from '../zustandState/useSubCategoriesIndex';
 

@@ -25,4 +25,13 @@ export const STRINGS = {
   ERROR_IN_LOADING_CATEGORIES: 'שגיאה בטעינת הקטגוריות, בבקשה נסו מאוחר יותר',
   HELLO_USER: 'היי {{name}},',
   MONTH_EXPENSES_TEXT: 'החודש הוצאת',
+  FROM: 'מתוך',
+  EXPENSE_AMOUNT_PLACEHOLDER: 'סכום ההוצאה',
+  EXPENSE_AMOUNT_REQUIRED: 'סכום חובה',
+  EXPENSE_AMOUNT_REQUIRED_GREATER_THAN_ZERO: 'הסכום חייב להיות גדול מאפס',
+  CATEGORY_CREATE_SCHEMA_INCORRECT_VALUES: 'שדות לא תקינים, בדקו את הקלט בבקשה',
+  CATEGORY_NAME_REQUIRED_ERROR: 'שם קטגוריה חובה',
+  CATEGORY_MAX_AMOUNT_REQUIRED_ERROR: 'תקציב חייב להיות מספר תקין וחיובי',
+  CATEGORY_ALREADY_EXISTS_ERROR: 'קיימת קטרוגיה בשם זה, אנא בחרו שם אחר',
+  CATEGORY_CREATE_FAILED_ERROR: 'הוספת הקטגוריה נכשלה, אנא נסו מאוחר יותר',
 };

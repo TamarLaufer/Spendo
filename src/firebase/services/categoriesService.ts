@@ -19,26 +19,6 @@ import type { IconKey } from '../../assets/icons';
 import { DEV_HOUSEHOLD_ID } from '../../config/consts';
 import { CategoryCreateSchema } from '../../shared/categorySchema';
 
-export type SubCategoryDocRead = {
-  subCategoryName: string;
-  icon: IconKey;
-  order?: number;
-  active?: boolean;
-  categoryId?: string;
-  createdAt?: FirestoreTypes.Timestamp | null;
-  updatedAt?: FirestoreTypes.Timestamp | null;
-};
-
-export type SubCategoryDocWrite = {
-  subCategoryName: string;
-  icon: IconKey;
-  order?: number;
-  active?: boolean;
-  categoryId?: string;
-  createdAt?: FirestoreTypes.FieldValue;
-  updatedAt?: FirestoreTypes.FieldValue;
-};
-
 export type CategoryDocRead = {
   householdId: string;
   categoryName: string;
@@ -61,6 +41,27 @@ type CategoryDocWrite = {
   updatedAt?: FirestoreTypes.FieldValue;
 };
 
+export type SubCategoryDocRead = {
+  subCategoryName: string;
+  icon: IconKey;
+  order?: number;
+  active?: boolean;
+  categoryId?: string;
+  createdAt?: FirestoreTypes.Timestamp | null;
+  updatedAt?: FirestoreTypes.Timestamp | null;
+};
+
+export type SubCategoryDocWrite = {
+  subCategoryName: string;
+  icon: IconKey;
+  order?: number;
+  active?: boolean;
+  categoryId?: string;
+  createdAt?: FirestoreTypes.FieldValue;
+  updatedAt?: FirestoreTypes.FieldValue;
+};
+
+//----collect all refs----
 type CatColRefRead = FirestoreTypes.CollectionReference<CategoryDocRead>;
 type CatColRefWrite = FirestoreTypes.CollectionReference<CategoryDocWrite>;
 type SubColRefRead = FirestoreTypes.CollectionReference<SubCategoryDocRead>;
@@ -69,12 +70,11 @@ type SubDocRefWrite = FirestoreTypes.DocumentReference<SubCategoryDocWrite>;
 
 // ---- Firestore init ----
 const appInstance = getApp();
-const firestoreDb = getFirestore(appInstance);
+const firestoreDb = getFirestore(appInstance); //determines which database to use
 
 // ---- Helper types ----
-
 const categoriesColRead = (): CatColRefRead =>
-  collection(firestoreDb, 'categories') as CatColRefRead;
+  collection(firestoreDb, 'categories') as CatColRefRead; //create a reference to the categories collection in the database
 
 const categoriesColWrite = (): CatColRefWrite =>
   collection(firestoreDb, 'categories') as CatColRefWrite;
@@ -95,9 +95,9 @@ const subCategoriesColWrite = (categoryId: string): SubColRefWrite =>
     'subCategories',
   ) as SubColRefWrite;
 
-// ---- Mapper: Firestore → UI ----
+// ---- Mapper/formatter: from Firestore to UI ----
 function mapCategorySnapshotToModel(
-  docSnap: FirestoreTypes.QueryDocumentSnapshot<CategoryDocRead>,
+  docSnap: FirestoreTypes.QueryDocumentSnapshot<CategoryDocRead>, //Firestore document snapshot
 ) {
   const data = docSnap.data();
   return {
@@ -112,16 +112,18 @@ function mapCategorySnapshotToModel(
 // ---- Queries ----
 export async function fetchCategoriesForHousehold(householdId: string) {
   const categoriesQuery = query(
-    categoriesColRead(),
-    where('householdId', '==', householdId),
-    orderBy('order', 'asc'),
+    //create a query to the categories collection in the database
+    categoriesColRead(), //create a reference to the categories collection in the database
+    where('householdId', '==', householdId), //filter the categories by the household id
+    orderBy('order', 'asc'), //sort (on the DB side) the categories by the order
   );
 
-  const querySnapshot = await getDocs(categoriesQuery);
-  return querySnapshot.docs.map(mapCategorySnapshotToModel);
+  const querySnapshot = await getDocs(categoriesQuery); //execute the query and get the documents
+  return querySnapshot.docs.map(mapCategorySnapshotToModel); //map the documents to the UI model
 }
 
 export function subscribeCategoriesForHousehold(
+  // Dear DB, Tell me when the categories change, and I will update the UI in real time
   householdId: string,
   onChange: (rows: ReturnType<typeof mapCategorySnapshotToModel>[]) => void,
   onError?: (e: Error) => void,
@@ -139,7 +141,7 @@ export function subscribeCategoriesForHousehold(
   );
 }
 
-// ---- Create category ----
+// ---- Create a new category ----
 export async function addCategory(input: {
   categoryName: string;
   maxAmount: number;
@@ -149,6 +151,18 @@ export async function addCategory(input: {
   householdId?: string;
 }) {
   const parsed = CategoryCreateSchema.parse(input);
+
+  const snap = await getDocs(
+    query(
+      categoriesColRead(),
+      where('householdId', '==', parsed.householdId ?? DEV_HOUSEHOLD_ID),
+      where('categoryName', '==', parsed.categoryName.trim()),
+    ),
+  );
+
+  if (!snap.empty) {
+    throw new Error('CATEGORY_ALREADY_EXISTS');
+  }
 
   const payload: CategoryDocWrite = {
     householdId: parsed.householdId ?? DEV_HOUSEHOLD_ID,
@@ -165,7 +179,7 @@ export async function addCategory(input: {
   return createdRef.id;
 }
 
-// helper ליצירת id מֵשם (או תשתמשי ב-id אקראי)
+// helper for creating an id from a name (or use a random id)
 export const toId = (name: string) =>
   name
     .normalize('NFKC')
@@ -175,6 +189,7 @@ export const toId = (name: string) =>
     .replace(/[^a-z0-9\-]/g, '')
     .slice(0, 48);
 
+// ---- upsert = Update or Insert a sub category ----
 export async function upsertSubCategory(
   categoryId: string,
   subCategoryId: string,

@@ -4,7 +4,7 @@ import { formatAmount, formatShortDate } from '../../utils/formatting';
 import {
   Amount,
   Container,
-  Date,
+  DateText,
   IconContainer,
   LeftCol,
   MiddleCol,
@@ -14,39 +14,39 @@ import {
 
 export type TransactionRowProps = {
   text: string;
-  onPress?: () => void;
   textStyle?: StyleProp<TextStyle>;
   icon?: React.ComponentType<SvgProps>;
   iconSize?: number;
   amount?: number;
   createdAt?: Date | null;
   subText?: string;
+  onPress?: () => void;
 };
 
 const TransactionRow = ({
   text,
-  onPress,
   icon: Icon,
-  iconSize = 30,
+  iconSize = 36,
   amount,
   createdAt,
   subText,
+  onPress,
 }: TransactionRowProps) => (
   <Container onPress={onPress} disabled={!onPress}>
     <IconContainer>
-      {Icon ? <Icon width={iconSize} height={iconSize} /> : null}
+      {Icon && <Icon width={iconSize} height={iconSize} />}
     </IconContainer>
     <MiddleCol>
       <Title numberOfLines={1}>{text}</Title>
-      {subText ? <SubTitle numberOfLines={1}>{subText}</SubTitle> : null}
+      {subText && <SubTitle numberOfLines={1}>{subText}</SubTitle>}
     </MiddleCol>
     <LeftCol>
-      {typeof amount === 'number' ? (
+      {typeof amount === 'number' && (
         <Amount numberOfLines={1}>{formatAmount(amount)}</Amount>
-      ) : null}
-      {createdAt ? (
-        <Date numberOfLines={1}>{formatShortDate(createdAt)}</Date>
-      ) : null}
+      )}
+      {createdAt && (
+        <DateText numberOfLines={1}>{formatShortDate(createdAt)}</DateText>
+      )}
     </LeftCol>
   </Container>
 );

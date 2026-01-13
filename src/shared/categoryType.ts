@@ -1,6 +1,6 @@
 import type { IconKey } from '../assets/icons';
 
-export type SubCategory = {
+export type SubCategoryType = {
   id: string;
   categoryId: string;
   name: string;
@@ -10,11 +10,11 @@ export type SubCategory = {
   createdAt?: Date | null;
   updatedAt?: Date | null;
 };
-export type Category = {
+export type CategoryType = {
   id: string;
   name: string;
   maxAmount: number;
-  isExceed: boolean; // computed in UI
+  isExceed: boolean;
   icon?: IconKey | null;
   createdAt?: Date | null;
   updatedAt?: Date | null;

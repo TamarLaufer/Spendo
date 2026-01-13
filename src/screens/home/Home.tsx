@@ -7,7 +7,7 @@ import { useCategory } from '../../zustandState/useCategory';
 import { DEV_HOUSEHOLD_ID, NUM_OF_TRANSACTIONS } from '../../config/consts';
 import { useEnsureSubcatIndex } from '../../hooks/useEnsureSubcatIndex';
 import ExpensesListView from '../../components/expensesListView/ExpensesListView';
-import TrackingExpensesCarousel from '../../components/trackingExpensesCarousel/TrackingExpensesCarousel';
+import TrackingExpensesCarousel from '../../components/trackingExpensesCarousel/trackingExpensesCarousel/TrackingExpensesCarousel';
 import {
   BalanceContainer,
   CarouselContainer,
@@ -28,14 +28,8 @@ const Home = () => {
   const expError = useExpenses(state => state.error);
   const catError = useCategory(state => state.error);
   const categories = useCategory(state => state.categories);
-  const categoryIds = useMemo(
-    () => categories.map(cat => cat.id),
-    [categories],
-  );
 
-  const topIds = useMemo(() => categoryIds.slice(0, 30), [categoryIds]);
-
-  useEnsureSubcatIndex(topIds);
+  useEnsureSubcatIndex(expenses.map(exp => exp.categoryId));
 
   const lastExpenses = useMemo(
     () => expenses.slice(0, NUM_OF_TRANSACTIONS),

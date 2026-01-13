@@ -1,5 +1,5 @@
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { PaymentMethods } from '../../bottomSheet/types';
+import { PaymentMethods } from '../../bottomSheetExpenses/types';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
 

@@ -4,7 +4,7 @@ export const ScrollView = styled.ScrollView`
   flex: 1;
 `;
 export const BalanceContainer = styled.View`
-  margin: 20px;
+  margin: 17px;
 `;
 export const ErrorText = styled.Text`
   font-family: 'Assistant';

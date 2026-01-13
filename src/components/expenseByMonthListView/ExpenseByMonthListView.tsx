@@ -1,7 +1,7 @@
 import { FlatList } from 'react-native';
 import React from 'react';
 import { ExpensesMonthSection } from '../../hooks/useExpensesByMonth';
-import { ExpenseModel } from '../../firebase/services/expenses';
+import { ExpenseModel } from '../../firebase/services/expensesService';
 import { formatAmount, formatShortDate } from '../../utils/formatting';
 import {
   DateText,

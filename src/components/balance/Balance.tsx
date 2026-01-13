@@ -3,6 +3,7 @@ import { useExpenses } from '../../zustandState/useExpenses';
 import { formatAmount } from '../../utils/formatting';
 import {
   BalanceAmount,
+  BalanceTextContainer,
   Container,
   HeaderText,
   RegularText,
@@ -35,8 +36,10 @@ const Balance = () => {
     <Container>
       {/* TODO: get name from user */}
       <HeaderText>{STRINGS.HELLO_USER.replace('{{name}}', 'תמר')}</HeaderText>
-      <RegularText>{STRINGS.MONTH_EXPENSES_TEXT}</RegularText>
-      <BalanceAmount>{formatAmount(balanceCalc)}</BalanceAmount>
+      <BalanceTextContainer>
+        <RegularText>{STRINGS.MONTH_EXPENSES_TEXT}</RegularText>
+        <BalanceAmount>{formatAmount(balanceCalc)}</BalanceAmount>
+      </BalanceTextContainer>
     </Container>
   );
 };

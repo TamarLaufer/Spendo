@@ -6,7 +6,7 @@ import {
   fetchExpenses,
   subscribeToExpenses,
   updateExpenseService,
-} from '../firebase/services/expenses';
+} from '../firebase/services/expensesService';
 
 export type ExpensesState = {
   expenses: ExpenseRecord[];

@@ -9,10 +9,11 @@ export const Container = styled.Pressable`
   align-items: center;
 `;
 export const IconContainer = styled.View`
-  width: 36px;
+  width: 42px;
   align-items: center;
   justify-content: center;
   margin-end: 8px;
+  padding: 5px;
 `;
 export const RightCol = styled.View`
   align-items: center;
@@ -21,6 +22,7 @@ export const RightCol = styled.View`
 `;
 export const MiddleCol = styled.View`
   flex: 1;
+  align-items: center;
   justify-content: center;
 `;
 export const LeftCol = styled.View`
@@ -32,6 +34,7 @@ export const Title = styled.Text`
   font-size: 18px;
   color: ${theme.color.dark_purple};
   font-family: 'MPLUSRounded1c-Regular';
+  font-weight: bold;
 `;
 export const SubTitle = styled.Text`
   font-size: 14px;
@@ -42,8 +45,9 @@ export const Amount = styled.Text`
   font-size: 16px;
   color: ${theme.color.dark_purple};
   font-family: 'MPLUSRounded1c-Regular';
+  font-weight: bold;
 `;
-export const Date = styled.Text`
+export const DateText = styled.Text`
   font-size: 12px;
   color: ${theme.color.dark_purple};
   font-family: 'MPLUSRounded1c-Regular';

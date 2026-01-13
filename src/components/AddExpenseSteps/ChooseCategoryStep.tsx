@@ -6,7 +6,7 @@ import AddCategory from '../addCategory/AddCategory';
 import { theme } from '../../theme/theme';
 import { IconRegistry } from '../../assets/icons';
 import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
-import { Category } from '../../shared/categoryType';
+import { CategoryType } from '../../shared/categoryType';
 
 const ChooseCategoryStep = () => {
   const categoryId = useExpenseWizard(state => state.categoryId);
@@ -23,7 +23,7 @@ const ChooseCategoryStep = () => {
     [setCategoryId, handleContinue],
   );
 
-  const renderItem = ({ item }: { item: Category }) => {
+  const renderItem = ({ item }: { item: CategoryType }) => {
     const Icon = item.icon ? IconRegistry[item.icon] : null;
     const isSelected = item.id === categoryId;
 

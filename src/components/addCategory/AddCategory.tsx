@@ -12,14 +12,15 @@ import { useCategory } from '../../zustandState/useCategory';
 import {
   addCategory,
   upsertSubCategory,
-} from '../../firebase/services/categories';
+} from '../../firebase/services/categoriesService';
 import {
   CategoryCreateSchema,
   CategoryIcon,
   type CategoryCreateInput,
 } from '../../shared/categorySchema';
-import { toId } from '../../firebase/services/categories';
+import { toId } from '../../firebase/services/categoriesService';
 import { DEV_HOUSEHOLD_ID } from '../../config/consts';
+import { STRINGS } from '../../strings/hebrew';
 
 type AddCategoryPropsType = {
   setDisplayAddCategory: (value: boolean) => void;
@@ -42,14 +43,13 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const setError = useCategory(state => state.setError);
 
   const handleAddCategoryPress = async () => {
-    // ולידציה בסיסית מהירה
     if (!categoryName.trim()) {
-      setSubmitError('נא להזין שם קטגוריה');
+      setSubmitError(STRINGS.CATEGORY_NAME_REQUIRED_ERROR);
       return;
     }
     const parsedAmount = Number(maxAmount);
     if (!Number.isFinite(parsedAmount) || parsedAmount < 0) {
-      setSubmitError('תקציב חייב להיות מספר תקין');
+      setSubmitError(STRINGS.CATEGORY_MAX_AMOUNT_REQUIRED_ERROR);
       return;
     }
 
@@ -62,10 +62,10 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       active: true,
     };
 
-    // ולידציית Zod מלאה
+    // Full Zod validation
     const result = CategoryCreateSchema.safeParse(categoryPayload);
     if (!result.success) {
-      setSubmitError('שדות לא תקינים, בדקי את הקלט בבקשה');
+      setSubmitError(STRINGS.CATEGORY_CREATE_SCHEMA_INCORRECT_VALUES);
       return;
     }
 
@@ -73,11 +73,9 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
     setSubmitError(null);
 
     try {
-      // 1) יצירת קטגוריה
       const categoryId = await addCategory(categoryPayload);
-
-      // 2) (אופציונלי) כתיבת תתי־קטגוריות מ-CSV, כל תת־קטגוריה כ־doc נפרד
       const names = parseCsv(subcategoriesText);
+
       if (names.length) {
         await Promise.all(
           names.map((name, idx) =>
@@ -94,7 +92,6 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
           ),
         );
       }
-
       // reset form
       setCategoryName('');
       setSubcategoriesText('');
@@ -103,7 +100,11 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       setError(null);
       setDisplayAddCategory(false);
     } catch (e: any) {
-      setSubmitError(e?.message ?? 'נכשלה הוספת קטגוריה');
+      if (e.message === 'CATEGORY_ALREADY_EXISTS') {
+        setSubmitError(STRINGS.CATEGORY_ALREADY_EXISTS_ERROR);
+      } else {
+        setSubmitError(e?.message ?? STRINGS.CATEGORY_CREATE_FAILED_ERROR);
+      }
     } finally {
       setSubmitLoader(false);
     }

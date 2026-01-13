@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { subscribeSubCategoriesForCategory } from '../firebase/services/categories';
+import { subscribeSubCategoriesForCategory } from '../firebase/services/categoriesService';
 import { useSubcatIndex } from '../zustandState/useSubCategoriesIndex';
-import type { SubCategory } from '../shared/categoryType';
+import type { SubCategoryType } from '../shared/categoryType';
 
 function uniqSorted(ids: string[]) {
   return Array.from(new Set(ids.filter(x => x != null && x !== ''))).sort();
@@ -25,7 +25,7 @@ export function useEnsureSubcatIndex(categoryIds: string[]) {
       const unsub = subscribeSubCategoriesForCategory(
         catId,
         rows => {
-          const subs: SubCategory[] = rows.map(r => ({
+          const subs: SubCategoryType[] = rows.map(r => ({
             id: r.id,
             categoryId: catId,
             name: r.subCategoryName,
@@ -43,7 +43,6 @@ export function useEnsureSubcatIndex(categoryIds: string[]) {
     toRemove.forEach(catId => {
       subsRef.current[catId]?.();
       delete subsRef.current[catId];
-      removeCategory(catId);
     });
 
     return () => {

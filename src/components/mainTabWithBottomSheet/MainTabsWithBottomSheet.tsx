@@ -2,7 +2,7 @@ import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { useEffect, useRef } from 'react';
 import { useCategory } from '../../zustandState/useCategory';
 import { useBottomSheet } from '../../zustandState/useBottomSheet';
-import BottomSheetExpenses from '../../bottomSheet/bottomSheetExpenses';
+import BottomSheetExpenses from '../../bottomSheetExpenses/bottomSheetExpenses';
 import MainTabsBottomNav from '../../navigation/bottomNavigation';
 
 const MainTabsWithBottomSheet = () => {

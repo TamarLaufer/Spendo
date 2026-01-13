@@ -1,13 +1,13 @@
 import { create } from 'zustand';
-import { SubCategory } from '../shared/categoryType';
+import { SubCategoryType } from '../shared/categoryType';
 
-type SubIndex = Record<string, Record<string, SubCategory>>;
+type SubIndex = Record<string, Record<string, SubCategoryType>>;
 type CountsIndex = Record<string, number>;
 
 type SubcatIndexState = {
   index: SubIndex; // index[categoryId][subId] = SubCategory
   counts: CountsIndex; // counts[categoryId] = num of subs
-  putMany: (categoryId: string, subs: SubCategory[]) => void;
+  putMany: (categoryId: string, subs: SubCategoryType[]) => void;
   removeCategory: (categoryId: string) => void;
   clear: () => void;
 };

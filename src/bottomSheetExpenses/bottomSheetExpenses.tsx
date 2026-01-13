@@ -1,8 +1,7 @@
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import AddExpenseStep from '../components/AddExpenseSteps/AddExpenseStep';
+import { Alert } from 'react-native';
+import AddExpenseStep from '../components/AddExpenseSteps/addExpenseStep/AddExpenseStep';
 import ChooseCategoryStep from '../components/AddExpenseSteps/ChooseCategoryStep';
 import EndProcessStep from '../components/AddExpenseSteps/EndProcessStep';
 import ChooseSubCategoryStep from '../components/AddExpenseSteps/ChooseSubCategoryStep';
@@ -13,6 +12,13 @@ import { useExpenseWizard } from '../zustandState/useExpenseWizard';
 import PaymentMethodsScreen from '../components/AddExpenseSteps/PaymentMethodsScreen';
 import AddNoteForExpense from '../components/AddExpenseSteps/AddNoteForExpense';
 import { useExpenseWizardNavigation } from '../hooks/useExpenseWizardNavigation';
+import {
+  ActionsContainer,
+  BackButton,
+  BottomSheetContainer,
+  HeaderText,
+  StepContainer,
+} from './BottomSheetExpenses.styles';
 
 type PropsType = {
   bottomSheetRef: React.RefObject<BottomSheetMethods | null>;
@@ -87,92 +93,36 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
       : !canProceedToNextStep();
 
   return (
-    <BottomSheet
+    <BottomSheetContainer
       ref={bottomSheetRef}
       index={-1}
       snapPoints={snapPoints}
       onChange={handleSheetChanges}
       enablePanDownToClose={!isSaving}
       enableDynamicSizing={false}
-      backgroundStyle={styles.bottomSheetBackground}
-      style={styles.bottomSheet}
     >
-      {!!header && <Text style={styles.header}>{header}</Text>}
+      {!!header && <HeaderText>{header}</HeaderText>}
 
-      <BottomSheetScrollView
-        style={styles.bottomScroll}
-        contentContainerStyle={styles.bottomSheetView}
-      >
-        {renderStep()}
-      </BottomSheetScrollView>
+      <StepContainer>{renderStep()}</StepContainer>
 
       {currentStep !== 'amount' && (
-        <Pressable
-          style={styles.backButton}
-          onPress={handleBack}
-          disabled={isSaving}
-        >
+        <BackButton onPress={handleBack} disabled={isSaving}>
           <Icons.Back width={50} height={50} />
-        </Pressable>
+        </BackButton>
       )}
 
       {showButton && !!primaryTitle && (
-        <View style={styles.actions}>
+        <ActionsContainer>
           <ContinueButton
             title={primaryTitle}
             onPress={onPrimaryPress}
             disabled={primaryDisabled}
             loading={isSaving}
           />
-        </View>
+        </ActionsContainer>
       )}
-    </BottomSheet>
+    </BottomSheetContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  bottomSheet: {
-    paddingVertical: 5,
-  },
-  bottomSheetBackground: {
-    backgroundColor: '#FBFBFB',
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 40,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 18,
-  },
-  bottomScroll: {
-    marginTop: 28,
-    marginHorizontal: 10,
-  },
-  bottomSheetView: { paddingBottom: 40 },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 12,
-  },
-  backButton: {
-    position: 'absolute',
-    top: -8,
-    left: '7%',
-    zIndex: 10,
-    transform: [{ rotate: '180deg' }],
-  },
-  cancelXButton: {
-    position: 'absolute',
-    top: '0%',
-    right: '6%',
-    zIndex: 10,
-  },
-  actions: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingBottom: 28,
-  },
-});
 
 export default BottomSheetExpenses;

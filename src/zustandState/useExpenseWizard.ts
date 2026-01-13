@@ -3,7 +3,7 @@ import {
   PAYMENT_METHODS,
   type PaymentMethods,
   type Steps,
-} from '../bottomSheet/types';
+} from '../bottomSheetExpenses/types';
 import {
   ExpenseCreateSchema,
   type ExpenseCreateInput,

@@ -4,7 +4,7 @@ import {
   fetchCategoriesForHousehold,
   seedCategoriesIfEmpty,
   subscribeCategoriesForHousehold,
-} from '../firebase/services/categories';
+} from '../firebase/services/categoriesService';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
 import { Category } from '../shared/categoryType';
 

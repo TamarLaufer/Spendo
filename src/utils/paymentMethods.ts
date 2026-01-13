@@ -1,4 +1,4 @@
-import { PaymentMethods } from '../bottomSheet/types';
+import { PaymentMethods } from '../bottomSheetExpenses/types';
 
 const PAYMENT_METHOD_LABELS: Record<PaymentMethods['id'], string> = {
   'credit-card': 'כרטיס אשראי',

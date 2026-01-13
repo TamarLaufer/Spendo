@@ -9,11 +9,11 @@ import { useCategory } from '../../zustandState/useCategory';
 import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
 import { useEnsureSubcatIndex } from '../../hooks/useEnsureSubcatIndex';
 
-import { IconRegistry } from '../../assets/icons';
+import { IconKey, IconRegistry } from '../../assets/icons';
 import { STRINGS } from '../../strings/hebrew';
 
 import type { RootStackParamsType } from '../../navigation/types';
-import type { ExpenseModel } from '../../firebase/services/expenses';
+import type { ExpenseModel } from '../../firebase/services/expensesService';
 import {
   ContentContainer,
   HeaderContainer,
@@ -24,6 +24,7 @@ import {
   NoExpensesText,
   Separator,
 } from './ExpensesListView.styles';
+import TransactionRowSkeleton from '../transactionRowSkeleton/TransactionRowSkeleton';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
@@ -56,13 +57,17 @@ const ExpensesListView = ({ data, header, link }: ExpensesListViewProps) => {
 
   const renderItem = ({ item }: { item: ExpenseModel }) => {
     const category = findCategoryById(item.categoryId);
-    const Icon = category?.icon ? IconRegistry[category.icon] : undefined;
+    const Icon = category?.icon
+      ? IconRegistry[category.icon as IconKey]
+      : undefined;
 
     const subCategoryName = item.subCategoryId
       ? subIndex[item.categoryId]?.[item.subCategoryId]?.name
       : undefined;
 
-    return (
+    const isReady = category && (item.subCategoryId ? subCategoryName : true);
+
+    return isReady ? (
       <TransactionRow
         text={category?.name ?? ''}
         subText={subCategoryName}
@@ -71,6 +76,8 @@ const ExpensesListView = ({ data, header, link }: ExpensesListViewProps) => {
         createdAt={item.createdAt ?? null}
         onPress={() => handleExpensePress(item)}
       />
+    ) : (
+      <TransactionRowSkeleton />
     );
   };
 

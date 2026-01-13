@@ -4,9 +4,9 @@ import { theme } from '../../theme/theme';
 export const Container = styled.View`
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 15px;
   background-color: ${theme.color.lightGreen};
-  margin: 0 30px;
+  margin-horizontal: 27px;
 `;
 export const HeaderText = styled.Text`
   font-size: 24px;
@@ -14,10 +14,15 @@ export const HeaderText = styled.Text`
 `;
 export const RegularText = styled.Text`
   font-size: 22px;
-  font-family: MPLUSRounded1c-Regular;
+  font-family: MPLUSRounded1c-Medium;
 `;
 export const BalanceAmount = styled.Text`
-  padding-top: 10px;
   font-size: 36px;
   font-family: MPLUSRounded1c-Regular;
+`;
+
+export const BalanceTextContainer = styled.View`
+  padding-top: 15px;
+  align-items: center;
+  justify-content: center;
 `;

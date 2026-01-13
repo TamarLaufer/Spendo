@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home/Home';
 import Receipts from '../screens/receipts/Receipts';
 import Settings from '../screens/settings/Settings';
-import Categories from '../screens/categories/Categories';
+import Categories from '../screens/categories/categories/Categories';
 import { MainBottomTabsParamsListTypes } from './types';
 import { STRINGS } from '../strings/hebrew';
 import AddButton from '../components/button/AddButton';
@@ -17,7 +17,7 @@ export type TabIconProps = Parameters<
 
 const Tab = createBottomTabNavigator<MainBottomTabsParamsListTypes>();
 
-const TAB_BAR_STYLE = { height: 70 } as const;
+const TAB_BAR_STYLE = { height: 65, paddingTop: 5 } as const;
 const TAB_SCREEN_OPTIONS = {
   tabBarActiveTintColor: theme.color.lightBlue,
   tabBarInactiveTintColor: 'gray',

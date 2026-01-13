@@ -2,10 +2,10 @@ import {
   addExpense,
   fetchExpenses,
   subscribeToExpenses,
-} from '../firebase/services/expenses';
+} from '../firebase/services/expensesService';
 
 import type { CategoryType } from '../shared/categoryType';
-import { fetchCategoriesForHousehold } from '../firebase/services/categories';
+import { fetchCategoriesForHousehold } from '../firebase/services/categoriesService';
 import { ExpenseCreateInput, ExpenseRecord } from '../shared/expenseSchema';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
 

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useExpenses } from '../zustandState/useExpenses';
-import { ExpenseModel } from '../firebase/services/expenses';
+import { ExpenseModel } from '../firebase/services/expensesService';
 
 export type ExpensesMonthSection = {
   key: string;

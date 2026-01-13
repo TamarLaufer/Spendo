@@ -7,8 +7,8 @@ export const Separator = styled.View`
 `;
 
 export const ContentContainer = styled.View`
-  margin-horizontal: 20px;
-  margin-bottom: 25px;
+  margin: 5px 10px 2px 10px;
+  margin-top: 8px;
 `;
 
 export const HeaderContainer = styled.View`
@@ -17,9 +17,8 @@ export const HeaderContainer = styled.View`
 `;
 
 export const HeaderText = styled.Text`
-  font-family: 'MPLUSRounded1c-Regular';
+  font-family: 'MPLUSRounded1c-Medium';
   font-size: 22px;
-  padding-bottom: 5px;
 `;
 
 export const NoExpensesText = styled.Text`

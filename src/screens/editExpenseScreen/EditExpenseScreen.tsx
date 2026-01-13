@@ -11,7 +11,7 @@ import { useCategory } from '../../zustandState/useCategory';
 import { RootStackParamsType } from '../../navigation/types';
 import { STRINGS } from '../../strings/hebrew';
 import { IconRegistry } from '../../assets/icons';
-import { PAYMENT_METHODS } from '../../bottomSheet/types';
+import { PAYMENT_METHODS } from '../../bottomSheetExpenses/types';
 
 import {
   Screen,
