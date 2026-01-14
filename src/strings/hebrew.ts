@@ -15,6 +15,7 @@ export const STRINGS = {
   LOADING_OR_NOT_FOUND: 'טוען/לא נמצא',
   LOADING_CATEGORY: 'טוען קטגוריה...',
   ALL_EXPENSES: 'כל ההוצאות',
+  EXPENSES_HISTORY: 'היסטוריית ההוצאות',
   DO_YOU_WANT_TO_DELETE: 'האם ברצונך למחוק את ההוצאה?',
   NO_MISTAKE: 'לא, טעות',
   YES_PLEASE_DELETE: 'כן, מחק בבקשה',

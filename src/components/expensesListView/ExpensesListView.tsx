@@ -54,6 +54,8 @@ const ExpensesListView = ({ data, header, link }: ExpensesListViewProps) => {
     [navigation],
   );
 
+  const handleLinkPress = () => navigation.navigate('AllExpenses');
+
   const renderItem = ({ item }: { item: ExpenseModel }) => {
     const category = findCategoryById(item.categoryId);
     const Icon = category?.icon
@@ -104,7 +106,7 @@ const ExpensesListView = ({ data, header, link }: ExpensesListViewProps) => {
       )}
 
       {link && (
-        <LinkPressable onPress={() => navigation.navigate('AllExpenses')}>
+        <LinkPressable onPress={handleLinkPress}>
           <LinkText>{STRINGS.TO_ALL_EXPENSES}</LinkText>
         </LinkPressable>
       )}

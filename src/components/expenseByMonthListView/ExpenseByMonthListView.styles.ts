@@ -9,13 +9,13 @@ export const ListContainer = styled.View`
 
 export const DateTextContainer = styled.View`
   align-items: center;
-  margin-top: 20px;
+  margin-top: 25px;
 `;
 export const DateText = styled.Text`
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 500;
   color: ${theme.color.lightBlue};
-  font-family: 'MPLUSRounded1c-Bold';
+  font-family: 'MPLUSRounded1c-Medium';
 `;
 export const ExpenseText = styled.Text`
   font-size: 16px;

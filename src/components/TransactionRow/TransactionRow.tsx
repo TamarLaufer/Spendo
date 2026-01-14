@@ -9,11 +9,13 @@ import {
   LeftCol,
   MiddleCol,
   SubTitle,
+  SubTitleContainer,
   Title,
+  TitleContainer,
 } from './TransactionRow.styles';
 
 export type TransactionRowProps = {
-  text: string;
+  text?: string;
   textStyle?: StyleProp<TextStyle>;
   icon?: React.ComponentType<SvgProps>;
   iconSize?: number;
@@ -26,7 +28,7 @@ export type TransactionRowProps = {
 const TransactionRow = ({
   text,
   icon: Icon,
-  iconSize = 36,
+  iconSize = 34,
   amount,
   createdAt,
   subText,
@@ -37,8 +39,12 @@ const TransactionRow = ({
       {Icon && <Icon width={iconSize} height={iconSize} />}
     </IconContainer>
     <MiddleCol>
-      <Title numberOfLines={1}>{text}</Title>
-      {subText && <SubTitle numberOfLines={1}>{subText}</SubTitle>}
+      <TitleContainer>
+        <Title numberOfLines={1}>{text}</Title>
+      </TitleContainer>
+      <SubTitleContainer>
+        {subText && <SubTitle numberOfLines={1}>{subText}</SubTitle>}
+      </SubTitleContainer>
     </MiddleCol>
     <LeftCol>
       {typeof amount === 'number' && (

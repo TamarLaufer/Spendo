@@ -29,13 +29,13 @@ export const NoExpensesText = styled.Text`
 export const LinkPressable = styled.Pressable`
   align-items: flex-end;
   padding-end: 5px;
-  margin-top: 4px;
+  margin-top: 3px;
 `;
 
 export const LinkText = styled.Text`
-  font-size: 18px;
+  font-size: 19px;
   color: ${theme.color.lightBlue};
-  font-family: 'MPLUSRounded1c-Regular';
+  font-family: 'MPLUSRounded1c-Medium';
 `;
 
 export const ListWrapper = styled.View`

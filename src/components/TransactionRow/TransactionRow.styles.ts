@@ -23,7 +23,7 @@ export const RightCol = styled.View`
 export const MiddleCol = styled.View`
   flex: 1;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 `;
 export const LeftCol = styled.View`
   margin-start: 8px;
@@ -33,19 +33,23 @@ export const LeftCol = styled.View`
 export const Title = styled.Text`
   font-size: 18px;
   color: ${theme.color.dark_purple};
-  font-family: 'MPLUSRounded1c-Regular';
-  font-weight: bold;
+  font-family: 'MPLUSRounded1c-Bold';
+`;
+export const TitleContainer = styled.View`
+  flex: 1;
 `;
 export const SubTitle = styled.Text`
   font-size: 14px;
   color: ${theme.color.dark_purple};
   font-family: 'MPLUSRounded1c-Regular';
 `;
+export const SubTitleContainer = styled.View`
+  flex: 1;
+`;
 export const Amount = styled.Text`
   font-size: 16px;
   color: ${theme.color.dark_purple};
-  font-family: 'MPLUSRounded1c-Regular';
-  font-weight: bold;
+  font-family: 'MPLUSRounded1c-Bold';
 `;
 export const DateText = styled.Text`
   font-size: 12px;
