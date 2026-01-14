@@ -25,11 +25,6 @@ export const ExpenseText = styled.Text`
   line-height: 20px;
 `;
 
-export const Separator = styled.View`
-  height: 1px;
-  background-color: rgba(0, 0, 0, 0.1);
-`;
-
 export const ListWrapper = styled.View`
   border-left-width: 1px;
   border-right-width: 1px;

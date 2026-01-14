@@ -2,17 +2,14 @@ import { SectionList } from 'react-native';
 import React from 'react';
 import { ExpensesMonthSection } from '../../hooks/useExpensesByMonth';
 import { ExpenseModel } from '../../firebase/services/expensesService';
-import {
-  DateText,
-  DateTextContainer,
-  Separator,
-} from './ExpenseByMonthListView.styles';
+import { DateText, DateTextContainer } from './ExpenseByMonthListView.styles';
 import TransactionRow from '../transactionRow/TransactionRow';
 import { useCategory } from '../../zustandState/useCategory';
 import { IconRegistry } from '../../assets/icons';
 import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
 import { RootNav } from '../../screens/expenseDetails/types';
 import { useNavigation } from '@react-navigation/native';
+import Separator from '../separator/Separator';
 
 type ExpenseByMonthListViewProps = {
   sections: ExpensesMonthSection[];

@@ -10,24 +10,40 @@ import {
   Container,
   Header,
   HeaderContainer,
+  IconAndTitle,
   Row,
   RowText,
+  Title,
 } from './Categories.styles';
 import AddCategory from '../../../components/addCategory/AddCategory';
+import Separator from '../../../components/separator/Separator';
+import { getIconComponent } from '../../../utils/getIconComponent';
 
 const Categories: FC = () => {
   const categories = useCategory(state => state.categories);
-  const [displayAdding, setDisplayAdding] = useState(false);
+  const [displayAddCategory, setDisplayAddCategory] = useState(false);
 
-  const onCategoryPress = (categoryId: string) => {
+  const handleCategoryPress = (categoryId: string) => {
     console.log(categoryId);
   };
 
-  const renderItem = ({ item }: { item: CategoryType }) => (
-    <Row onPress={() => onCategoryPress(item.id)}>
-      <RowText>{item.name}</RowText>
-    </Row>
-  );
+  const handleAddCategoryPress = () => {
+    setDisplayAddCategory(true);
+  };
+
+  const renderItem = ({ item }: { item: CategoryType }) => {
+    const Icon = item.icon ? getIconComponent(item.icon) : undefined;
+
+    return (
+      <Row onPress={() => handleCategoryPress(item.id)}>
+        <IconAndTitle>
+          {Icon && <Icon width={20} height={20} />}
+          <Title>{item.name}</Title>
+        </IconAndTitle>
+        <RowText>{item.maxAmount}</RowText>
+      </Row>
+    );
+  };
 
   return (
     <ScreenLayout>
@@ -41,14 +57,13 @@ const Categories: FC = () => {
               <Header>{STRINGS.CATEGORIES}</Header>
             </HeaderContainer>
           }
+          ItemSeparatorComponent={Separator}
           ListFooterComponent={
             <>
-              {displayAdding && (
-                <AddCategory setDisplayAddCategory={setDisplayAdding} />
-              )}
-
-              {!displayAdding && (
-                <AddCategoryButton onPress={() => setDisplayAdding(true)}>
+              {displayAddCategory ? (
+                <AddCategory setDisplayAddCategory={setDisplayAddCategory} />
+              ) : (
+                <AddCategoryButton onPress={handleAddCategoryPress}>
                   <ButtonText>{STRINGS.ADD_NEW_CATEGORY}</ButtonText>
                 </AddCategoryButton>
               )}

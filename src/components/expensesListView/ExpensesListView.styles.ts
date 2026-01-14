@@ -1,11 +1,6 @@
 import styled from 'styled-components/native';
 import { theme } from '../../theme/theme';
 
-export const Separator = styled.View`
-  height: 1px;
-  background-color: rgba(0, 0, 0, 0.1);
-`;
-
 export const ContentContainer = styled.View`
   margin: 5px 10px 2px 10px;
   margin-top: 8px;

@@ -2,13 +2,15 @@ import styled from 'styled-components/native';
 import { theme } from '../../../theme/theme';
 
 export const Container = styled.View`
-  padding-horizontal: 10px,
-  padding-bottom: 40px,
+  flex: 1;
+  padding-horizontal: 10px;
+  padding-bottom: 40px;
 `;
 
 export const Header = styled.Text`
-  font-size: 23px;
-  font-weight: 700;
+  font-size: 24px;
+  font-family: 'MPLUSRounded1c-Bold';
+  color: ${theme.color.lightBlue};
 `;
 
 export const HeaderContainer = styled.View`
@@ -21,11 +23,13 @@ export const Row = styled.Pressable`
   padding: 14px;
   border-radius: 12px;
   background-color: white;
-  margin-bottom: 8px;
+  flex-direction: row;
+  align-items: center;
 `;
 
 export const RowText = styled.Text`
   font-size: 18px;
+  font-family: 'MPLUSRounded1c-Bold';
 `;
 
 export const AddCategoryButton = styled.Pressable`
@@ -35,8 +39,19 @@ export const AddCategoryButton = styled.Pressable`
   border-radius: 12px;
   align-items: center;
 `;
+
 export const ButtonText = styled.Text`
   color: white;
   font-size: 18px;
   font-weight: 700;
+`;
+
+export const IconAndTitle = styled.View`
+  flex: 1;
+  flex-direction: row;
+  gap: 14px;
+`;
+export const Title = styled.Text`
+  font-size: 18px;
+  font-family: 'MPLUSRounded1c-Bold';
 `;

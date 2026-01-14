@@ -22,10 +22,10 @@ import {
   LinkText,
   ListWrapper,
   NoExpensesText,
-  Separator,
 } from './ExpensesListView.styles';
 import WithSkeleton from '../skeleton/withSkeleton/WithSkeleton';
 import RowSkeleton from '../skeleton/rowSkeleton/RowSkeleton';
+import Separator from '../separator/Separator';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 
