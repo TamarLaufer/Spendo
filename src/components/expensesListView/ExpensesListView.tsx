@@ -54,8 +54,6 @@ const ExpensesListView = ({ data, header, link }: ExpensesListViewProps) => {
     [navigation],
   );
 
-  const SeparatorComponent = Separator;
-
   const renderItem = ({ item }: { item: ExpenseModel }) => {
     const category = findCategoryById(item.categoryId);
     const Icon = category?.icon
@@ -99,8 +97,8 @@ const ExpensesListView = ({ data, header, link }: ExpensesListViewProps) => {
             keyExtractor={item => item.id}
             renderItem={renderItem}
             scrollEnabled={false}
-            ListHeaderComponent={SeparatorComponent}
-            ItemSeparatorComponent={SeparatorComponent}
+            ListHeaderComponent={Separator}
+            ItemSeparatorComponent={Separator}
           />
         </ListWrapper>
       )}

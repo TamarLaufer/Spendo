@@ -6,17 +6,17 @@ import {
   subscribeCategoriesForHousehold,
 } from '../firebase/services/categoriesService';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
-import { Category } from '../shared/categoryType';
+import { CategoryType } from '../shared/categoryType';
 
 type CategoryStateType = {
-  categories: Category[];
+  categories: CategoryType[];
   loading: boolean;
   error: string | null;
   setLoading: (v: boolean) => void;
   setError: (msg: string | null) => void;
   loadCategories: () => Promise<void>;
   subscribe: () => () => void;
-  findCategoryById: (categoryId: string) => Category | undefined;
+  findCategoryById: (categoryId: string) => CategoryType | undefined;
   deleteCategory: (categoryId: string) => void;
 };
 
@@ -50,12 +50,14 @@ export const useCategory = create<CategoryStateType>((set, get) => ({
   },
   findCategoryById: (categoryId: string) => {
     const state = get();
-    return state.categories.find(category => category.id === categoryId);
+    return state.categories.find(
+      (category: CategoryType) => category.id === categoryId,
+    );
   },
   deleteCategory: (categoryId: string) => {
     const state = get();
     const newList = state.categories.filter(
-      category => category.id !== categoryId,
+      (category: CategoryType) => category.id !== categoryId,
     );
     set({
       categories: newList,

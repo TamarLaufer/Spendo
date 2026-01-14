@@ -1,49 +1,53 @@
-import { FlatList } from 'react-native';
+import { SectionList } from 'react-native';
 import React from 'react';
 import { ExpensesMonthSection } from '../../hooks/useExpensesByMonth';
 import { ExpenseModel } from '../../firebase/services/expensesService';
-import { formatAmount, formatShortDate } from '../../utils/formatting';
 import {
   DateText,
   DateTextContainer,
-  ExpenseText,
-  ListContainer,
-  OneRowContainer,
+  Separator,
 } from './ExpenseByMonthListView.styles';
+import TransactionRow from '../transactionRow/TransactionRow';
+import { useCategory } from '../../zustandState/useCategory';
+import { IconRegistry } from '../../assets/icons';
 
 type ExpenseByMonthListViewProps = {
   sections: ExpensesMonthSection[];
 };
 
-const renderItem = ({ item }: { item: ExpensesMonthSection }) => {
-  return (
-    <ListContainer key={item.key}>
-      <DateTextContainer>
-        <DateText>{item.title}</DateText>
-      </DateTextContainer>
-      {item.data.map((oneExpense: ExpenseModel) => {
-        return (
-          <OneRowContainer key={oneExpense.id}>
-            <ExpenseText>{oneExpense.paymentMethod}</ExpenseText>
-            <ExpenseText>{formatShortDate(oneExpense.createdAt)}</ExpenseText>
-            <ExpenseText>{oneExpense.createdBy}</ExpenseText>
-            <ExpenseText>{oneExpense.note}</ExpenseText>
-            <ExpenseText>{formatAmount(oneExpense.amount)}</ExpenseText>
-          </OneRowContainer>
-        );
-      })}
-    </ListContainer>
-  );
-};
-
 const ExpenseByMonthListView = ({ sections }: ExpenseByMonthListViewProps) => {
+  const findCategoryById = useCategory(state => state.findCategoryById);
+
+  const renderItem = ({ item }: { item: ExpenseModel }) => {
+    const category = findCategoryById(item.categoryId);
+    return (
+      <TransactionRow
+        text={category?.name ?? ''}
+        amount={item.amount}
+        createdAt={item.createdAt}
+        icon={
+          category?.icon && IconRegistry[category.icon]
+            ? IconRegistry[category.icon]
+            : undefined
+        }
+      />
+    );
+  };
+
   return (
-    <FlatList
-      data={sections}
+    <SectionList
+      sections={sections}
+      keyExtractor={(item: ExpenseModel) => item.id}
+      stickySectionHeadersEnabled={true}
+      renderSectionHeader={({ section }) => (
+        <DateTextContainer>
+          <DateText>{section.title}</DateText>
+        </DateTextContainer>
+      )}
       renderItem={renderItem}
-      keyExtractor={item => item.key}
+      ListHeaderComponent={Separator}
+      ItemSeparatorComponent={Separator}
     />
   );
 };
-
 export default ExpenseByMonthListView;

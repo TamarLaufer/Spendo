@@ -12,7 +12,9 @@ export const ErrorText = styled.Text`
   color: red;
   margin-top: 20px;
 `;
-export const LastExpenses = styled.View``;
+export const LastExpenses = styled.View`
+  margin-horizontal: 12px;
+`;
 
 export const CarouselContainer = styled.View`
   align-items: center;

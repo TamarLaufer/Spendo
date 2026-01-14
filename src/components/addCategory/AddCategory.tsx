@@ -114,7 +114,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
     <View style={styles.container}>
       <Pressable
         onPress={() => setDisplayAddCategory(false)}
-        style={styles.xContainer}
+        // style={styles.xContainer}
       >
         <Text style={styles.x}>X</Text>
       </Pressable>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
   buttonText: { color: 'white', fontSize: 18, fontWeight: '700' },
   error: { color: 'red' },
-  xContainer: { flex: 1 },
+  // xContainer: { flex: 1 },
   x: { textAlign: 'right', paddingEnd: 20, fontSize: 20 },
 });
 

@@ -28,8 +28,8 @@ export const NoExpensesText = styled.Text`
 
 export const LinkPressable = styled.Pressable`
   align-items: flex-end;
-  padding-end: 10px;
-  margin-top: 10px;
+  padding-end: 5px;
+  margin-top: 4px;
 `;
 
 export const LinkText = styled.Text`
