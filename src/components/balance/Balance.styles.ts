@@ -4,9 +4,10 @@ import { theme } from '../../theme/theme';
 export const Container = styled.View`
   align-items: center;
   justify-content: center;
-  padding: 15px;
+  padding: 20px;
   background-color: ${theme.color.lightGreen};
   margin-horizontal: 27px;
+  margin-top: 20px;
 `;
 export const HeaderText = styled.Text`
   font-size: 24px;

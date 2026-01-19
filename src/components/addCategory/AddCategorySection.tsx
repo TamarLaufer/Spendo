@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
-import { theme } from '../../theme/theme';
+import { ActivityIndicator } from 'react-native';
 import { useCategory } from '../../zustandState/useCategory';
 import {
   addCategory,
@@ -21,6 +13,16 @@ import {
 import { toId } from '../../firebase/services/categoriesService';
 import { DEV_HOUSEHOLD_ID } from '../../config/consts';
 import { STRINGS } from '../../strings/hebrew';
+import {
+  AddButton,
+  AddButtonText,
+  CloseButtonContainer,
+  CloseText,
+  Container,
+  ErrorText,
+  Input,
+  Label,
+} from './AddCategorySection.styles';
 
 type AddCategoryPropsType = {
   setDisplayAddCategory: (value: boolean) => void;
@@ -39,6 +41,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [submitLoader, setSubmitLoader] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [icon, setIcon] = useState<CategoryIcon>('defaultIcon');
+  const loadCategories = useCategory(state => state.loadCategories);
 
   const setError = useCategory(state => state.setError);
 
@@ -92,6 +95,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
           ),
         );
       }
+      await loadCategories();
       // reset form
       setCategoryName('');
       setSubcategoriesText('');
@@ -111,74 +115,45 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Pressable
+    <Container>
+      <CloseButtonContainer
         onPress={() => setDisplayAddCategory(false)}
         // style={styles.xContainer}
       >
-        <Text style={styles.x}>X</Text>
-      </Pressable>
+        <CloseText>X</CloseText>
+      </CloseButtonContainer>
 
       {submitLoader && <ActivityIndicator />}
-      {submitError && <Text style={styles.error}>{submitError}</Text>}
+      {submitError && <ErrorText>{submitError}</ErrorText>}
 
-      <Text style={styles.label}>שם קטגוריה</Text>
-      <TextInput
+      <Label>שם קטגוריה</Label>
+      <Input
         value={categoryName}
         onChangeText={setCategoryName}
         placeholder="למשל: מזון"
-        style={styles.input}
       />
 
-      <Text style={styles.label}>תקציב מקסימלי</Text>
-      <TextInput
+      <Label>תקציב מקסימלי</Label>
+      <Input
         value={maxAmount}
         onChangeText={setMaxAmount}
         placeholder="1500"
         keyboardType="numeric"
-        style={styles.input}
       />
 
-      <Text style={styles.label}>תתי־קטגוריות (פסיקים בין ערכים)</Text>
-      <TextInput
+      <Label>תתי־קטגוריות (פסיקים בין ערכים)</Label>
+      <Input
         value={subcategoriesText}
         onChangeText={setSubcategoriesText}
         placeholder="למשל: סופר, ירקות, מוצרי חלב"
         keyboardType="default"
-        style={styles.input}
       />
 
-      <Pressable
-        onPress={handleAddCategoryPress}
-        style={styles.button}
-        disabled={submitLoader}
-      >
-        <Text style={styles.buttonText}>הוספה</Text>
-      </Pressable>
-    </View>
+      <AddButton onPress={handleAddCategoryPress} disabled={submitLoader}>
+        <AddButtonText>הוספה</AddButtonText>
+      </AddButton>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { padding: 16, gap: 10 },
-  label: { fontSize: 14, fontWeight: '600' },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    padding: 10,
-  },
-  button: {
-    marginTop: 12,
-    backgroundColor: theme.color.lightGreen,
-    padding: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  buttonText: { color: 'white', fontSize: 18, fontWeight: '700' },
-  error: { color: 'red' },
-  // xContainer: { flex: 1 },
-  x: { textAlign: 'right', paddingEnd: 20, fontSize: 20 },
-});
 
 export default AddCategory;

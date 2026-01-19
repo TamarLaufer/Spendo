@@ -3,14 +3,17 @@ import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useCategory } from '../../zustandState/useCategory';
 import { STRINGS } from '../../strings/hebrew';
 import { formatAmount } from '../../utils/formatting';
-import { useSubCategories } from '../../hooks/useSubCategories';
+import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
 
 const EndProcessStep = () => {
   const categoryId = useExpenseWizard(state => state.categoryId);
   const amount = useExpenseWizard(state => state.amount);
   const subCategoryId = useExpenseWizard(state => state.subCategoryId);
-  const { rows: subcats } = useSubCategories(categoryId);
-  const subCat = subcats.find(subC => subC.id === subCategoryId);
+  const subCat = useSubcatIndex(state =>
+    categoryId && subCategoryId
+      ? state.index[categoryId]?.[subCategoryId]
+      : undefined,
+  );
 
   const findCategoryById = useCategory(state => state.findCategoryById);
   const expenseObj = findCategoryById(categoryId);

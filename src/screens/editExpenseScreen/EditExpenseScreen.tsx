@@ -41,21 +41,16 @@ const EditExpenseScreen = () => {
   const {
     params: { expenseId, categoryId },
   } = useRoute<EditExpenseRoute>();
-
   const navigation = useNavigation<RootNav>();
   const bottomSheetRef = useRef<BottomSheet>(null);
-
   const [sheetMode, setSheetMode] = useState<SheetMode>(null);
-
-  const snapPoints = useMemo(() => ['75%'], []);
   const categories = useCategory(state => state.categories);
   const findCategoryById = useCategory(state => state.findCategoryById);
-
   const findExpenseById = useExpenses(state => state.findExpenseById);
   const updateExpense = useExpenses(state => state.updateExpense);
-
   const expense = findExpenseById(expenseId);
   const currentCategory = findCategoryById(categoryId);
+  const snapPoints = useMemo(() => ['75%'], []);
 
   const {
     register,
@@ -92,11 +87,10 @@ const EditExpenseScreen = () => {
         paymentMethod: data.paymentMethod,
         note: data.noteText ?? '',
       });
-
-      Alert.alert('נשמר!', 'עדכון ההוצאה נשמר בהצלחה');
+      Alert.alert(STRINGS.SAVED, STRINGS.EXPENSE_UPDATED_SUCCESSFULLY);
       navigation.goBack();
     } catch {
-      Alert.alert('שגיאה', 'נסי שוב בעוד כמה דקות');
+      Alert.alert(STRINGS.ERROR_IN_UPDATING_EXPENSE, STRINGS.TRY_AGAIN_LATER);
     }
   };
 
@@ -105,18 +99,15 @@ const EditExpenseScreen = () => {
       <HeaderContainer>
         <HeaderText>{STRINGS.EDIT_EXPENSE}</HeaderText>
       </HeaderContainer>
-
       <Content>
         <ChangeCategoryButton onPress={() => openSheet('category')}>
-          <ChangeCategoryText>שינוי קטגוריה</ChangeCategoryText>
+          <ChangeCategoryText>{STRINGS.CHANGE_CATEGORY}</ChangeCategoryText>
         </ChangeCategoryButton>
-
         <ChangeCategoryButton onPress={() => openSheet('payment')}>
           <ChangeCategoryText>
-            {watch('paymentMethod') || 'בחירת אמצעי תשלום'}
+            {watch('paymentMethod') || STRINGS.SELECT_PAYMENT_METHOD}
           </ChangeCategoryText>
         </ChangeCategoryButton>
-
         <InputWrapper>
           <StyledInput
             {...register('amountText')}
@@ -124,7 +115,7 @@ const EditExpenseScreen = () => {
             onChangeText={v =>
               setValue('amountText', v, { shouldValidate: true })
             }
-            placeholder="סכום"
+            placeholder={STRINGS.AMOUNT}
             keyboardType="numeric"
           />
           {errors.amountText && (
@@ -135,11 +126,10 @@ const EditExpenseScreen = () => {
             {...register('noteText')}
             value={watch('noteText')}
             onChangeText={v => setValue('noteText', v)}
-            placeholder="הערה"
+            placeholder={STRINGS.NOTE}
           />
         </InputWrapper>
       </Content>
-
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
@@ -155,9 +145,7 @@ const EditExpenseScreen = () => {
               keyExtractor={category => category.id}
               renderItem={({ item }) => {
                 const Icon = item.icon ? IconRegistry[item.icon] : undefined;
-
                 const isSelected = item.id === watch('categoryId');
-
                 return (
                   <Pressable
                     style={[styles.sheetRow, isSelected && styles.selectedRow]}
@@ -173,14 +161,12 @@ const EditExpenseScreen = () => {
               }}
             />
           )}
-
           {sheetMode === 'payment' && (
             <FlatList
               data={PAYMENT_METHODS}
               keyExtractor={payment => payment.id}
               renderItem={({ item }) => {
                 const isSelected = item.name === watch('paymentMethod');
-
                 return (
                   <Pressable
                     style={[styles.sheetRow, isSelected && styles.selectedRow]}
@@ -199,10 +185,9 @@ const EditExpenseScreen = () => {
           )}
         </BottomSheetScrollView>
       </BottomSheet>
-
       <Footer>
         <SaveButton disabled={!isValid} onPress={handleSubmit(submitLogic)}>
-          <SaveText>שמור</SaveText>
+          <SaveText>{STRINGS.SAVE}</SaveText>
         </SaveButton>
       </Footer>
     </Screen>

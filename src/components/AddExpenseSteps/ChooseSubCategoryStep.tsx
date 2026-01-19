@@ -1,22 +1,17 @@
 import React from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { useSubCategories } from '../../hooks/useSubCategories';
 import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
-import { SubCategory } from '../../shared/categoryType';
+import { SubCategoryType } from '../../shared/categoryType';
+import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
 
 const ChooseSubCategoryStep = () => {
   const { categoryId, setSubCategoryId } = useExpenseWizard();
   const { handleContinue } = useExpenseWizardNavigation();
 
-  const { rows, loading, error } = useSubCategories(categoryId);
+  const rows = useSubcatIndex(state =>
+    categoryId ? Object.values(state.index[categoryId] ?? {}) : [],
+  );
 
   const handleSelect = (subId: string) => {
     setSubCategoryId(subId);
@@ -27,19 +22,11 @@ const ChooseSubCategoryStep = () => {
     return <Text style={styles.msg}>בחרי קודם קטגוריה</Text>;
   }
 
-  if (loading) {
-    return <ActivityIndicator style={styles.loader} />;
-  }
-
-  if (error) {
-    return <Text style={styles.error}>{error}</Text>;
-  }
-
   if (rows.length === 0) {
     return <Text style={styles.msg}>אין תתי־קטגוריות לקטגוריה זו</Text>;
   }
 
-  const renderItem = ({ item }: { item: SubCategory }) => {
+  const renderItem = ({ item }: { item: SubCategoryType }) => {
     return (
       <Pressable onPress={() => handleSelect(item.id)}>
         <Text>{item.name}</Text>

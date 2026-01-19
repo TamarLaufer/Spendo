@@ -3,7 +3,6 @@ import { create } from 'zustand';
 import {
   fetchCategoriesForHousehold,
   seedCategoriesIfEmpty,
-  subscribeCategoriesForHousehold,
 } from '../firebase/services/categoriesService';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
 import { CategoryType } from '../shared/categoryType';
@@ -15,9 +14,8 @@ type CategoryStateType = {
   setLoading: (v: boolean) => void;
   setError: (msg: string | null) => void;
   loadCategories: () => Promise<void>;
-  subscribe: () => () => void;
   findCategoryById: (categoryId: string) => CategoryType | undefined;
-  deleteCategory: (categoryId: string) => void;
+  deleteCategoryLocal: (categoryId: string) => void;
 };
 
 export const useCategory = create<CategoryStateType>((set, get) => ({
@@ -27,16 +25,6 @@ export const useCategory = create<CategoryStateType>((set, get) => ({
 
   setLoading: value => set({ loading: value }),
   setError: msg => set({ error: msg }),
-
-  subscribe: () => {
-    set({ loading: true, error: null });
-    const unsub = subscribeCategoriesForHousehold(
-      DEV_HOUSEHOLD_ID,
-      rows => set({ categories: rows, loading: false, error: null }),
-      err => set({ error: err.message, loading: false }),
-    );
-    return unsub;
-  },
 
   loadCategories: async () => {
     set({ loading: true, error: null });
@@ -54,7 +42,7 @@ export const useCategory = create<CategoryStateType>((set, get) => ({
       (category: CategoryType) => category.id === categoryId,
     );
   },
-  deleteCategory: (categoryId: string) => {
+  deleteCategoryLocal: (categoryId: string) => {
     const state = get();
     const newList = state.categories.filter(
       (category: CategoryType) => category.id !== categoryId,

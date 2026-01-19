@@ -9,12 +9,6 @@ export const Backdrop = styled.Pressable`
   padding: 24px;
 `;
 
-export const CenteredView = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
-
 export const ModalView = styled.View`
   justify-content: center;
   margin: 20px;

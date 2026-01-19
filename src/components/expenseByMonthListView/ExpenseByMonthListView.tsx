@@ -64,6 +64,7 @@ const ExpenseByMonthListView = ({ sections }: ExpenseByMonthListViewProps) => {
       renderItem={renderItem}
       ListHeaderComponent={Separator}
       ItemSeparatorComponent={Separator}
+      showsVerticalScrollIndicator={false}
     />
   );
 };

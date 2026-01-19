@@ -98,7 +98,6 @@ const ExpensesListView = ({ data, header, link }: ExpensesListViewProps) => {
             data={data}
             keyExtractor={item => item.id}
             renderItem={renderItem}
-            scrollEnabled={false}
             ListHeaderComponent={Separator}
             ItemSeparatorComponent={Separator}
           />

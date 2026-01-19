@@ -76,6 +76,8 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
   },
 
   updateExpense: async (id: string, patch: ExpenseUpdatePatch) => {
+    console.log('updateExpense', id, patch);
+
     try {
       await updateExpenseService(id, patch);
       set(state => ({

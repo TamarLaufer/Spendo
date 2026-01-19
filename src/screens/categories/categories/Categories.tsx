@@ -15,7 +15,7 @@ import {
   RowText,
   Title,
 } from './Categories.styles';
-import AddCategory from '../../../components/addCategory/AddCategory';
+import AddCategory from '../../../components/addCategory/AddCategorySection';
 import Separator from '../../../components/separator/Separator';
 import { getIconComponent } from '../../../utils/getIconComponent';
 
@@ -58,6 +58,7 @@ const Categories: FC = () => {
             </HeaderContainer>
           }
           ItemSeparatorComponent={Separator}
+          showsVerticalScrollIndicator={false}
           ListFooterComponent={
             <>
               {displayAddCategory ? (

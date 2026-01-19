@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { View, StyleSheet, Pressable, Text, FlatList } from 'react-native';
 import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
 import { useCategory } from '../../zustandState/useCategory';
-import AddCategory from '../addCategory/AddCategory';
+import AddCategory from '../addCategory/AddCategorySection';
 import { theme } from '../../theme/theme';
 import { IconRegistry } from '../../assets/icons';
 import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';

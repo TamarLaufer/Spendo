@@ -1,10 +1,7 @@
 import styled from 'styled-components/native';
 
-export const ScrollView = styled.ScrollView`
-  flex: 1;
-`;
 export const BalanceContainer = styled.View`
-  margin: 17px;
+  flex: 1;
 `;
 export const ErrorText = styled.Text`
   font-family: 'Assistant';
@@ -13,12 +10,18 @@ export const ErrorText = styled.Text`
   margin-top: 20px;
 `;
 export const LastExpenses = styled.View`
-  margin-horizontal: 12px;
+  flex: 1;
 `;
 
 export const CarouselContainer = styled.View`
-  align-items: center;
+  flex: 1;
 `;
 export const Loader = styled.ActivityIndicator`
+  margin-top: 20px;
+`;
+export const HeaderText = styled.Text`
+  font-family: 'Assistant';
+  font-size: 20px;
+  color: black;
   margin-top: 20px;
 `;

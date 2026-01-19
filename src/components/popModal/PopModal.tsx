@@ -4,7 +4,6 @@ import {
   Backdrop,
   ButtonsContainer,
   ButtonText,
-  CenteredView,
   ModalText,
   ModalView,
   PressLeft,
@@ -41,20 +40,18 @@ const PopModal = ({
       onRequestClose={onClose}
     >
       <Backdrop onPress={onClose}>
-        <CenteredView>
-          <ModalView>
-            <ModalText>{modalHeader}</ModalText>
-            {children}
-            <ButtonsContainer>
-              <PressLeft onPress={onConfirm}>
-                <ButtonText>{modalButtonTextLeft}</ButtonText>
-              </PressLeft>
-              <PressRight onPress={onCancel}>
-                <ButtonText>{modalButtonTextRight}</ButtonText>
-              </PressRight>
-            </ButtonsContainer>
-          </ModalView>
-        </CenteredView>
+        <ModalView>
+          <ModalText>{modalHeader}</ModalText>
+          {children}
+          <ButtonsContainer>
+            <PressLeft onPress={onConfirm}>
+              <ButtonText>{modalButtonTextLeft}</ButtonText>
+            </PressLeft>
+            <PressRight onPress={onCancel}>
+              <ButtonText>{modalButtonTextRight}</ButtonText>
+            </PressRight>
+          </ButtonsContainer>
+        </ModalView>
       </Backdrop>
     </Modal>
   );

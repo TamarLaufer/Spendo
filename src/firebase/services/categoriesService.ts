@@ -5,7 +5,6 @@ import {
   where,
   orderBy,
   getDocs,
-  onSnapshot,
   writeBatch,
   doc,
   limit,
@@ -61,6 +60,11 @@ export type SubCategoryDocWrite = {
   updatedAt?: FirestoreTypes.FieldValue;
 };
 
+export type SubCategoryWithId = SubCategoryDocRead & {
+  id: string;
+  categoryId: string;
+};
+
 //----collect all refs----
 type CatColRefRead = FirestoreTypes.CollectionReference<CategoryDocRead>;
 type CatColRefWrite = FirestoreTypes.CollectionReference<CategoryDocWrite>;
@@ -96,7 +100,7 @@ const subCategoriesColWrite = (categoryId: string): SubColRefWrite =>
   ) as SubColRefWrite;
 
 // ---- Mapper/formatter: from Firestore to UI ----
-function mapCategorySnapshotToModel(
+function mapCategoryDocToModel(
   docSnap: FirestoreTypes.QueryDocumentSnapshot<CategoryDocRead>, //Firestore document snapshot
 ) {
   const data = docSnap.data();
@@ -119,26 +123,7 @@ export async function fetchCategoriesForHousehold(householdId: string) {
   );
 
   const querySnapshot = await getDocs(categoriesQuery); //execute the query and get the documents
-  return querySnapshot.docs.map(mapCategorySnapshotToModel); //map the documents to the UI model
-}
-
-export function subscribeCategoriesForHousehold(
-  // Dear DB, Tell me when the categories change, and I will update the UI in real time
-  householdId: string,
-  onChange: (rows: ReturnType<typeof mapCategorySnapshotToModel>[]) => void,
-  onError?: (e: Error) => void,
-) {
-  const categoriesQuery = query(
-    categoriesColRead(),
-    where('householdId', '==', householdId),
-    orderBy('order', 'asc'),
-  );
-
-  return onSnapshot(
-    categoriesQuery,
-    snap => onChange(snap.docs.map(mapCategorySnapshotToModel)),
-    err => onError?.(err as unknown as Error),
-  );
+  return querySnapshot.docs.map(mapCategoryDocToModel); //map the documents to the UI model
 }
 
 // ---- Create a new category ----
@@ -207,7 +192,9 @@ export async function upsertSubCategory(
   );
 }
 
-export async function fetchSubCategoriesForCategory(categoryId: string) {
+export async function fetchSubCategoriesForCategory(
+  categoryId: string,
+): Promise<SubCategoryWithId[]> {
   const queryOrder = query(
     subCategoriesColRead(categoryId),
     orderBy('order', 'asc'),
@@ -219,33 +206,6 @@ export async function fetchSubCategoriesForCategory(categoryId: string) {
       categoryId,
       ...subDoc.data(),
     }),
-  );
-}
-
-export function subscribeSubCategoriesForCategory(
-  categoryId: string,
-  onChange: (
-    rows: Array<{ id: string } & SubCategoryDocRead & { categoryId: string }>,
-  ) => void,
-  onError?: (e: Error) => void,
-) {
-  const querySub = query(
-    subCategoriesColRead(categoryId),
-    orderBy('order', 'asc'),
-  );
-  return onSnapshot(
-    querySub,
-    snap => {
-      const rows = snap.docs.map(
-        (subDoc: FirestoreTypes.QueryDocumentSnapshot<SubCategoryDocRead>) => ({
-          id: subDoc.id,
-          categoryId,
-          ...subDoc.data(),
-        }),
-      );
-      onChange(rows);
-    },
-    err => onError?.(err as unknown as Error),
   );
 }
 
@@ -302,7 +262,7 @@ export async function addCategoryWithCsvSubcats(input: {
   return categoryId;
 }
 
-// ---- Seed (אם אין קטגוריות) ----
+// ---- Seed (when there are no categories) ----
 export async function seedCategoriesIfEmpty(householdId: string) {
   const categoriesRef = collection(firestoreDb, 'categories');
   const existsSnap = await getDocs(

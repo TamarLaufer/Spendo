@@ -1,57 +1,39 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { subscribeSubCategoriesForCategory } from '../firebase/services/categoriesService';
+import { fetchSubCategoriesForCategory } from '../firebase/services/categoriesService';
 import { useSubcatIndex } from '../zustandState/useSubCategoriesIndex';
 import type { SubCategoryType } from '../shared/categoryType';
 
 function uniqSorted(ids: string[]) {
-  return Array.from(new Set(ids.filter(x => x != null && x !== ''))).sort();
+  return Array.from(new Set(ids.filter(Boolean))).sort();
 }
 
 export function useEnsureSubcatIndex(categoryIds: string[]) {
-  //ה־hook הזה מקבל categoryIds
-  //ופותח מאזינים רק לקטגוריות שצריך
-  //ושומר את תתי־הקטגוריות בזוסטנד
-  //ומנקה מאזינים כשכבר לא צריך
   const putMany = useSubcatIndex(state => state.putMany);
-  const removeCategory = useSubcatIndex(state => state.removeCategory);
-  const subsRef = useRef<Record<string, () => void>>({});
-
+  const loadedRef = useRef<Set<string>>(new Set());
   const ids = useMemo(() => uniqSorted(categoryIds), [categoryIds]);
-  const idsKey = useMemo(() => ids.join('|'), [ids]);
 
   useEffect(() => {
-    const current = new Set(Object.keys(subsRef.current));
-    const next = new Set(ids);
-    const toAdd = ids.filter(id => !current.has(id));
-    const toRemove = [...current].filter(id => !next.has(id));
+    ids.forEach(categoryId => {
+      if (loadedRef.current.has(categoryId)) return;
 
-    toAdd.forEach(catId => {
-      const unsub = subscribeSubCategoriesForCategory(
-        catId,
-        rows => {
-          const subs: SubCategoryType[] = rows.map(r => ({
-            id: r.id,
-            categoryId: catId,
-            name: r.subCategoryName,
-            icon: r.icon ?? null,
-            order: r.order,
-            active: r.active,
+      loadedRef.current.add(categoryId);
+
+      (async () => {
+        try {
+          const rows = await fetchSubCategoriesForCategory(categoryId);
+          const subs: SubCategoryType[] = rows.map(row => ({
+            id: row.id,
+            categoryId,
+            name: row.subCategoryName,
+            icon: row.icon ?? null,
+            order: row.order,
+            active: row.active,
           }));
-          putMany(catId, subs);
-        },
-        e => console.warn('[useEnsureSubcatIndex] error', catId, e),
-      );
-      subsRef.current[catId] = unsub;
+          putMany(categoryId, subs);
+        } catch (e) {
+          console.warn('[useEnsureSubcatIndex] fetch error', categoryId, e);
+        }
+      })();
     });
-
-    toRemove.forEach(catId => {
-      subsRef.current[catId]?.();
-      delete subsRef.current[catId];
-    });
-
-    return () => {
-      Object.values(subsRef.current).forEach(unsub => unsub());
-      subsRef.current = {};
-    };
-  }, [ids, idsKey, putMany, removeCategory]);
+  }, [ids, putMany]);
 }
