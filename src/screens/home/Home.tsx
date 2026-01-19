@@ -6,10 +6,12 @@ import TrackingExpensesCarousel from '../../components/trackingExpensesCarousel/
 import ExpensesListView from '../../components/expensesListView/ExpensesListView';
 import { useHomeData } from '../../hooks/useHomeData';
 import {
-  BalanceContainer,
-  CarouselContainer,
+  BalanceSection,
+  CarouselSection,
   ErrorText,
+  Spacer,
   Loader,
+  HomeContainer,
 } from './Home.styles';
 import { STRINGS } from '../../strings/hebrew';
 
@@ -27,19 +29,22 @@ const Home = () => {
   return (
     <ScreenLayout>
       <FlatList
-        data={expenses}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => <ExpensesListView data={[item]} />}
+        data={[]} // Data is not needed for this list
+        renderItem={null}
         ListHeaderComponent={
-          <>
-            <BalanceContainer>
+          <HomeContainer>
+            <BalanceSection>
               <Balance />
-            </BalanceContainer>
+            </BalanceSection>
 
-            <CarouselContainer>
+            <CarouselSection>
               <TrackingExpensesCarousel categories={categories} />
-            </CarouselContainer>
-          </>
+            </CarouselSection>
+
+            <Spacer />
+
+            <ExpensesListView data={expenses.slice(0, 3)} />
+          </HomeContainer>
         }
       />
     </ScreenLayout>
