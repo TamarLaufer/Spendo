@@ -10,7 +10,6 @@ import {
   CarouselSection,
   ErrorText,
   Spacer,
-  Loader,
   HomeContainer,
 } from './Home.styles';
 import { STRINGS } from '../../strings/hebrew';
@@ -20,10 +19,6 @@ const Home = () => {
 
   if (error) {
     return <ErrorText>{STRINGS.GENERIC_ERROR}</ErrorText>;
-  }
-
-  if (loading) {
-    return <Loader />;
   }
 
   return (
@@ -43,7 +38,7 @@ const Home = () => {
 
             <Spacer />
 
-            <ExpensesListView data={expenses.slice(0, 3)} />
+            <ExpensesListView data={expenses.slice(0, 3)} loading={loading} />
           </HomeContainer>
         }
       />
