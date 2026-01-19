@@ -17,9 +17,10 @@ import { RootNav } from '../../screens/expenseDetails/types';
 
 type ExpensesListViewProps = {
   data: ExpenseModel[];
+  loading: boolean;
 };
 
-const ExpensesListView = ({ data }: ExpensesListViewProps) => {
+const ExpensesListView = ({ data, loading }: ExpensesListViewProps) => {
   const navigation = useNavigation<RootNav>();
 
   const handleExpensePress = useCallback(
@@ -34,6 +35,10 @@ const ExpensesListView = ({ data }: ExpensesListViewProps) => {
   );
 
   const handleLinkPress = () => navigation.navigate('AllExpenses');
+
+  if (loading) {
+    return null;
+  }
 
   if (data.length === 0) {
     return <NoExpensesText>{STRINGS.NO_EXPENSES_YET}</NoExpensesText>;
