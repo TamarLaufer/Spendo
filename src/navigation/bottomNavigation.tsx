@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../screens/home/Home';
 import Receipts from '../screens/receipts/Receipts';
 import Settings from '../screens/settings/Settings';
-import Categories from '../screens/categories/categories/Categories';
+import AllCategories from '../screens/categories/allCategories/AllCategories';
 import { MainBottomTabsParamsListTypes } from './types';
 import { STRINGS } from '../strings/hebrew';
 import AddButton from '../components/button/AddButton';
@@ -31,7 +31,7 @@ const IconHome = ({ focused, color, size }: TabIconProps) => (
 );
 const IconCategories = ({ focused, color, size }: TabIconProps) => (
   <TabBarIcon
-    routeName="Categories"
+    routeName="AllCategories"
     focused={focused}
     color={color}
     size={size}
@@ -58,8 +58,8 @@ const HOME_OPTIONS = {
   tabBarLabel: STRINGS.HOME,
   tabBarIcon: IconHome,
 } as const;
-const CATEGORIES_OPTIONS = {
-  tabBarLabel: STRINGS.CATEGORIES,
+const ALL_CATEGORIES_OPTIONS = {
+  tabBarLabel: STRINGS.ALL_CATEGORIES,
   tabBarIcon: IconCategories,
 } as const;
 const RECEIPTS_OPTIONS = {
@@ -90,9 +90,9 @@ const MainTabsBottomNav = ({ openBottomSheet }: PropsType) => {
     <Tab.Navigator screenOptions={TAB_SCREEN_OPTIONS}>
       <Tab.Screen name="Home" component={Home} options={HOME_OPTIONS} />
       <Tab.Screen
-        name="Categories"
-        component={Categories}
-        options={CATEGORIES_OPTIONS}
+        name="AllCategories"
+        component={AllCategories}
+        options={ALL_CATEGORIES_OPTIONS}
       />
       <Tab.Screen name="Add" component={DummyComponent} options={addOptions} />
       <Tab.Screen

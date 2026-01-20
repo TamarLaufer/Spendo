@@ -6,12 +6,12 @@ import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { useExpenses } from '../../zustandState/useExpenses';
-import { useCategory } from '../../zustandState/useCategory';
-import { RootStackParamsType } from '../../navigation/types';
-import { STRINGS } from '../../strings/hebrew';
-import { IconRegistry } from '../../assets/icons';
-import { PAYMENT_METHODS } from '../../bottomSheetExpenses/types';
+import { useExpenses } from '../../../zustandState/useExpenses';
+import { useCategory } from '../../../zustandState/useCategory';
+import { RootStackParamsType } from '../../../navigation/types';
+import { STRINGS } from '../../../strings/hebrew';
+import { IconRegistry } from '../../../assets/icons';
+import { PAYMENT_METHODS } from '../../../bottomSheetExpenses/types';
 
 import {
   Screen,
@@ -26,12 +26,12 @@ import {
   Footer,
   SaveButton,
   SaveText,
-} from './EditExpenseScreen.styles';
+} from './EditExpense.styles';
 
 import {
   editExpenseUiSchema,
   EditExpenseUiDraft,
-} from '../../shared/editExpenseUiSchema';
+} from '../../../shared/editExpenseUiSchema';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 type EditExpenseRoute = RouteProp<RootStackParamsType, 'EditExpenseScreen'>;

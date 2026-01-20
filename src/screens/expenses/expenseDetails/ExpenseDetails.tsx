@@ -1,13 +1,12 @@
 import { Text } from 'react-native';
 import React, { useState } from 'react';
-import { useExpenses } from '../../zustandState/useExpenses';
+import { useExpenses } from '../../../zustandState/useExpenses';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useCategory } from '../../zustandState/useCategory';
-import { formatAmount, formatShortDate } from '../../utils/formatting';
-import Logo from '../../assets/icons/expense.svg';
-import { STRINGS } from '../../strings/hebrew';
-import Delete from '../../assets/icons/trash.svg';
-import PopModal from '../../components/popModal/PopModal';
+import { useCategory } from '../../../zustandState/useCategory';
+import { formatAmount, formatShortDate } from '../../../utils/formatting';
+import Logo from '../../../assets/icons/expense.svg';
+import { STRINGS } from '../../../strings/hebrew';
+import Delete from '../../../assets/icons/trash.svg';
 import { DetailsRoute, RootNav } from './types';
 import {
   AmountText,
@@ -22,7 +21,8 @@ import {
   LogoContainer,
   TextContainer,
 } from './ExpenseDetails.styles';
-import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
+import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
+import PopModal from '../../../components/popModal/PopModal';
 
 const ExpenseDetails = () => {
   const {

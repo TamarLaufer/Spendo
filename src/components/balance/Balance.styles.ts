@@ -4,10 +4,10 @@ import { theme } from '../../theme/theme';
 export const Container = styled.View`
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 17px;
   background-color: ${theme.color.lightGreen};
+  margin-vertical: 16px;
   margin-horizontal: 27px;
-  margin-top: 20px;
 `;
 export const HeaderText = styled.Text`
   font-size: 24px;

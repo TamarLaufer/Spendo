@@ -2,7 +2,8 @@ import styled from 'styled-components/native';
 import { theme } from '../../theme/theme';
 
 export const ContentContainer = styled.View`
-  flex: 1;
+  margin-horizontal: 20px;
+  margin-top: 10px;
 `;
 
 export const HeaderContainer = styled.View`
@@ -18,6 +19,7 @@ export const HeaderText = styled.Text`
 export const NoExpensesText = styled.Text`
   font-family: 'Assistant';
   font-size: 18px;
+  margin-top: 10px;
 `;
 
 export const LinkPressable = styled.Pressable`

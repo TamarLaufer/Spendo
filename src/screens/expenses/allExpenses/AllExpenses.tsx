@@ -1,15 +1,15 @@
 import React from 'react';
 
-import { STRINGS } from '../../strings/hebrew';
-import useExpensesByMonth from '../../hooks/useExpensesByMonth';
-import ExpenseByMonthListView from '../../components/expenseByMonthListView/ExpenseByMonthListView';
+import { STRINGS } from '../../../strings/hebrew';
+import useExpensesByMonth from '../../../hooks/useExpensesByMonth';
+import ExpenseByMonthListView from '../../../components/expenseByMonthListView/ExpenseByMonthListView';
 import {
   Container,
   ExpenseByMonthContainer,
   Header,
   HeaderContainer,
 } from './AllExpenses.styles';
-import ScreenLayout from '../../components/screenLayout/ScreenLayout';
+import ScreenLayout from '../../../components/screenLayout/ScreenLayout';
 
 const AllExpenses = () => {
   const sections = useExpensesByMonth();

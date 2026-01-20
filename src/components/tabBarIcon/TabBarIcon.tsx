@@ -14,7 +14,7 @@ type TabBarIconPropsType = {
 
 const ICONS: Record<RouteName, { active: string; inactive: string }> = {
   Home: { active: 'home', inactive: 'home-outline' },
-  Categories: { active: 'list', inactive: 'list-outline' },
+  AllCategories: { active: 'list', inactive: 'list-outline' },
   Receipts: { active: 'receipt', inactive: 'receipt-outline' },
   Settings: { active: 'settings', inactive: 'settings-outline' },
   Add: { active: 'add', inactive: 'add-outline' },

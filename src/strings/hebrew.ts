@@ -51,4 +51,5 @@ export const STRINGS = {
   SAVED: 'נשמר!',
   TRY_AGAIN_LATER: 'נסו שוב בעוד כמה דקות',
   GENERIC_ERROR: 'שגיאה כללית, בבקשה נסו מאוחר יותר',
+  ALL_CATEGORIES: 'כל הקטגוריות',
 };
