@@ -13,7 +13,7 @@ import {
   LinkText,
   NoExpensesText,
 } from './ExpensesListView.styles';
-import { RootNav } from '../../screens/expenseDetails/types';
+import { RootNav } from '../../screens/expenses/expenseDetails/types';
 
 type ExpensesListViewProps = {
   data: ExpenseModel[];

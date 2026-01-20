@@ -1,6 +1,6 @@
 export type MainBottomTabsParamsListTypes = {
   Home: undefined;
-  Categories: undefined;
+  AllCategories: undefined;
   Add: undefined;
   Receipts: undefined;
   Settings: undefined;

@@ -7,7 +7,7 @@ import TransactionRow from '../transactionRow/TransactionRow';
 import { useCategory } from '../../zustandState/useCategory';
 import { IconRegistry } from '../../assets/icons';
 import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
-import { RootNav } from '../../screens/expenseDetails/types';
+import { RootNav } from '../../screens/expenses/expenseDetails/types';
 import { useNavigation } from '@react-navigation/native';
 import Separator from '../separator/Separator';
 

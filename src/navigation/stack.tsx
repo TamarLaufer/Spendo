@@ -1,10 +1,10 @@
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamsType } from './types';
-import AllExpenses from '../screens/allExpenses/AllExpenses';
-import DetailsExpense from '../screens/expenseDetails/ExpenseDetails';
+import AllExpenses from '../screens/expenses/allExpenses/AllExpenses';
+import ExpenseDetails from '../screens/expenses/expenseDetails/ExpenseDetails';
 import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
-import EditExpenseScreen from '../screens/editExpenseScreen/EditExpenseScreen';
+import EditExpenseScreen from '../screens/expenses/editExpense/EditExpense';
 
 const theme = {
   ...DefaultTheme,
@@ -23,7 +23,7 @@ export default function StackNavigation() {
     <NavigationContainer theme={theme}>
       <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS}>
         <Stack.Screen name="MainTabs" component={MainTabsWithBottomSheet} />
-        <Stack.Screen name="DetailsExpense" component={DetailsExpense} />
+        <Stack.Screen name="DetailsExpense" component={ExpenseDetails} />
         <Stack.Screen name="AllExpenses" component={AllExpenses} />
         <Stack.Screen
           name="EditExpenseScreen"

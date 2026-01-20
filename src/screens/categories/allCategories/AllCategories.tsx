@@ -14,12 +14,12 @@ import {
   Row,
   RowText,
   Title,
-} from './Categories.styles';
+} from './AllCategories.styles';
 import AddCategory from '../../../components/addCategory/AddCategorySection';
 import Separator from '../../../components/separator/Separator';
 import { getIconComponent } from '../../../utils/getIconComponent';
 
-const Categories: FC = () => {
+const AllCategories: FC = () => {
   const categories = useCategory(state => state.categories);
   const [displayAddCategory, setDisplayAddCategory] = useState(false);
 
@@ -76,4 +76,4 @@ const Categories: FC = () => {
   );
 };
 
-export default Categories;
+export default AllCategories;
