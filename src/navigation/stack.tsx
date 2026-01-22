@@ -4,7 +4,8 @@ import { RootStackParamsType } from './types';
 import AllExpenses from '../screens/expenses/allExpenses/AllExpenses';
 import ExpenseDetails from '../screens/expenses/expenseDetails/ExpenseDetails';
 import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
-import EditExpenseScreen from '../screens/expenses/editExpense/EditExpense';
+import EditExpense from '../screens/expenses/editExpense/EditExpense';
+import CategoryDetails from '../screens/categories/categoryDetails/CategoryDetails';
 
 const theme = {
   ...DefaultTheme,
@@ -23,12 +24,17 @@ export default function StackNavigation() {
     <NavigationContainer theme={theme}>
       <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS}>
         <Stack.Screen name="MainTabs" component={MainTabsWithBottomSheet} />
-        <Stack.Screen name="DetailsExpense" component={ExpenseDetails} />
+        <Stack.Screen name="ExpenseDetails" component={ExpenseDetails} />
         <Stack.Screen name="AllExpenses" component={AllExpenses} />
         <Stack.Screen
-          name="EditExpenseScreen"
-          component={EditExpenseScreen}
+          name="EditExpense"
+          component={EditExpense}
           options={{ title: 'עריכת הוצאה' }}
+        />
+        <Stack.Screen
+          name="CategoryDetails"
+          component={CategoryDetails}
+          options={{ title: 'פרטי קטגוריה' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

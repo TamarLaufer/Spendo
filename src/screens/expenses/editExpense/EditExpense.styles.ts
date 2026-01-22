@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled, { css } from 'styled-components/native';
 import { theme } from '../../../theme/theme';
 
 export const Screen = styled.View`
@@ -73,4 +73,29 @@ export const SaveText = styled.Text`
   color: white;
   font-size: 18px;
   font-weight: 700;
+`;
+
+export const SheetRow = styled.Pressable<{ isSelected?: boolean }>`
+  ${({ isSelected }) =>
+    isSelected &&
+    css`
+      border-width: 2px;
+      border-color: #4da6ff;
+    `}
+  flex-direction: row;
+  align-items: center;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: white;
+  margin-bottom: 8px;
+`;
+
+export const SelectedRow = styled(SheetRow)`
+  border-width: 2px;
+  border-color: #4da6ff;
+`;
+
+export const SheetRowText = styled.Text`
+  font-size: 18px;
+  margin-start: 12px;
 `;

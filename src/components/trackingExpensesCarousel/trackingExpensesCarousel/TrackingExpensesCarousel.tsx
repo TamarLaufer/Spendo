@@ -6,18 +6,26 @@ import { CategoryType } from '../../../shared/categoryType';
 import { Container } from './TrackingExpensesCarousel.styles';
 import WithSkeleton from '../../skeleton/withSkeleton/WithSkeleton';
 import SkeletonBlock from '../../skeleton/skeletonBlock/SkeletonBlock';
+import { useNavigation } from '@react-navigation/native';
+import { RootNav } from '../../../screens/expenses/expenseDetails/types';
 
 const TrackingExpensesCarousel = ({
   categories,
 }: {
   categories: CategoryType[];
 }) => {
+  const navigation = useNavigation<RootNav>();
+  const onCategoryPress = (categoryId: string) => {
+    navigation.navigate('CategoryDetails', { categoryId });
+  };
+
   const renderItem = ({ item }: { item: CategoryType }) => (
     <OneCard
       icon={item?.icon ?? 'defaultIcon'}
       id={item.id}
       name={item.name}
       maxAmount={item.maxAmount}
+      onPress={() => onCategoryPress(item.id)}
     />
   );
 
@@ -37,7 +45,11 @@ const TrackingExpensesCarousel = ({
           showsHorizontalScrollIndicator={false}
           snapToInterval={CARD_WIDTH + SPACING}
           decelerationRate="fast"
-          contentContainerStyle={{ paddingHorizontal: SPACING }}
+          contentContainerStyle={{
+            paddingHorizontal: SPACING,
+            paddingBottom: 8,
+            paddingTop: 15,
+          }}
         />
       </Container>
     </WithSkeleton>

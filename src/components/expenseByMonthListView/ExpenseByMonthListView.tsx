@@ -21,7 +21,7 @@ const ExpenseByMonthListView = ({ sections }: ExpenseByMonthListViewProps) => {
   const navigation = useNavigation<RootNav>();
 
   const handleExpensePress = (expense: ExpenseModel) => {
-    navigation.navigate('DetailsExpense', {
+    navigation.navigate('ExpenseDetails', {
       expenseId: expense.id,
       categoryId: expense.categoryId,
       subCategoryId: expense.subCategoryId ?? undefined,

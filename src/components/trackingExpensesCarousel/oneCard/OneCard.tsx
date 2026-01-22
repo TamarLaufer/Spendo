@@ -15,15 +15,17 @@ type CategoryCard = {
   name: string;
   maxAmount?: number;
   icon: IconKey;
+  onPress: () => void;
 };
 
 const OneCard = (item: CategoryCard) => {
   const Icon = item.icon ? IconRegistry[item.icon] : undefined;
   return (
     <Container
-      colors={['#44873D', '#FFFEFD']}
-      start={{ x: 0, y: 1 }}
-      end={{ x: 1, y: 0 }}
+      onPress={item.onPress}
+      // colors={['#44873D', '#FFFEFD']}
+      // start={{ x: 0, y: 1 }}
+      // end={{ x: 1, y: 0 }}
     >
       <TitleContainer>
         <IconContainer>{Icon && <Icon width={40} height={40} />}</IconContainer>

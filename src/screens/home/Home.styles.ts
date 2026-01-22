@@ -19,6 +19,4 @@ export const BalanceSection = styled.View``;
 
 export const CarouselSection = styled.View``;
 
-export const Spacer = styled.View``;
-
 export const HomeContainer = styled.View``;

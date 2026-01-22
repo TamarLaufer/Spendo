@@ -3,16 +3,16 @@ import { FlatList } from 'react-native';
 import ScreenLayout from '../../components/screenLayout/ScreenLayout';
 import Balance from '../../components/balance/Balance';
 import TrackingExpensesCarousel from '../../components/trackingExpensesCarousel/trackingExpensesCarousel/TrackingExpensesCarousel';
-import ExpensesListView from '../../components/expensesListView/ExpensesListView';
+import LastExpensesListView from '../../components/lastExpensesListView/LastExpensesListView';
 import { useHomeData } from '../../hooks/useHomeData';
 import {
   BalanceSection,
   CarouselSection,
   ErrorText,
-  Spacer,
   HomeContainer,
 } from './Home.styles';
 import { STRINGS } from '../../strings/hebrew';
+import HomeHeader from '../../components/homeHeader/HomeHeader';
 
 const Home = () => {
   const { categories, expenses, loading, error } = useHomeData();
@@ -28,6 +28,7 @@ const Home = () => {
         renderItem={null}
         ListHeaderComponent={
           <HomeContainer>
+            <HomeHeader />
             <BalanceSection>
               <Balance />
             </BalanceSection>
@@ -36,9 +37,10 @@ const Home = () => {
               <TrackingExpensesCarousel categories={categories} />
             </CarouselSection>
 
-            <Spacer />
-
-            <ExpensesListView data={expenses.slice(0, 3)} loading={loading} />
+            <LastExpensesListView
+              data={expenses.slice(0, 3)}
+              loading={loading}
+            />
           </HomeContainer>
         }
       />

@@ -7,7 +7,7 @@ import { formatAmount, formatShortDate } from '../../../utils/formatting';
 import Logo from '../../../assets/icons/expense.svg';
 import { STRINGS } from '../../../strings/hebrew';
 import Delete from '../../../assets/icons/trash.svg';
-import { DetailsRoute, RootNav } from './types';
+import { ExpenseDetailsRoute, RootNav } from './types';
 import {
   AmountText,
   BoldText,
@@ -27,7 +27,7 @@ import PopModal from '../../../components/popModal/PopModal';
 const ExpenseDetails = () => {
   const {
     params: { expenseId, subCategoryId, categoryId },
-  } = useRoute<DetailsRoute>();
+  } = useRoute<ExpenseDetailsRoute>();
 
   const subCat = useSubcatIndex(
     s => s.index[categoryId]?.[subCategoryId ?? ''],
@@ -62,7 +62,7 @@ const ExpenseDetails = () => {
   };
 
   const handleEditPress = () => {
-    navigation.navigate('EditExpenseScreen', { expenseId, categoryId });
+    navigation.navigate('EditExpense', { expenseId, categoryId });
   };
 
   if (!category) return <Text>{STRINGS.LOADING_CATEGORY}</Text>;

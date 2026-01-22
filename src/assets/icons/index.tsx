@@ -8,7 +8,7 @@ import Health from './health.svg';
 import Toys from './toys.svg';
 import Study from './study.svg';
 import DefaultIcon from './money-default-icon.svg';
-import Events from './event.svg';
+import Events from './ticket.svg';
 import Hobies from './hobies.svg';
 
 //other icons

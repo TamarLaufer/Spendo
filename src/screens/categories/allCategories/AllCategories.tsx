@@ -18,13 +18,17 @@ import {
 import AddCategory from '../../../components/addCategory/AddCategorySection';
 import Separator from '../../../components/separator/Separator';
 import { getIconComponent } from '../../../utils/getIconComponent';
+import { RootNav } from '../../expenses/expenseDetails/types';
+import { useNavigation } from '@react-navigation/native';
 
 const AllCategories: FC = () => {
   const categories = useCategory(state => state.categories);
   const [displayAddCategory, setDisplayAddCategory] = useState(false);
+  const navigation = useNavigation<RootNav>();
 
   const handleCategoryPress = (categoryId: string) => {
     console.log(categoryId);
+    navigation.navigate('CategoryDetails', { categoryId });
   };
 
   const handleAddCategoryPress = () => {
@@ -37,7 +41,7 @@ const AllCategories: FC = () => {
     return (
       <Row onPress={() => handleCategoryPress(item.id)}>
         <IconAndTitle>
-          {Icon && <Icon width={20} height={20} />}
+          {Icon && <Icon width={30} height={30} />}
           <Title>{item.name}</Title>
         </IconAndTitle>
         <RowText>{item.maxAmount}</RowText>

@@ -2,8 +2,11 @@ import styled from 'styled-components/native';
 import { theme } from '../../theme/theme';
 
 export const ContentContainer = styled.View`
-  margin-horizontal: 20px;
-  margin-top: 10px;
+  margin: 10px 10px 20px 10px;
+  border-radius: 20px;
+  background-color: white;
+  elevation: 4;
+  padding: 10px;
 `;
 
 export const HeaderContainer = styled.View`

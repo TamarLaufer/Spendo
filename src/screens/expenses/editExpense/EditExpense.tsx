@@ -1,8 +1,8 @@
-import { Alert, FlatList, Pressable, StyleSheet, Text } from 'react-native';
+import { Alert, FlatList } from 'react-native';
 import React, { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -26,6 +26,8 @@ import {
   Footer,
   SaveButton,
   SaveText,
+  SheetRow,
+  SheetRowText,
 } from './EditExpense.styles';
 
 import {
@@ -34,10 +36,10 @@ import {
 } from '../../../shared/editExpenseUiSchema';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
-type EditExpenseRoute = RouteProp<RootStackParamsType, 'EditExpenseScreen'>;
+type EditExpenseRoute = RouteProp<RootStackParamsType, 'EditExpense'>;
 type SheetMode = 'category' | 'payment' | null;
 
-const EditExpenseScreen = () => {
+const EditExpense = () => {
   const {
     params: { expenseId, categoryId },
   } = useRoute<EditExpenseRoute>();
@@ -138,7 +140,7 @@ const EditExpenseScreen = () => {
         enablePanDownToClose
         enableDynamicSizing={false}
       >
-        <BottomSheetScrollView>
+        <>
           {sheetMode === 'category' && (
             <FlatList
               data={categories}
@@ -147,16 +149,16 @@ const EditExpenseScreen = () => {
                 const Icon = item.icon ? IconRegistry[item.icon] : undefined;
                 const isSelected = item.id === watch('categoryId');
                 return (
-                  <Pressable
-                    style={[styles.sheetRow, isSelected && styles.selectedRow]}
+                  <SheetRow
+                    isSelected={isSelected}
                     onPress={() => {
                       setValue('categoryId', item.id, { shouldValidate: true });
                       closeSheet();
                     }}
                   >
                     {Icon && <Icon width={24} height={24} />}
-                    <Text style={styles.sheetRowText}>{item.name}</Text>
-                  </Pressable>
+                    <SheetRowText>{item.name}</SheetRowText>
+                  </SheetRow>
                 );
               }}
             />
@@ -168,8 +170,8 @@ const EditExpenseScreen = () => {
               renderItem={({ item }) => {
                 const isSelected = item.name === watch('paymentMethod');
                 return (
-                  <Pressable
-                    style={[styles.sheetRow, isSelected && styles.selectedRow]}
+                  <SheetRow
+                    isSelected={isSelected}
                     onPress={() => {
                       setValue('paymentMethod', item.name, {
                         shouldValidate: true,
@@ -177,13 +179,13 @@ const EditExpenseScreen = () => {
                       closeSheet();
                     }}
                   >
-                    <Text style={styles.sheetRowText}>{item.name}</Text>
-                  </Pressable>
+                    <SheetRowText>{item.name}</SheetRowText>
+                  </SheetRow>
                 );
               }}
             />
           )}
-        </BottomSheetScrollView>
+        </>
       </BottomSheet>
       <Footer>
         <SaveButton disabled={!isValid} onPress={handleSubmit(submitLogic)}>
@@ -194,23 +196,4 @@ const EditExpenseScreen = () => {
   );
 };
 
-export default EditExpenseScreen;
-
-const styles = StyleSheet.create({
-  sheetRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
-    backgroundColor: 'white',
-    marginBottom: 8,
-  },
-  selectedRow: {
-    borderWidth: 2,
-    borderColor: '#4da6ff',
-  },
-  sheetRowText: {
-    fontSize: 18,
-    marginStart: 12,
-  },
-});
+export default EditExpense;

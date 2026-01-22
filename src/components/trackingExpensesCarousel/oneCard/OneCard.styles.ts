@@ -1,17 +1,18 @@
 import styled from 'styled-components/native';
-import { theme } from '../../../theme/theme';
-import { CARD_WIDTH } from '../../../config/consts';
-import { LinearGradient } from 'react-native-linear-gradient';
+import { CARD_HEIGHT, CARD_WIDTH } from '../../../config/consts';
 
-export const Container = styled(LinearGradient)`
-  background-color: ${theme.color.green};
+export const Container = styled.Pressable`
+  background-color: white;
   border-radius: 20px;
-  padding: 20px;
+  padding: 15px;
   margin-horizontal: 8px;
   width: ${CARD_WIDTH}px;
-  height: 150px;
+  height: ${CARD_HEIGHT}px;
   justify-content: flex-start;
   align-items: center;
+
+  /* shadow */
+  elevation: 4;
 `;
 export const TitleContainer = styled.View`
   align-items: center;
@@ -20,12 +21,10 @@ export const TitleContainer = styled.View`
 `;
 export const Title = styled.Text`
   font-size: 20px;
-  font-wheight: bold;
   font-family: 'MPLUSRounded1c-Regular';
 `;
 export const MaxAmount = styled.Text`
   font-size: 16px;
-  font-wheight: bold;
   font-family: 'MPLUSRounded1c-Regular';
   margin-top: 5px;
 `;

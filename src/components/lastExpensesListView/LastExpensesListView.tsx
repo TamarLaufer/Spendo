@@ -12,7 +12,7 @@ import {
   LinkPressable,
   LinkText,
   NoExpensesText,
-} from './ExpensesListView.styles';
+} from './LastExpensesListView.styles';
 import { RootNav } from '../../screens/expenses/expenseDetails/types';
 
 type ExpensesListViewProps = {
@@ -20,12 +20,12 @@ type ExpensesListViewProps = {
   loading: boolean;
 };
 
-const ExpensesListView = ({ data, loading }: ExpensesListViewProps) => {
+const LastExpensesListView = ({ data, loading }: ExpensesListViewProps) => {
   const navigation = useNavigation<RootNav>();
 
   const handleExpensePress = useCallback(
     (expense: ExpenseModel) => {
-      navigation.navigate('DetailsExpense', {
+      navigation.navigate('ExpenseDetails', {
         expenseId: expense.id,
         categoryId: expense.categoryId,
         subCategoryId: expense.subCategoryId ?? undefined,
@@ -67,4 +67,4 @@ const ExpensesListView = ({ data, loading }: ExpensesListViewProps) => {
   );
 };
 
-export default ExpensesListView;
+export default LastExpensesListView;

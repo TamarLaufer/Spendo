@@ -8,7 +8,6 @@ export const Container = styled.View`
   padding-vertical: 10px;
   padding-left: 30px;
   background-color: white;
-  border-radius: 12px;
   elevation: 8;
 `;
 
