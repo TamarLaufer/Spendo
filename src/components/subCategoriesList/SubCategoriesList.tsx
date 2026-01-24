@@ -3,12 +3,12 @@ import {
   Container,
   Header,
   HeaderContainer,
-  Separator,
   SubCatText,
 } from './SubCategoriesList.styles';
 import { FlatList } from 'react-native-gesture-handler';
 import { STRINGS } from '../../strings/hebrew';
 import { SubCategoryType } from '../../shared/categoryType';
+import Separator from '../separator/Separator';
 
 const SubCategoriesList = ({
   subCategories,
@@ -18,16 +18,20 @@ const SubCategoriesList = ({
   const renderItem = ({ item }: { item: SubCategoryType }) => {
     return <SubCatText>{item.name}</SubCatText>;
   };
-  console.log('subCategories:', subCategories);
+
   return (
-    <Container>
+    <Container hasNoSubCategories={subCategories.length === 0}>
       <FlatList
         data={subCategories}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         ListHeaderComponent={
           <HeaderContainer>
-            <Header>{STRINGS.SUB_CATEGORIES}</Header>
+            <Header>
+              {subCategories.length === 0
+                ? STRINGS.NO_SUB_CATEGORIES
+                : STRINGS.SUB_CATEGORIES}
+            </Header>
           </HeaderContainer>
         }
         ItemSeparatorComponent={Separator}

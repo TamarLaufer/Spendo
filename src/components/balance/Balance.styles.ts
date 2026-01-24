@@ -9,7 +9,7 @@ export const Container = styled.View`
 
   /* shadow */
   elevation: 4;
-  border-radius: 20px;
+  border-radius: 8px;
 `;
 
 export const RegularText = styled.Text`

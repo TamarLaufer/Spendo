@@ -18,6 +18,7 @@ export type TabIconProps = Parameters<
 const Tab = createBottomTabNavigator<MainBottomTabsParamsListTypes>();
 
 const TAB_BAR_STYLE = { height: 65, paddingTop: 5 } as const;
+
 const TAB_SCREEN_OPTIONS = {
   tabBarActiveTintColor: theme.color.lightBlue,
   tabBarInactiveTintColor: 'gray',

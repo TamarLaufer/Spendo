@@ -3,7 +3,7 @@ import { CARD_HEIGHT, CARD_WIDTH } from '../../../config/consts';
 
 export const Container = styled.Pressable`
   background-color: white;
-  border-radius: 20px;
+  border-radius: 8px;
   padding: 15px;
   margin-horizontal: 8px;
   width: ${CARD_WIDTH}px;

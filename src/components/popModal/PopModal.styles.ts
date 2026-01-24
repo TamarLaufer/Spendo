@@ -1,5 +1,4 @@
 import styled from 'styled-components/native';
-import { theme } from '../../theme/theme';
 
 export const Backdrop = styled.Pressable`
   flex: 1;
@@ -11,51 +10,42 @@ export const Backdrop = styled.Pressable`
 
 export const ModalView = styled.View`
   justify-content: center;
-  margin: 20px;
   background-color: white;
   border-radius: 10px;
-  padding: 35px;
+  padding: 20px;
   align-items: center;
-  width: 335px;
   elevation: 5;
 `;
 
 export const ModalText = styled.Text`
   text-align: center;
-  font-size: 22px;
-  font-family: 'MPLUSRounded1c-Regular';
-  margin-bottom: 15px;
+  font-size: 24px;
+  font-family: 'MPLUSRounded1c-Medium';
+  margin-bottom: 20px;
 `;
 
-export const ButtonsContainer = styled.View`
+export const ActionsContainer = styled.View`
   flex-direction: row;
   gap: 12px;
-  margin-top: 15px;
+  margin-top: 20px;
 `;
 
-export const PressRight = styled.Pressable`
-  background-color: ${theme.color.lightBlue};
-  padding: 8px;
-  padding-horizontal: 22px;
-  border-radius: 18px;
+export const ActionButtonContainer = styled.Pressable<{
+  backgroundColor: string;
+  borderColor: string;
+}>`
+  background-color: ${({ backgroundColor }) => backgroundColor};
+  padding: 10px;
+  border-radius: 8px;
   justify-content: center;
   align-items: center;
-  width: 112px;
-  height: 58px;
+  width: 50%;
+  border-width: 1px;
+  border-color: ${({ borderColor }) => borderColor};
 `;
 
-export const PressLeft = styled.Pressable`
-  background-color: ${theme.color.pink};
-  padding: 8px;
-  border-radius: 18px;
-  justify-content: center;
-  align-items: center;
-  width: 150px;
-  height: 58px;
-`;
-
-export const ButtonText = styled.Text`
-  color: white;
-  font-size: 18px;
+export const ButtonText = styled.Text<{ textColor: string }>`
+  font-size: 20px;
   font-family: 'MPLUSRounded1c-Regular';
+  color: ${({ textColor }) => textColor};
 `;

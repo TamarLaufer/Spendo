@@ -3,46 +3,43 @@ import { theme } from '../../../theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  padding: 16px 24px;
+  padding: 20px 24px;
 `;
 
 export const IconAndHeaderContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  padding-vertical: 20px;
+  gap: 10px;
 `;
 
 export const HeaderContainer = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  padding-top: 10px;
+  padding-horizontal: 20px;
 `;
 
 export const HeaderText = styled.Text`
-  font-size: 30px;
-  justify-content: center;
-  align-items: center;
+  font-size: 34px;
   font-family: 'MPLUSRounded1c-Bold';
   color: ${theme.color.lightBlue};
 `;
 
-export const IconContainer = styled.View`
-  align-items: center;
-  justify-content: center;
-`;
+export const IconContainer = styled.View``;
 
 export const SubText = styled.Text`
-  font-size: 26px;
-  text-align: center;
-  font-family: 'MPLUSRounded1c-Bold';
-  color: ${theme.color.lightBlue};
+  font-size: 22px;
+  text-align: left;
+  font-family: 'MPLUSRounded1c-Regular';
+  padding-vertical: 20px;
 `;
 
 export const SubTextContainer = styled.View`
-  flex: 1;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
 `;
 
 export const HeaderSubCatText = styled.Text`
@@ -51,13 +48,12 @@ export const HeaderSubCatText = styled.Text`
   font-family: 'MPLUSRounded1c-Bold';
 `;
 
-export const SubCatText = styled.Text`
-  font-size: 16px;
-  font-family: 'MPLUSRounded1c-Regular';
+export const BoldText = styled.Text`
+  font-size: 24px;
+  font-family: 'MPLUSRounded1c-Bold';
 `;
 
-export const SubCatList = styled.View`
-  flex: 2;
-  align-items: center;
-  gap: 6px;
+export const SubCategoriesListContainer = styled.View`
+  flex: 1;
+  margin-bottom: 20px;
 `;

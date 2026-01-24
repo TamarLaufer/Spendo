@@ -8,7 +8,7 @@ export const Container = styled.View`
   padding-vertical: 10px;
   padding-left: 30px;
   background-color: white;
-  elevation: 8;
+  elevation: 4;
 `;
 
 export const TitleText = styled.Text`

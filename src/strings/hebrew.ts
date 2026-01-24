@@ -1,4 +1,5 @@
 export const STRINGS = {
+  FINANCIAL_SAVVY: 'חסכוני',
   HOME: 'תמונת מצב',
   CATEGORIES: 'קטגוריות',
   RECEIPS: 'קבלות',
@@ -16,7 +17,7 @@ export const STRINGS = {
   LOADING_CATEGORY: 'טוען קטגוריה...',
   ALL_EXPENSES: 'כל ההוצאות',
   EXPENSES_HISTORY: 'היסטוריית ההוצאות',
-  DO_YOU_WANT_TO_DELETE: 'האם ברצונך למחוק את ההוצאה?',
+  DO_YOU_WANT_TO_DELETE: 'האם ברצונך למחוק?',
   NO_MISTAKE: 'לא, טעות',
   YES_PLEASE_DELETE: 'כן, מחק בבקשה',
   EDIT_EXPENSE: 'עריכת הוצאה',
@@ -54,6 +55,7 @@ export const STRINGS = {
   ALL_CATEGORIES: 'כל הקטגוריות',
   SUB_CATEGORIES: 'תתי קטגוריות',
   NO_SUB_CATEGORIES: 'אין תתי קטגוריות',
-  HOW_MUCH_I_SPENT_THIS_MONTH: 'כמה הוצאתי החודש? ',
+  HOW_MUCH_I_SPENT_THIS_MONTH: 'כמה הוצאתי החודש על {{categoryName}}?',
   MAX_AMOUNT: 'סכום מרבי',
+  TRACKING_EXPENSES: 'מעקב הוצאות חודשי',
 };

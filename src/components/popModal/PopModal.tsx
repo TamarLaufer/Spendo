@@ -1,14 +1,14 @@
 import { GestureResponderEvent, Modal } from 'react-native';
 import React from 'react';
 import {
+  ActionButtonContainer,
+  ActionsContainer,
   Backdrop,
-  ButtonsContainer,
   ButtonText,
   ModalText,
   ModalView,
-  PressLeft,
-  PressRight,
 } from './PopModal.styles';
+import { theme } from '../../theme/theme';
 
 type PopModalPropsType = {
   modalHeader: string;
@@ -43,14 +43,26 @@ const PopModal = ({
         <ModalView>
           <ModalText>{modalHeader}</ModalText>
           {children}
-          <ButtonsContainer>
-            <PressLeft onPress={onConfirm}>
-              <ButtonText>{modalButtonTextLeft}</ButtonText>
-            </PressLeft>
-            <PressRight onPress={onCancel}>
-              <ButtonText>{modalButtonTextRight}</ButtonText>
-            </PressRight>
-          </ButtonsContainer>
+          <ActionsContainer>
+            <ActionButtonContainer
+              backgroundColor={theme.color.lightBlue}
+              borderColor={theme.color.lightBlue}
+              onPress={onConfirm}
+            >
+              <ButtonText textColor={theme.color.white}>
+                {modalButtonTextLeft}
+              </ButtonText>
+            </ActionButtonContainer>
+            <ActionButtonContainer
+              backgroundColor={theme.color.white}
+              borderColor={theme.color.shadowColor}
+              onPress={onCancel}
+            >
+              <ButtonText textColor={theme.color.shadowColor}>
+                {modalButtonTextRight}
+              </ButtonText>
+            </ActionButtonContainer>
+          </ActionsContainer>
         </ModalView>
       </Backdrop>
     </Modal>

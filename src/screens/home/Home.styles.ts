@@ -9,14 +9,11 @@ export const ErrorText = styled.Text`
 export const Loader = styled.ActivityIndicator`
   margin-top: 20px;
 `;
-export const HeaderText = styled.Text`
-  font-family: 'Assistant';
-  font-size: 20px;
-  color: black;
-  margin-top: 20px;
-`;
+
 export const BalanceSection = styled.View``;
 
 export const CarouselSection = styled.View``;
 
-export const HomeContainer = styled.View``;
+export const HomeContainer = styled.View`
+  flex: 1;
+`;

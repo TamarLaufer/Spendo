@@ -12,17 +12,14 @@ import {
   AmountText,
   BoldText,
   Container,
-  DeleteButtonText,
-  DeleteContainer,
   DetailText,
-  EditButtonText,
-  EditContainer,
-  Elements,
   LogoContainer,
+  NoteText,
   TextContainer,
 } from './ExpenseDetails.styles';
 import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
 import PopModal from '../../../components/popModal/PopModal';
+import ItemActions from '../../../components/ItemActions/ItemActions';
 
 const ExpenseDetails = () => {
   const {
@@ -57,12 +54,12 @@ const ExpenseDetails = () => {
     setActiveModal('delete');
   };
 
-  const handleModal = () => {
-    setActiveModal(null);
-  };
-
   const handleEditPress = () => {
     navigation.navigate('EditExpense', { expenseId, categoryId });
+  };
+
+  const handleModal = () => {
+    setActiveModal(null);
   };
 
   if (!category) return <Text>{STRINGS.LOADING_CATEGORY}</Text>;
@@ -85,7 +82,9 @@ const ExpenseDetails = () => {
         <DetailText>
           {`${STRINGS.PAYMENT_PERFORMED_ON}${expense.paymentMethod}`}
         </DetailText>
-        <DetailText>{expense?.note ?? ''}</DetailText>
+        <NoteText>
+          {STRINGS.NOTE}: <DetailText>{expense?.note ?? ''}</DetailText>
+        </NoteText>
       </TextContainer>
       {activeModal === 'delete' && (
         <PopModal
@@ -100,14 +99,10 @@ const ExpenseDetails = () => {
           <Delete width={70} height={70} />
         </PopModal>
       )}
-      <Elements>
-        <DeleteContainer onPress={handleDeletePress}>
-          <DeleteButtonText>{STRINGS.DELETE_EXPENSE}</DeleteButtonText>
-        </DeleteContainer>
-        <EditContainer onPress={handleEditPress}>
-          <EditButtonText>{STRINGS.EDIT_EXPENSE}</EditButtonText>
-        </EditContainer>
-      </Elements>
+      <ItemActions
+        onDeletePress={handleDeletePress}
+        onEditPress={handleEditPress}
+      />
     </Container>
   );
 };

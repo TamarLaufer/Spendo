@@ -1,22 +1,26 @@
 import styled from 'styled-components/native';
 
-export const Container = styled.View`
+export const Container = styled.View<{ hasNoSubCategories: boolean }>`
   flex: 1;
+  background-color: white;
+  padding: 20px 24px;
+  border-radius: 8px;
+  elevation: ${({ hasNoSubCategories }) => (hasNoSubCategories ? 0 : 8)};
 `;
 
-export const HeaderContainer = styled.View``;
+export const HeaderContainer = styled.View`
+  margin-bottom: 10px;
+`;
 
 export const Header = styled.Text`
-  font-size: 22px;
+  font-size: 24px;
   font-family: 'MPLUSRounded1c-Medium';
-`;
-
-export const Separator = styled.View`
-  height: 1px;
-  background-color: rgba(0, 0, 0, 0.08);
+  text-align: center;
 `;
 
 export const SubCatText = styled.Text`
-  font-size: 16px;
+  font-size: 20px;
   font-family: 'MPLUSRounded1c-Regular';
+  text-align: center;
+  margin-vertical: 10px;
 `;

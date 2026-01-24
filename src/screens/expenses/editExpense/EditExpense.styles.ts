@@ -13,8 +13,8 @@ export const HeaderContainer = styled.View`
 `;
 
 export const HeaderText = styled.Text`
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 28px;
+  font-family: 'MPLUSRounded1c-Bold';
 `;
 
 export const Content = styled.View`
@@ -24,6 +24,7 @@ export const Content = styled.View`
   background-color: white;
   margin: 16px;
   border-radius: 24px;
+  elevation: 4;
 `;
 
 export const InputWrapper = styled.View`
@@ -37,11 +38,13 @@ export const StyledInput = styled.TextInput`
   padding: 14px;
   font-size: 17px;
   background-color: #fafafa;
+  font-family: 'MPLUSRounded1c-Medium';
 `;
 
 export const ErrorText = styled.Text`
   color: red;
   font-size: 12px;
+  font-family: 'MPLUSRounded1c-Regular';
 `;
 
 export const ChangeCategoryButton = styled.Pressable`
@@ -53,8 +56,9 @@ export const ChangeCategoryButton = styled.Pressable`
 `;
 
 export const ChangeCategoryText = styled.Text`
-  font-size: 16px;
+  font-size: 18px;
   color: #3a3a3c;
+  font-family: 'MPLUSRounded1c-Regular';
 `;
 
 export const Footer = styled.View`
@@ -62,17 +66,20 @@ export const Footer = styled.View`
 `;
 
 export const SaveButton = styled.Pressable<{ disabled?: boolean }>`
-  padding: 16px;
-  border-radius: 20px;
+  padding: 12px;
+  border-radius: 8px;
   background-color: ${({ disabled }) =>
     disabled ? '#c7c7cc' : theme.color.lightBlue};
   align-items: center;
+  width: 90%;
+  align-self: center;
+  font-family: 'MPLUSRounded1c-Bold';
 `;
 
 export const SaveText = styled.Text`
   color: white;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 20px;
+  font-family: 'MPLUSRounded1c-Bold';
 `;
 
 export const SheetRow = styled.Pressable<{ isSelected?: boolean }>`

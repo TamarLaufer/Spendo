@@ -9,7 +9,7 @@ import CategoryDetails from '../screens/categories/categoryDetails/CategoryDetai
 
 const theme = {
   ...DefaultTheme,
-  colors: { ...DefaultTheme.colors, background: '#fff' },
+  colors: { ...DefaultTheme.colors, background: '#f6f7f9' },
 };
 const Stack = createNativeStackNavigator<RootStackParamsType>();
 

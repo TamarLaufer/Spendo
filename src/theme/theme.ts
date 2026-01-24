@@ -9,5 +9,6 @@ export const theme = {
     purple: '#9929EA',
     lightBlue: '#9bacecff',
     lightGreen: 'rgba(186, 236, 209, 0.28)',
+    white: '#FFFFFF',
   },
 };

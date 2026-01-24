@@ -3,7 +3,7 @@ import { theme } from '../../theme/theme';
 
 export const ContentContainer = styled.View`
   margin: 5px 10px 20px 10px;
-  border-radius: 20px;
+  border-radius: 8px;
   background-color: white;
   elevation: 6;
   padding: 10px;
