@@ -52,4 +52,8 @@ export const STRINGS = {
   TRY_AGAIN_LATER: 'נסו שוב בעוד כמה דקות',
   GENERIC_ERROR: 'שגיאה כללית, בבקשה נסו מאוחר יותר',
   ALL_CATEGORIES: 'כל הקטגוריות',
+  SUB_CATEGORIES: 'תתי קטגוריות',
+  NO_SUB_CATEGORIES: 'אין תתי קטגוריות',
+  HOW_MUCH_I_SPENT_THIS_MONTH: 'כמה הוצאתי החודש? ',
+  MAX_AMOUNT: 'סכום מרבי',
 };

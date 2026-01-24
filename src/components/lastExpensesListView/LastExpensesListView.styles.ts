@@ -2,10 +2,10 @@ import styled from 'styled-components/native';
 import { theme } from '../../theme/theme';
 
 export const ContentContainer = styled.View`
-  margin: 10px 10px 20px 10px;
+  margin: 5px 10px 20px 10px;
   border-radius: 20px;
   background-color: white;
-  elevation: 4;
+  elevation: 6;
   padding: 10px;
 `;
 

@@ -2,33 +2,27 @@ import React from 'react';
 import {
   Container,
   HeaderContainer,
-  HeaderSubCatText,
   HeaderText,
   IconAndHeaderContainer,
   IconContainer,
-  SubCatList,
-  SubCatText,
   SubText,
   SubTextContainer,
 } from './CategoryDetails.styles';
 import { RootStackParamsType } from '../../../navigation/types';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
-import { SubCategoryType } from '../../../shared/categoryType';
 import { IconKey } from '../../../assets/icons';
 import { getIconComponent } from '../../../utils/getIconComponent';
 import { formatAmount } from '../../../utils/formatting';
 import { useBudgetStats } from '../../../hooks/useBudgetStats';
 import useCategoryById from '../../../hooks/useCategoryById';
+import SubCategoriesList from '../../../components/subCategoriesList/SubCategoriesList';
+import { STRINGS } from '../../../strings/hebrew';
 
 type NativePropsType = NativeStackScreenProps<
   RootStackParamsType,
   'CategoryDetails'
 >;
-
-function SubCategoryItem({ subCategory }: { subCategory: SubCategoryType }) {
-  return <SubCatText>{subCategory.name}</SubCatText>;
-}
 
 const CategoryDetails = ({ route }: NativePropsType) => {
   const { categoryId } = route.params;
@@ -38,14 +32,11 @@ const CategoryDetails = ({ route }: NativePropsType) => {
   );
   const subcatList = subcatMap ? Object.values(subcatMap) : [];
 
-  const { byCategory, total } = useBudgetStats();
+  const { byCategory } = useBudgetStats();
 
   const Icon = category?.icon
     ? getIconComponent(category?.icon as IconKey)
     : undefined;
-
-  console.log('categoryId:', categoryId);
-  console.log('categoryStats:', total.max);
 
   return (
     <Container>
@@ -57,20 +48,18 @@ const CategoryDetails = ({ route }: NativePropsType) => {
           <HeaderText> {category?.name}</HeaderText>
         </IconAndHeaderContainer>
         <SubTextContainer>
-          <SubText>סכום מרבי: {formatAmount(category?.maxAmount ?? 0)}</SubText>
+          <SubText>
+            {STRINGS.MAX_AMOUNT}: {formatAmount(category?.maxAmount ?? 0)}
+          </SubText>
         </SubTextContainer>
         <SubTextContainer>
           <SubText>
-            כמה הוצאתי החודש? {formatAmount(byCategory[categoryId]?.spent ?? 0)}
+            {STRINGS.HOW_MUCH_I_SPENT_THIS_MONTH}{' '}
+            {formatAmount(byCategory[categoryId]?.spent ?? 0)}
           </SubText>
         </SubTextContainer>
       </HeaderContainer>
-      <SubCatList>
-        <HeaderSubCatText>תתי קטגוריות</HeaderSubCatText>
-        {subcatList.map(sub => (
-          <SubCategoryItem key={sub.id} subCategory={sub} />
-        ))}
-      </SubCatList>
+      <SubCategoriesList subCategories={subcatList} />
     </Container>
   );
 };

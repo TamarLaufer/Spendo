@@ -28,7 +28,7 @@ const OneCard = (item: CategoryCard) => {
       // end={{ x: 1, y: 0 }}
     >
       <TitleContainer>
-        <IconContainer>{Icon && <Icon width={40} height={40} />}</IconContainer>
+        <IconContainer>{Icon && <Icon width={30} height={30} />}</IconContainer>
         <Title>{item.name}</Title>
       </TitleContainer>
       <MaxAmount>
