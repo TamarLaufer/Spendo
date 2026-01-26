@@ -29,7 +29,7 @@ const ChooseSubCategoryStep = () => {
   const renderItem = ({ item }: { item: SubCategoryType }) => {
     return (
       <Pressable onPress={() => handleSelect(item.id)}>
-        <Text>{item.name}</Text>
+        <Text>{item.subCategoryName}</Text>
       </Pressable>
     );
   };

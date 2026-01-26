@@ -25,6 +25,7 @@ import PopModal from '../../../components/popModal/PopModal';
 import { useNavigation } from '@react-navigation/native';
 import { RootNav } from '../../expenses/expenseDetails/types';
 import Delete from '../../../assets/icons/trash.svg';
+import { useCategory } from '../../../zustandState/useCategory';
 
 type NativePropsType = NativeStackScreenProps<
   RootStackParamsType,
@@ -43,6 +44,7 @@ const CategoryDetails = ({ route }: NativePropsType) => {
   );
   const { goBack, navigate } = useNavigation<RootNav>();
   const { byCategory } = useBudgetStats();
+  const softDeleteCategory = useCategory(state => state.softDeleteCategory);
 
   const Icon = category?.icon
     ? getIconComponent(category?.icon as IconKey)
@@ -62,7 +64,7 @@ const CategoryDetails = ({ route }: NativePropsType) => {
 
   const handleDeleteFinalPress = () => {
     setActiveModal(null);
-    deleteCategory(categoryId);
+    softDeleteCategory(categoryId);
     goBack();
   };
 

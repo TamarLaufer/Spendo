@@ -157,7 +157,7 @@ const EditExpense = () => {
                     }}
                   >
                     {Icon && <Icon width={24} height={24} />}
-                    <SheetRowText>{item.name}</SheetRowText>
+                    <SheetRowText>{item.categoryName}</SheetRowText>
                   </SheetRow>
                 );
               }}

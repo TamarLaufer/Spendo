@@ -72,8 +72,8 @@ const ExpenseDetails = () => {
       <TextContainer>
         <AmountText>{formatAmount(expense.amount)}</AmountText>
         <DetailText>
-          {STRINGS.ON} <BoldText>{category?.name}</BoldText>
-          {subCat?.name ? `, ${subCat.name}` : ''}
+          {STRINGS.ON} <BoldText>{category?.categoryName}</BoldText>
+          {subCat?.subCategoryName ? `, ${subCat.subCategoryName}` : ''}
         </DetailText>
         <DetailText>
           {STRINGS.ON_DATE}{' '}

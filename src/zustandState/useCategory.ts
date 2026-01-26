@@ -3,9 +3,11 @@ import { create } from 'zustand';
 import {
   fetchCategoriesForHousehold,
   seedCategoriesIfEmpty,
+  softDeleteCategory as softDeleteCategoryService,
+  updateCategory as updateCategoryService,
 } from '../firebase/services/categoriesService';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
-import { CategoryType } from '../shared/categoryType';
+import { CategoryPatch, CategoryType } from '../shared/categoryType';
 
 type CategoryStateType = {
   categories: CategoryType[];
@@ -15,7 +17,11 @@ type CategoryStateType = {
   setError: (msg: string | null) => void;
   loadCategories: () => Promise<void>;
   findCategoryById: (categoryId: string) => CategoryType | undefined;
-  deleteCategoryLocal: (categoryId: string) => void;
+  softDeleteCategory: (categoryId: string) => Promise<void>;
+  updateCategory: (
+    categoryId: string,
+    patch: CategoryPatch,
+  ) => Promise<void>;
 };
 
 export const useCategory = create<CategoryStateType>((set, get) => ({
@@ -42,13 +48,35 @@ export const useCategory = create<CategoryStateType>((set, get) => ({
       (category: CategoryType) => category.id === categoryId,
     );
   },
-  deleteCategoryLocal: (categoryId: string) => {
-    const state = get();
-    const newList = state.categories.filter(
-      (category: CategoryType) => category.id !== categoryId,
-    );
-    set({
-      categories: newList,
-    });
+  softDeleteCategory: async categoryId => {
+    const exists = get().categories.some(cat => cat.id === categoryId);
+    if (!exists) return;
+
+    try {
+      await softDeleteCategoryService(categoryId);
+      set(state => ({
+        categories: state.categories.filter(cat => cat.id !== categoryId),
+      }));
+    } catch (e: any) {
+      console.error('Failed to soft delete category', e);
+      throw e;
+    }
+  },
+  updateCategory: async (categoryId, patch) => {
+    const exists = get().categories.some(cat => cat.id === categoryId);
+    if (!exists) return;
+
+    try {
+      await updateCategoryService(categoryId, patch);
+
+      set(state => ({
+        categories: state.categories.map(cat =>
+          cat.id === categoryId ? { ...cat, ...patch } : cat,
+        ),
+      }));
+    } catch (e: any) {
+      console.error('Failed to update category', e);
+      throw e;
+    }
   },
 }));

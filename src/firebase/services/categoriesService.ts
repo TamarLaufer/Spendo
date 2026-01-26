@@ -13,10 +13,12 @@ import {
   type FirebaseFirestoreTypes as FirestoreTypes,
   setDoc,
   query,
+  updateDoc,
 } from '@react-native-firebase/firestore';
 import type { IconKey } from '../../assets/icons';
 import { DEV_HOUSEHOLD_ID } from '../../config/consts';
 import { CategoryCreateSchema } from '../../shared/categorySchema';
+import { CategoryPatch } from '../../shared/categoryType';
 
 export type CategoryDocRead = {
   householdId: string;
@@ -108,7 +110,7 @@ function mapCategoryDocToModel(
     id: docSnap.id,
     name: data.categoryName,
     maxAmount: data.maxAmount,
-    isExceed: false,
+    isExceed: false, //TODO: implement this
     icon: data.icon || 'defaultIcon',
   };
 }
@@ -119,6 +121,7 @@ export async function fetchCategoriesForHousehold(householdId: string) {
     //create a query to the categories collection in the database
     categoriesColRead(), //create a reference to the categories collection in the database
     where('householdId', '==', householdId), //filter the categories by the household id
+    where('active', '==', true), //filter the categories by the active status
     orderBy('order', 'asc'), //sort (on the DB side) the categories by the order
   );
 
@@ -173,6 +176,43 @@ export const toId = (name: string) =>
     .replace(/\s+/g, '-')
     .replace(/[^a-z0-9\-]/g, '')
     .slice(0, 48);
+
+export async function softDeleteCategory(categoryId: string) {
+  await setDoc(
+    doc(firestoreDb, 'categories', categoryId),
+    {
+      active: false,
+      updatedAt: serverTimestamp(),
+    },
+    { merge: true },
+  );
+}
+
+function mapCategoryPatchToDb(patch: CategoryPatch) {
+  const dbPatch: Record<string, any> = {};
+
+  if (patch.name !== undefined) dbPatch.categoryName = patch.name;
+  if (patch.maxAmount !== undefined) dbPatch.maxAmount = patch.maxAmount;
+  if (patch.icon !== undefined) dbPatch.icon = patch.icon;
+  if (patch.active !== undefined) dbPatch.active = patch.active;
+  if (patch.order !== undefined) dbPatch.order = patch.order;
+
+  return dbPatch;
+} 
+
+export async function updateCategory(
+  categoryId: string,
+  patch: CategoryPatch,
+) {
+  const ref = doc(firestoreDb, 'categories', categoryId);
+
+  const dbPatch = mapCategoryPatchToDb(patch);
+
+  await updateDoc(ref, {
+    ...dbPatch,
+    updatedAt: serverTimestamp(),
+  });
+}
 
 // ---- upsert = Update or Insert a sub category ----
 export async function upsertSubCategory(

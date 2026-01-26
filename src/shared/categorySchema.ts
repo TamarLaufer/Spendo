@@ -14,6 +14,7 @@ export const ICON_KEYS = [
 ] as const;
 
 export const IconKeySchema = z.enum(ICON_KEYS);
+
 export type CategoryIcon = (typeof ICON_KEYS)[number];
 
 export const SubCategoryCreateSchema = z.object({
@@ -36,7 +37,6 @@ export const CategoryCreateSchema = z.object({
 export type CategoryCreateInput = z.infer<typeof CategoryCreateSchema>;
 
 export const CategoryUpdateSchema = CategoryCreateSchema.partial();
-export type CategoryUpdatePatch = z.infer<typeof CategoryUpdateSchema>;
 
 export const CategoryRecordSchema = z.object({
   categoryId: z.string(),
@@ -44,36 +44,32 @@ export const CategoryRecordSchema = z.object({
   maxAmount: z.number(),
   isExceed: z.boolean(),
 });
+
 export type CategoryRecord = z.infer<typeof CategoryRecordSchema>;
 
 export const normalizeName = (value: string) =>
   value.normalize('NFKC').trim().toLowerCase();
 
-/** בסיס הוולידציה: שדות וצורות */
-export const CategoryUiDraftBaseSchema = z.object({
+export const CategoryFormSchema = z.object({
   categoryName: z.string().min(1, 'נא להזין שם קטגוריה'),
-  maxAmount: z.coerce
-    .number()
-    .refine(Number.isFinite, { message: 'תקציב חייב להיות מספר תקין' })
-    .nonnegative({ message: 'תקציב חייב להיות 0 או יותר' }),
+  maxAmount: z
+    .string()
+    .min(1, 'שדה חובה')
+    .refine(v => !isNaN(Number(v)), 'חייב להיות מספר')
+    .refine(v => Number(v) >= 0, 'חייב להיות 0 או יותר'),
 });
 
-/**
- * מפעל סכמות: מחזיר סכמת Zod שמכילה גם בדיקת כפילות שם,
- * לפי רשימת שמות קיימים שמועברת מבחוץ.
- */
-export const makeCategoryUiDraftSchema = (existingNames: string[]) =>
-  CategoryUiDraftBaseSchema.superRefine((data, ctx) => {
-    const requested = normalizeName(data.categoryName);
-    const exists = existingNames.map(normalizeName).includes(requested);
+// export const makeCategoryFormSchema = (existingNames: string[]) =>
+//   CategoryFormSchema.refine(
+//     data =>
+//       !existingNames
+//         .map(n => n.normalize('NFKC').trim().toLowerCase())
+//         .includes(data.categoryName.normalize('NFKC').trim().toLowerCase()),
+//     {
+//       message: 'קטגוריה בשם זה כבר קיימת',
+//       path: ['categoryName'],
+//     },
+//   );
 
-    if (exists) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['categoryName'],
-        message: 'קטגוריה בשם זה כבר קיימת',
-      });
-    }
-  });
-
-export type CategoryUiDraft = z.infer<typeof CategoryUiDraftBaseSchema>;
+  
+  export type CategoryForm = z.infer<typeof CategoryFormSchema>;

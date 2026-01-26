@@ -6,6 +6,7 @@ import ExpenseDetails from '../screens/expenses/expenseDetails/ExpenseDetails';
 import MainTabsWithBottomSheet from '../components/mainTabWithBottomSheet/MainTabsWithBottomSheet';
 import EditExpense from '../screens/expenses/editExpense/EditExpense';
 import CategoryDetails from '../screens/categories/categoryDetails/CategoryDetails';
+import EditCategory from '../screens/categories/editCategory/EditCategory';
 
 const theme = {
   ...DefaultTheme,
@@ -35,6 +36,11 @@ export default function StackNavigation() {
           name="CategoryDetails"
           component={CategoryDetails}
           options={{ title: 'פרטי קטגוריה' }}
+        />
+        <Stack.Screen
+          name="EditCategory"
+          component={EditCategory}
+          options={{ title: 'עריכת קטגוריה' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

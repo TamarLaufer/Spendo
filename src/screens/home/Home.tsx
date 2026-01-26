@@ -18,6 +18,7 @@ const Home = () => {
   const { categories, expenses, loading, error } = useHomeData();
 
   if (error) {
+    console.log('error', error);
     return <ErrorText>{STRINGS.GENERIC_ERROR}</ErrorText>;
   }
 
@@ -25,7 +26,7 @@ const Home = () => {
     <ScreenLayout>
       <FlatList
         data={[]} // Data is not needed for this list
-        renderItem={null}
+        renderItem={() => <></>}
         ListHeaderComponent={
           <HomeContainer>
             <HomeHeader />

@@ -16,4 +16,5 @@ export type RootStackParamsType = {
   AllExpenses: undefined;
   EditExpense: { expenseId: string; categoryId: string };
   CategoryDetails: { categoryId: string };
+  EditCategory: { categoryId: string };
 };

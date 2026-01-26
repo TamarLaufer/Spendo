@@ -4,18 +4,23 @@ export type SubCategoryType = {
   id: string;
   categoryId: string;
   name: string;
-  icon?: IconKey | null;
+  icon?: IconKey;
   order?: number;
   active?: boolean;
-  createdAt?: Date | null;
-  updatedAt?: Date | null;
 };
+
 export type CategoryType = {
   id: string;
   name: string;
   maxAmount: number;
   isExceed: boolean;
-  icon?: IconKey | null;
-  createdAt?: Date | null;
-  updatedAt?: Date | null;
+  icon?: IconKey;
 };
+
+export type CategoryPatch = Partial<{
+  name: string;
+  maxAmount: number;
+  icon: IconKey;
+  active: boolean;
+  order: number;
+}>;

@@ -15,7 +15,7 @@ export function useHomeData() {
   const categories = useCategory(state => state.categories);
   const categoryError = useCategory(state => state.error);
 
-  useEnsureSubcatIndex(expenses.map(e => e.categoryId));
+  useEnsureSubcatIndex(expenses?.map(e => e.categoryId) ?? []);
 
   const lastExpenses = useMemo(
     () => expenses.slice(0, NUM_OF_TRANSACTIONS),
