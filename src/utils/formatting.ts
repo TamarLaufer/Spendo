@@ -47,3 +47,7 @@ export function formatShortDate(value?: Date | null): string {
     year: '2-digit',
   }).format(d);
 }
+
+export const formatPercent = (percent: number) => {
+  return `${Math.round(percent)}%`;
+};

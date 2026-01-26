@@ -2,7 +2,7 @@ import styled from 'styled-components/native';
 import { theme } from '../../theme/theme';
 
 export const ContentContainer = styled.View`
-  margin: 5px 10px 20px 10px;
+  margin: 12px 18px 20px 18px;
   border-radius: 8px;
   background-color: white;
   elevation: 6;

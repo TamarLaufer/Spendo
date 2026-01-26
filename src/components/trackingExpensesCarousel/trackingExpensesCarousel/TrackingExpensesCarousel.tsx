@@ -13,6 +13,7 @@ import SkeletonBlock from '../../skeleton/skeletonBlock/SkeletonBlock';
 import { useNavigation } from '@react-navigation/native';
 import { RootNav } from '../../../screens/expenses/expenseDetails/types';
 import { STRINGS } from '../../../strings/hebrew';
+import { useBudgetStats } from '../../../hooks/useBudgetStats';
 
 const TrackingExpensesCarousel = ({
   categories,
@@ -23,6 +24,7 @@ const TrackingExpensesCarousel = ({
   const onCategoryPress = (categoryId: string) => {
     navigation.navigate('CategoryDetails', { categoryId });
   };
+  const { byCategory } = useBudgetStats();
 
   const renderItem = ({ item }: { item: CategoryType }) => (
     <OneCard
@@ -30,6 +32,7 @@ const TrackingExpensesCarousel = ({
       id={item.id}
       name={item.name}
       maxAmount={item.maxAmount}
+      percent={item.isExceed ? 100 : byCategory[item.id]?.percent ?? 0}
       onPress={() => onCategoryPress(item.id)}
     />
   );
