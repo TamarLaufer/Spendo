@@ -70,4 +70,9 @@ export const STRINGS = {
   NO_SUB_CATEGORIES: 'אין תתי קטגוריות',
   HOW_MUCH_I_SPENT_THIS_MONTH: 'כמה הוצאתי החודש על {{categoryName}}?',
   TRACKING_EXPENSES: 'מעקב הוצאות חודשי',
+  OVER_BUDGET: 'חריגה!',
+  BE_CAREFUL: 'הגעת למכסה החודש',
+  YOU_ARE_IN_GOOD_STATE: 'אתה במצב טוב',
+  SPENT: 'הוצאתי',
+  PAY_ATTENTION: 'שים לב! יש לעקוב',
 };

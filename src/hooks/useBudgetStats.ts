@@ -48,7 +48,7 @@ export function useBudgetStats(): BudgetStats {
       const spent = categoryExpenses.reduce((sum, exp) => sum + exp.amount, 0);
 
       const max = category.maxAmount ?? 0;
-      const percent = max > 0 ? Math.min((spent / max) * 100, 100) : 0;
+      const percent = max > 0 ? (spent / max) * 100 : 0;
       const isExceeded = max > 0 && spent > max;
 
       byCategory[category.id] = {
@@ -64,7 +64,7 @@ export function useBudgetStats(): BudgetStats {
     });
 
     const totalPercent =
-      totalMax > 0 ? Math.min((totalSpent / totalMax) * 100, 100) : 0;
+      totalMax > 0 ? Math.min((totalSpent / totalMax) * 100) : 0;
 
     return {
       byCategory,

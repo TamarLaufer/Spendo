@@ -5,43 +5,41 @@ import {
   MaxAmount,
   Title,
   IconContainer,
+  AmountContainer,
+  AmountText,
 } from './OneCard.styles';
-import { formatAmount, formatPercent } from '../../../utils/formatting';
+import { formatAmount } from '../../../utils/formatting';
 import { STRINGS } from '../../../strings/hebrew';
 import { IconKey, IconRegistry } from '../../../assets/icons';
 import ProgressBar from '../../progressBar/ProgressBar';
-import { Text } from 'react-native';
 
 type CategoryCard = {
-  id: string;
   name: string;
   maxAmount?: number;
   icon: IconKey;
   percent: number;
+  spent: number;
   onPress: () => void;
 };
 
-const OneCard = (item: CategoryCard) => {
-  const Icon = item.icon ? IconRegistry[item.icon] : undefined;
+const OneCard = ({ name, maxAmount, icon, percent, spent, onPress }: CategoryCard) => {
+  const Icon = icon ? IconRegistry[icon] : undefined;
 
-  console.log('item.percent', item.percent);
+  console.log('item.percent', percent);
   
   return (
-    <Container
-      onPress={item.onPress}
-      // colors={['#44873D', '#FFFEFD']}
-      // start={{ x: 0, y: 1 }}
-      // end={{ x: 1, y: 0 }}
-    >
+    <Container onPress={onPress}>
       <TitleContainer>
         <IconContainer>{Icon && <Icon width={30} height={30} />}</IconContainer>
-        <Title>{item.name}</Title>
+        <Title>{name}</Title>
       </TitleContainer>
+      <AmountContainer>
+        <AmountText>{STRINGS.SPENT} {formatAmount(spent)}</AmountText>
+      </AmountContainer>
       <MaxAmount>
-        {STRINGS.FROM} {formatAmount(item.maxAmount || 0)}
+        {STRINGS.FROM} {formatAmount(maxAmount || 0)}
       </MaxAmount>
-      <Text>{formatPercent(item.percent)}</Text>
-      <ProgressBar percent={item.percent} />
+      <ProgressBar percent={percent} />
     </Container>
   );
 };

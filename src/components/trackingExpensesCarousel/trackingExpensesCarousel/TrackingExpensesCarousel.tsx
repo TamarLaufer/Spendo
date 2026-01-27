@@ -25,14 +25,17 @@ const TrackingExpensesCarousel = ({
     navigation.navigate('CategoryDetails', { categoryId });
   };
   const { byCategory } = useBudgetStats();
+  console.log('byCategory', byCategory);
+  
 
+  console.log('byCategory', byCategory);
   const renderItem = ({ item }: { item: CategoryType }) => (
     <OneCard
       icon={item?.icon ?? 'defaultIcon'}
-      id={item.id}
       name={item.name}
       maxAmount={item.maxAmount}
-      percent={item.isExceed ? 100 : byCategory[item.id]?.percent ?? 0}
+      spent={byCategory[item.id]?.spent ?? 0}
+      percent={byCategory[item.id]?.percent ?? 0}
       onPress={() => onCategoryPress(item.id)}
     />
   );
