@@ -72,7 +72,9 @@ export const InputWrapper = styled.View`
 `;
 
 export const StyledInput = styled.TextInput`
-  padding: 12px;
+  width: 300px;
+  height: 62px;
+  padding: 14px;
   border-radius: 8px;
   border: 1px solid ${theme.color.placeholder};
   font-size: 16px;

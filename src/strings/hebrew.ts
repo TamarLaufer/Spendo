@@ -75,4 +75,5 @@ export const STRINGS = {
   YOU_ARE_IN_GOOD_STATE: 'אתה במצב טוב',
   SPENT: 'הוצאתי',
   PAY_ATTENTION: 'שים לב! יש לעקוב',
+  SEARCH_PLACEHOLDER: 'חיפוש',
 };

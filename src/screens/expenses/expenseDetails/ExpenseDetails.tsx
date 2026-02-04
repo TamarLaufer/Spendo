@@ -72,8 +72,8 @@ const ExpenseDetails = () => {
       <TextContainer>
         <AmountText>{formatAmount(expense.amount)}</AmountText>
         <DetailText>
-          {STRINGS.ON} <BoldText>{category?.categoryName}</BoldText>
-          {subCat?.subCategoryName ? `, ${subCat.subCategoryName}` : ''}
+          {STRINGS.ON} <BoldText>{category?.name}</BoldText>
+          {subCat?.name ? `, ${subCat.name}` : ''}
         </DetailText>
         <DetailText>
           {STRINGS.ON_DATE}{' '}
@@ -83,7 +83,7 @@ const ExpenseDetails = () => {
           {`${STRINGS.PAYMENT_PERFORMED_ON}${expense.paymentMethod}`}
         </DetailText>
         <NoteText>
-          {STRINGS.NOTE}: <DetailText>{expense?.note ?? ''}</DetailText>
+           <DetailText>{expense?.note ? `${STRINGS.NOTE}: ${expense?.note}` : ''}</DetailText>
         </NoteText>
       </TextContainer>
       {activeModal === 'delete' && (

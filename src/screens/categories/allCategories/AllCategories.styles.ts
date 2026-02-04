@@ -8,7 +8,7 @@ export const Container = styled.View`
 `;
 
 export const Header = styled.Text`
-  font-size: 24px;
+  font-size: 28px;
   font-family: 'MPLUSRounded1c-Bold';
   color: ${theme.color.lightBlue};
 `;
@@ -42,8 +42,8 @@ export const AddCategoryButton = styled.Pressable`
 
 export const ButtonText = styled.Text`
   color: white;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 20px;
+  font-family: 'MPLUSRounded1c-Bold';
 `;
 
 export const IconAndTitle = styled.View`

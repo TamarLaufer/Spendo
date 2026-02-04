@@ -10,6 +10,8 @@ import Study from './study.svg';
 import DefaultIcon from './money-default-icon.svg';
 import Events from './ticket.svg';
 import Hobies from './hobies.svg';
+import Filter from './filter.svg';
+import Sort from './sort.svg';
 
 //other icons
 export const Icons = {
@@ -25,10 +27,14 @@ export const Icons = {
   DefaultIcon,
   Events,
   Hobies,
+  Filter,
+  Sort,
 };
 
 //categories icons
 export const IconRegistry = {
+  filter: Filter,
+  sort: Sort,
   market: Market,
   back: Back,
   cancelX: CancelX,

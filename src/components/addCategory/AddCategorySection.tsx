@@ -103,6 +103,7 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       setIcon('defaultIcon');
       setError(null);
       setDisplayAddCategory(false);
+      
     } catch (e: any) {
       if (e.message === 'CATEGORY_ALREADY_EXISTS') {
         setSubmitError(STRINGS.CATEGORY_ALREADY_EXISTS_ERROR);

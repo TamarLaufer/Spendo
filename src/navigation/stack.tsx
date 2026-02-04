@@ -41,7 +41,7 @@ export default function StackNavigation() {
           name="EditCategory"
           component={EditCategory}
           options={{ title: 'עריכת קטגוריה' }}
-        />
+        />  
       </Stack.Navigator>
     </NavigationContainer>
   );

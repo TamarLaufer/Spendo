@@ -3,7 +3,7 @@ import { theme } from '../../../theme/theme';
 
 export const Container = styled.View`
   flex: 1;
-  padding: 20px 24px;
+  margin-horizontal: 20px;
 `;
 
 export const IconAndHeaderContainer = styled.View`
@@ -33,7 +33,11 @@ export const SubText = styled.Text`
   font-size: 22px;
   text-align: left;
   font-family: 'MPLUSRounded1c-Regular';
-  padding-vertical: 20px;
+  padding-vertical: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
 `;
 
 export const SubTextContainer = styled.View`

@@ -144,6 +144,7 @@ export async function addCategory(input: {
     query(
       categoriesColRead(),
       where('householdId', '==', parsed.householdId ?? DEV_HOUSEHOLD_ID),
+      where('active', '==', true),
       where('categoryName', '==', parsed.categoryName.trim()),
     ),
   );

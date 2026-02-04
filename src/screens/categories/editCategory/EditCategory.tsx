@@ -21,11 +21,8 @@ import {
   InputWrapper,
   StyledInput,
   Footer,
-  SaveButton,
-  SaveText,
-  DeleteButton,
-  DeleteText,
 } from './EditCategory.styles';
+import ItemActions from '../../../components/ItemActions/ItemActions';
 
 type EditCategoryRoute = RouteProp<RootStackParamsType, 'EditCategory'>;
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
@@ -42,16 +39,10 @@ const EditCategory = () => {
   const updateCategory = useCategory(state => state.updateCategory);
   const deleteCategory = useCategory(state => state.softDeleteCategory);
 
-  // const existingNames = useMemo(
-  //   () => categories.filter(c => c.id !== categoryId).map(c => c.categoryName),
-  //   [categories, categoryId],
-  // );
-
   const {
     watch,
     setValue,
     handleSubmit,
-    formState: { isValid },
   } = useForm<CategoryForm>({
     resolver: zodResolver(CategoryFormSchema),
     mode: 'onChange',
@@ -100,7 +91,6 @@ const EditCategory = () => {
       <HeaderContainer>
         <HeaderText>{STRINGS.EDIT_CATEGORY}</HeaderText>
       </HeaderContainer>
-
       <Content>
         <InputWrapper>
           <StyledInput
@@ -110,7 +100,6 @@ const EditCategory = () => {
             }
             placeholder={STRINGS.CATEGORY_NAME}
           />
-
           <StyledInput
             value={watch('maxAmount')}
             onChangeText={v =>
@@ -121,15 +110,8 @@ const EditCategory = () => {
           />
         </InputWrapper>
       </Content>
-
       <Footer>
-        <SaveButton disabled={!isValid} onPress={handleSubmit(submitLogic)}>
-          <SaveText>{STRINGS.SAVE}</SaveText>
-        </SaveButton>
-
-        <DeleteButton onPress={confirmDelete}>
-          <DeleteText>{STRINGS.DELETE}</DeleteText>
-        </DeleteButton>
+        <ItemActions onDeletePress={confirmDelete} onEditPress={handleSubmit(submitLogic)} />
       </Footer>
     </Screen>
   );

@@ -24,3 +24,10 @@ export type CategoryPatch = Partial<{
   active: boolean;
   order: number;
 }>;
+
+export type SortDirection = 'asc' | 'desc';
+
+export type SortConfig<T> = {
+  key: keyof T;
+  direction: SortDirection;
+};
