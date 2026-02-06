@@ -11,12 +11,14 @@ export const Display = styled.TextInput`
   margin-bottom: 14px;
   font-weight: 600;
   color: black;
+  font-family: 'MPLUSRounded1c-Medium';
 `;
 
 export const ErrorText = styled.Text`
   color: red;
-  margin-top: 6px;
   text-align: center;
+  font-family: 'MPLUSRounded1c-Medium';
+  font-size: 16px;
 `;
 
 export const Row = styled.View`
@@ -32,12 +34,13 @@ export const KeyButton = styled.TouchableOpacity`
   background-color: white;
   justify-content: center;
   align-items: center;
-  margin-horizontal: 10px;
+  margin-horizontal: 8px;
   elevation: 2;
 `;
 
 export const KeyText = styled.Text`
-  font-size: 28px;
+  font-size: 26px;
   color: #321d63;
   font-weight: 500;
+  font-family: 'MPLUSRounded1c-Medium';
 `;

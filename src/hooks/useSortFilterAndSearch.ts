@@ -3,11 +3,11 @@ import { CategoryType } from '../shared/categoryType';
 import useDebounce from './useDebounce';
 import { SortConfig } from '../shared/categoryType';
 
-export const useSortAndFilter = (
+export const useSortFilterAndSearch = (
   setSortConfig: (config: SortConfig<CategoryType> | undefined) => void,
   setFilters: (filter: ((item: CategoryType) => boolean) | undefined) => void,
+  filters?: (item: CategoryType) => boolean,
   sortConfig?: SortConfig<CategoryType>,
-  filters?: (item: CategoryType) => boolean
 ) => {
   const [textSearch, setTextSearch] = useState('');
   const debouncedSearch = useDebounce(textSearch, 500);
@@ -33,7 +33,7 @@ export const useSortAndFilter = (
   const sortLabel = (() => {
     if (!sortConfig || typeof sortConfig === 'function') return 'מיון';
     const keyLabel = sortConfig.key === 'name' ? 'שם' : 'תקציב';
-    const directionLabel = sortConfig.direction === 'asc' ? '↓' : '↑' ;
+    const directionLabel = sortConfig.direction === 'asc' ? '↓' : '↑';
     return `מיון: ${keyLabel} ${directionLabel}`;
   })();
 

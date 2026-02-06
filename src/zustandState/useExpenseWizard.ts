@@ -62,24 +62,18 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
 
     canProceedToNextStep: () => {
       const state = get();
-
       switch (state.currentStep) {
         case 'amount':
           return state.amount !== null && state.amount > 0;
-
         case 'category':
           return !!state.categoryId;
-
         case 'subCategory':
           return !!state.subCategoryId;
-
         case 'payMethod':
           return !!state.paymentMethod;
-
-        case 'AddNoteForExpense':
+        case 'addNote':
         case 'endProcess':
           return true;
-
         default:
           return false;
       }

@@ -4,7 +4,7 @@ export const Container = styled.View``;
 export const HeaderContainer = styled.View`
   justify-content: center;
   margin-top: 10px;
-  padding-left: 15px;
+  margin-left: 20px;
 `;
 export const HeaderText = styled.Text`
   font-size: 18px;

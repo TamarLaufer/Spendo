@@ -1,5 +1,5 @@
 import styled from 'styled-components/native';
-import { theme } from '../../../theme/theme';
+import { theme } from '../../../../theme/theme';
 
 export const ContinueButtonContainer = styled.Pressable<{
   disabled?: boolean;

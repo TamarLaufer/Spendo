@@ -21,7 +21,7 @@ import { getIconComponent } from '../../../utils/getIconComponent';
 import { RootNav } from '../../expenses/expenseDetails/types';
 import { useNavigation } from '@react-navigation/native';
 import SortAndFilterButtons from '../../../components/sortAndFilterButtons/SortAndFilterButtons';
-import { useSortAndFilter } from '../../../hooks/useSortAndFilter';
+import { useSortFilterAndSearch } from '../../../hooks/useSortFilterAndSearch';
 
 const AllCategories: FC = () => {
   const categories = useCategory(state => state.categories);
@@ -40,38 +40,38 @@ const AllCategories: FC = () => {
     handleFilterPress,
     sortLabel,
     filterLabel,
-  } = useSortAndFilter(
+  } = useSortFilterAndSearch(
     setSortConfig,
     setFilters,
-    sortConfig,
-    filters
+    filters ?? undefined,
+    sortConfig ?? undefined,
   );
 
-const filteredCategories = filters
-  ? categories.filter(filters)
-  : categories;
+  const sortedCategories = sortConfig
+    ? [...categories].sort((a, b) => {
+        if (sortConfig.key === 'name') {
+          return sortConfig.direction === 'asc'
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        }
 
-const sortedCategories = sortConfig
-  ? [...filteredCategories].sort((a, b) => {
-      if (sortConfig.key === 'name') {
-        return sortConfig.direction === 'asc'
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
-      }
+        if (sortConfig.key === 'maxAmount') {
+          return sortConfig.direction === 'asc'
+            ? a.maxAmount - b.maxAmount
+            : b.maxAmount - a.maxAmount;
+        }
 
-      if (sortConfig.key === 'maxAmount') {
-        return sortConfig.direction === 'asc'
-          ? a.maxAmount - b.maxAmount
-          : b.maxAmount - a.maxAmount;
-      }
+        return 0;
+      })
+    : categories;
 
-      return 0;
-    })
-  : filteredCategories;
-
+  const searchedCategories = textSearch
+    ? [...sortedCategories].filter(item =>
+        item.name.toLowerCase().includes(textSearch.toLowerCase()),
+      )
+    : sortedCategories;
 
   const handleCategoryPress = (categoryId: string) => {
-    console.log(categoryId);
     navigation.navigate('CategoryDetails', { categoryId });
   };
 
@@ -97,14 +97,19 @@ const sortedCategories = sortConfig
     <ScreenLayout>
       <Container>
         <FlatList
-          data={sortedCategories}
+          data={searchedCategories}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           ListHeaderComponent={
             <HeaderContainer>
               <Header>{STRINGS.CATEGORIES}</Header>
-              <SortAndFilterButtons textSearch={textSearch} onSearchChange={setTextSearch} onSortPress={handleSortPress}
-               onFilterPress={handleFilterPress} sortLabel={sortLabel}
+              <SortAndFilterButtons
+                sortDisplayed
+                textSearch={textSearch}
+                onSearchChange={setTextSearch}
+                onSortPress={handleSortPress}
+                onFilterPress={handleFilterPress}
+                sortLabel={sortLabel}
                 filterLabel={filterLabel}
                 isFilterActive={!!filters}
               />

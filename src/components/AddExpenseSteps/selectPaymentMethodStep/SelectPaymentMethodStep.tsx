@@ -1,9 +1,9 @@
-import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { PaymentMethods } from '../../bottomSheetExpenses/types';
+import { useExpenseWizard } from '../../../zustandState/useExpenseWizard';
+import { PaymentMethods } from '../../../bottomSheetExpenses/types';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
+import { useExpenseWizardNavigation } from '../../../hooks/useExpenseWizardNavigation';
 
-const PaymentMethodsScreen = () => {
+const SelectPaymentMethodStep = () => {
   const paymentMethods = useExpenseWizard(state => state.paymentMethods);
   const { handleContinue } = useExpenseWizardNavigation();
   const setPaymentMethod = useExpenseWizard(state => state.setPaymentMethod);
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default PaymentMethodsScreen;
+export default SelectPaymentMethodStep;

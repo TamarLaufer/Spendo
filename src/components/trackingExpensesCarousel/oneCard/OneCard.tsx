@@ -25,8 +25,6 @@ type CategoryCard = {
 const OneCard = ({ name, maxAmount, icon, percent, spent, onPress }: CategoryCard) => {
   const Icon = icon ? IconRegistry[icon] : undefined;
 
-  console.log('item.percent', percent);
-  
   return (
     <Container onPress={onPress}>
       <TitleContainer>

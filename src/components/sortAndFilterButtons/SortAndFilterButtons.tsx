@@ -3,7 +3,6 @@ import {
   ButtonsContainer,
   FilterButtonText,
   FilterContainer,
-  SearchText,
   SortButtonText,
   SortContainer,
 } from './SortAndFilterButtons.styles';
@@ -19,6 +18,8 @@ type SortAndFilterButtonsProps = {
   sortLabel: string;
   filterLabel: string;
   isFilterActive: boolean;
+  sortDisplayed?: boolean;
+  filterDisplayed?: boolean;
 };
 
 const SortAndFilterButtons = ({
@@ -29,23 +30,33 @@ const SortAndFilterButtons = ({
   sortLabel,
   filterLabel,
   isFilterActive,
+  sortDisplayed,
+  filterDisplayed,
 }: SortAndFilterButtonsProps) => {
-
   const SortIcon = getIconComponent('sort');
   const FilterIcon = getIconComponent('filter');
 
   return (
     <ButtonsContainer>
-      <TextInput value={textSearch} onChangeText={onSearchChange} placeholder={STRINGS.SEARCH_PLACEHOLDER}/>
-      {textSearch && <SearchText>{textSearch}</SearchText>}
-      <SortContainer onPress={onSortPress}>
-        {SortIcon && <SortIcon width={20} height={20} />}
-        <SortButtonText>{sortLabel}</SortButtonText>
-      </SortContainer>
-      <FilterContainer onPress={onFilterPress}>
-         {FilterIcon && <FilterIcon width={22} height={22} />}
-         <FilterButtonText active={isFilterActive}>{filterLabel}</FilterButtonText>
-      </FilterContainer>
+      <TextInput
+        value={textSearch}
+        onChangeText={onSearchChange}
+        placeholder={STRINGS.SEARCH_PLACEHOLDER}
+      />
+      {sortDisplayed && sortLabel && sortLabel !== '' && (
+        <SortContainer onPress={onSortPress}>
+          {SortIcon && <SortIcon width={20} height={20} />}
+          <SortButtonText>{sortLabel}</SortButtonText>
+        </SortContainer>
+      )}
+      {filterDisplayed && filterLabel && filterLabel !== '' && (
+        <FilterContainer onPress={onFilterPress}>
+          {FilterIcon && <FilterIcon width={22} height={22} />}
+          <FilterButtonText active={isFilterActive}>
+            {filterLabel}
+          </FilterButtonText>
+        </FilterContainer>
+      )}
     </ButtonsContainer>
   );
 };

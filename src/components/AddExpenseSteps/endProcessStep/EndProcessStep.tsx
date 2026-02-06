@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { useCategory } from '../../zustandState/useCategory';
-import { STRINGS } from '../../strings/hebrew';
-import { formatAmount } from '../../utils/formatting';
-import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
+import { useExpenseWizard } from '../../../zustandState/useExpenseWizard';
+import { useCategory } from '../../../zustandState/useCategory';
+import { STRINGS } from '../../../strings/hebrew';
+import { formatAmount } from '../../../utils/formatting';
+import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
 
 const EndProcessStep = () => {
   const categoryId = useExpenseWizard(state => state.categoryId);

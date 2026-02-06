@@ -72,7 +72,7 @@ export const STRINGS = {
   TRACKING_EXPENSES: 'מעקב הוצאות חודשי',
   OVER_BUDGET: 'חריגה!',
   BE_CAREFUL: 'הגעת למכסה החודש',
-  YOU_ARE_IN_GOOD_STATE: 'אתה במצב טוב',
+  YOU_ARE_IN_GOOD_STATE: 'מצב מעולה',
   SPENT: 'הוצאתי',
   PAY_ATTENTION: 'שים לב! יש לעקוב',
   SEARCH_PLACEHOLDER: 'חיפוש',

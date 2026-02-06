@@ -2,15 +2,15 @@ import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert } from 'react-native';
 import AddExpenseStep from '../components/AddExpenseSteps/addExpenseStep/AddExpenseStep';
-import ChooseCategoryStep from '../components/AddExpenseSteps/ChooseCategoryStep';
-import EndProcessStep from '../components/AddExpenseSteps/EndProcessStep';
-import ChooseSubCategoryStep from '../components/AddExpenseSteps/ChooseSubCategoryStep';
+import SelectCategoryStep from '../components/AddExpenseSteps/selectCategoryStep/SelectCategoryStep';
+import EndProcessStep from '../components/AddExpenseSteps/endProcessStep/EndProcessStep';
+import SelectSubCategoryStep from '../components/AddExpenseSteps/selectSubCategpryStep/SelectSubCategoryStep';
 import { Icons } from '../assets/icons';
-import ContinueButton from '../components/AddExpenseSteps/continueButton/ContinueButton';
+import ContinueButton from '../components/AddExpenseSteps/components/continueButton/ContinueButton';
 import { StepsConfig } from './types';
 import { useExpenseWizard } from '../zustandState/useExpenseWizard';
-import PaymentMethodsScreen from '../components/AddExpenseSteps/PaymentMethodsScreen';
-import AddNoteForExpense from '../components/AddExpenseSteps/AddNoteForExpense';
+import SelectPaymentMethodStep from '../components/AddExpenseSteps/selectPaymentMethodStep/SelectPaymentMethodStep';
+import AddNoteStep from '../components/AddExpenseSteps/addNoteStep/AddNoteStep';
 import { useExpenseWizardNavigation } from '../hooks/useExpenseWizardNavigation';
 import {
   ActionsContainer,
@@ -54,13 +54,13 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
       case 'amount':
         return <AddExpenseStep />;
       case 'category':
-        return <ChooseCategoryStep />;
+        return <SelectCategoryStep />;
       case 'subCategory':
-        return <ChooseSubCategoryStep />;
+        return <SelectSubCategoryStep />;
       case 'payMethod':
-        return <PaymentMethodsScreen />;
-      case 'AddNoteForExpense':
-        return <AddNoteForExpense />;
+        return <SelectPaymentMethodStep />;
+      case 'addNote':
+        return <AddNoteStep />;
       case 'endProcess':
         return <EndProcessStep />;
       default:

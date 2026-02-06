@@ -9,6 +9,7 @@ import {
 } from './Balance.styles';
 import { STRINGS } from '../../strings/hebrew';
 import { useBudgetStats } from '../../hooks/useBudgetStats';
+import ProgressBar from '../progressBar/ProgressBar';
 
 const Balance = () => {
   const { total } = useBudgetStats();
@@ -23,6 +24,7 @@ const Balance = () => {
           {formatAmount(total.max)}
         </MaxAmount>
       </BalanceTextContainer>
+      <ProgressBar percent={total.percent} />
     </Container>
   );
 };

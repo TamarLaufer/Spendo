@@ -1,11 +1,11 @@
 import React from 'react';
 import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
-import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
-import { useExpenseWizardNavigation } from '../../hooks/useExpenseWizardNavigation';
-import { SubCategoryType } from '../../shared/categoryType';
-import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
+import { useExpenseWizard } from '../../../zustandState/useExpenseWizard';
+import { useExpenseWizardNavigation } from '../../../hooks/useExpenseWizardNavigation';
+import { SubCategoryType } from '../../../shared/categoryType';
+import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
 
-const ChooseSubCategoryStep = () => {
+const SelectSubCategoryStep = () => {
   const { categoryId, setSubCategoryId } = useExpenseWizard();
   const { handleContinue } = useExpenseWizardNavigation();
 
@@ -29,7 +29,7 @@ const ChooseSubCategoryStep = () => {
   const renderItem = ({ item }: { item: SubCategoryType }) => {
     return (
       <Pressable onPress={() => handleSelect(item.id)}>
-        <Text>{item.subCategoryName}</Text>
+        <Text>{item.name}</Text>
       </Pressable>
     );
   };
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
   error: { textAlign: 'center', marginTop: 20, color: 'red' },
 });
 
-export default ChooseSubCategoryStep;
+export default SelectSubCategoryStep;

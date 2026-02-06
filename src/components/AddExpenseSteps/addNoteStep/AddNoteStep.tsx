@@ -1,6 +1,6 @@
 import { StyleSheet, TextInput, View } from 'react-native';
 import React from 'react';
-import { useExpenseWizard } from '../../zustandState/useExpenseWizard';
+import { useExpenseWizard } from '../../../zustandState/useExpenseWizard';
 
 const AddNoteForExpense = () => {
   const setNote = useExpenseWizard(state => state.setNote);

@@ -25,10 +25,7 @@ const TrackingExpensesCarousel = ({
     navigation.navigate('CategoryDetails', { categoryId });
   };
   const { byCategory } = useBudgetStats();
-  console.log('byCategory', byCategory);
-  
 
-  console.log('byCategory', byCategory);
   const renderItem = ({ item }: { item: CategoryType }) => (
     <OneCard
       icon={item?.icon ?? 'defaultIcon'}
@@ -62,7 +59,7 @@ const TrackingExpensesCarousel = ({
           contentContainerStyle={{
             paddingHorizontal: SPACING,
             paddingBottom: 8,
-            paddingTop: 10,
+            paddingTop: 3,
           }}
         />
       </Container>

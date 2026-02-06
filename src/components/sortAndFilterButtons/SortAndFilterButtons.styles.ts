@@ -3,9 +3,10 @@ import { theme } from '../../theme/theme';
 
 export const ButtonsContainer = styled.View`
   flex-direction: row;
-  margin-top: 28px;
   justify-content: space-between;
-  width: 90%;
+  width: 100%;
+  padding-horizontal: 30px;
+  margin-top: 20px;
 `;
 
 export const SortContainer = styled.Pressable`

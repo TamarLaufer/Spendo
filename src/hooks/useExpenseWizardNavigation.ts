@@ -34,11 +34,11 @@ export const useExpenseWizardNavigation = () => {
         setCurrentStep('payMethod');
         break;
       case 'payMethod':
-        setCurrentStep('AddNoteForExpense');
+        setCurrentStep('addNote');
         break;
-      case 'AddNoteForExpense':
+      case 'addNote':
         setCurrentStep('endProcess');
-        break;
+        break;  
       case 'endProcess':
         closeBottomSheet();
         break;
@@ -62,11 +62,11 @@ export const useExpenseWizardNavigation = () => {
       case 'payMethod':
         setCurrentStep(needSub ? 'subCategory' : 'category');
         break;
-      case 'AddNoteForExpense':
+      case 'addNote':
         setCurrentStep('payMethod');
         break;
       case 'endProcess':
-        setCurrentStep('AddNoteForExpense');
+        setCurrentStep('addNote');
         break;
     }
   };
