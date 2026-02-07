@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizard } from '../../../zustandState/useExpenseWizard';
 import { useCategory } from '../../../zustandState/useCategory';
 import { STRINGS } from '../../../strings/hebrew';
 import { formatAmount } from '../../../utils/formatting';
 import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
+import { Container, StyledText, TextContainer } from './EndProcessStep.styles';
 
 const EndProcessStep = () => {
   const categoryId = useExpenseWizard(state => state.categoryId);
@@ -22,39 +22,17 @@ const EndProcessStep = () => {
   const isAmountExist = amount ? formatAmount(amount) : '';
 
   return (
-    <View style={styles.container}>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>{STRINGS.EXPENSE_SUCCEDED}</Text>
-        <Text style={styles.text}>{`${STRINGS.EXPENSE_IN}: ${
-          expenseObj?.name
-        } ${subCat?.name ? `- ${subCat?.name}` : ''}`}</Text>
-      </View>
-      <Text
-        style={styles.amountText}
-      >{`${isAmountExist} ב${paymentMethod}`}</Text>
+    <Container>
+      <TextContainer>
+        <StyledText>{STRINGS.EXPENSE_SUCCEDED}</StyledText>
+        <StyledText>{`${STRINGS.EXPENSE_IN}: ${expenseObj?.name} ${
+          subCat?.name ? `- ${subCat?.name}` : ''
+        }`}</StyledText>
+      </TextContainer>
+      <StyledText>{`${isAmountExist} ב${paymentMethod}`}</StyledText>
       {/* <Text style={styles.amountText}>{`ב${paymentMethod}`}</Text> */}
-    </View>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    height: 200,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginHorizontal: 25,
-  },
-  textContainer: { flex: 1 },
-  text: {
-    fontSize: 24,
-    textAlign: 'center',
-    verticalAlign: 'middle',
-  },
-  amountText: {
-    fontSize: 33,
-    textAlign: 'center',
-    verticalAlign: 'middle',
-  },
-});
 
 export default EndProcessStep;

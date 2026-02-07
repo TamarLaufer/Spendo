@@ -49,6 +49,7 @@ export const CancelXButton = styled.Pressable`
 `;
 
 export const ActionsContainer = styled.View`
-  justify-content: center;
+  flex: 1;
+  justify-content: flex-end;
   padding-bottom: 28px;
 `;
