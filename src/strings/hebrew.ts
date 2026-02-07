@@ -76,4 +76,5 @@ export const STRINGS = {
   SPENT: 'הוצאתי',
   PAY_ATTENTION: 'שים לב! יש לעקוב',
   SEARCH_PLACEHOLDER: 'חיפוש',
+  SELECT_CATEGORY_FIRST: 'בחרי קודם קטגוריה',
 };

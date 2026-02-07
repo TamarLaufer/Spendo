@@ -4,6 +4,7 @@ export const SheetContainer = styled.View`
   align-items: center;
   justify-content: center;
   border-radius: 24px;
+  margin-bottom: 30px;
 `;
 
 export const Display = styled.TextInput`

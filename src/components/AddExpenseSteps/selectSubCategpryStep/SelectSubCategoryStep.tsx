@@ -1,60 +1,62 @@
-import React from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback } from 'react';
 import { useExpenseWizard } from '../../../zustandState/useExpenseWizard';
-import { useExpenseWizardNavigation } from '../../../hooks/useExpenseWizardNavigation';
 import { SubCategoryType } from '../../../shared/categoryType';
 import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
+import { useExpenseWizardNavigation } from '../../../hooks/useExpenseWizardNavigation';
+import { STRINGS } from '../../../strings/hebrew';
+import { Container, Msg, Row, RowText } from './SelectSubCategoryStep.styles';
+import Separator from '../../separator/Separator';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 
 const SelectSubCategoryStep = () => {
-  const { categoryId, setSubCategoryId } = useExpenseWizard();
+  const categoryId = useExpenseWizard(state => state.categoryId);
+  const setSubCategoryId = useExpenseWizard(state => state.setSubCategoryId);
   const { handleContinue } = useExpenseWizardNavigation();
 
-  const rows = useSubcatIndex(state =>
-    categoryId ? Object.values(state.index[categoryId] ?? {}) : [],
+  const subIndex = useSubcatIndex(state =>
+    categoryId ? state.index[categoryId] ?? {} : {},
   );
 
-  const handleSelect = (subId: string) => {
-    setSubCategoryId(subId);
-    handleContinue();
-  };
+  const rows = React.useMemo(() => Object.values(subIndex), [subIndex]);
+
+  const handleSelect = useCallback(
+    (subId: string) => {
+      setSubCategoryId(subId);
+      handleContinue();
+    },
+    [setSubCategoryId, handleContinue],
+  );
+
+  const renderItem = useCallback(
+    ({ item }: { item: SubCategoryType }) => {
+      return (
+        <Row onPress={() => handleSelect(item.id)}>
+          <RowText>{item.name}</RowText>
+        </Row>
+      );
+    },
+    [handleSelect],
+  );
 
   if (!categoryId) {
-    return <Text style={styles.msg}>בחרי קודם קטגוריה</Text>;
+    return <Msg>{STRINGS.SELECT_CATEGORY_FIRST}</Msg>;
   }
 
   if (rows.length === 0) {
-    return <Text style={styles.msg}>אין תתי־קטגוריות לקטגוריה זו</Text>;
+    return <Msg>{STRINGS.NO_SUB_CATEGORIES}</Msg>;
   }
 
-  const renderItem = ({ item }: { item: SubCategoryType }) => {
-    return (
-      <Pressable onPress={() => handleSelect(item.id)}>
-        <Text>{item.name}</Text>
-      </Pressable>
-    );
-  };
-
   return (
-    <View style={styles.container}>
-      <FlatList
+    <Container>
+      <BottomSheetFlatList
         data={rows}
         keyExtractor={item => item.id}
         renderItem={renderItem}
+        ItemSeparatorComponent={Separator}
+        showsVerticalScrollIndicator={false}
       />
-    </View>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 18,
-    justifyContent: 'center',
-    marginHorizontal: 35,
-  },
-  loader: { marginTop: 20 },
-  msg: { textAlign: 'center', marginTop: 20, fontSize: 16 },
-  error: { textAlign: 'center', marginTop: 20, color: 'red' },
-});
 
 export default SelectSubCategoryStep;

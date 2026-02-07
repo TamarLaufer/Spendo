@@ -17,7 +17,6 @@ import {
   BackButton,
   BottomSheetContainer,
   HeaderText,
-  StepContainer,
 } from './BottomSheetExpenses.styles';
 
 type PropsType = {
@@ -103,7 +102,7 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
     >
       {!!header && <HeaderText>{header}</HeaderText>}
 
-      <StepContainer>{renderStep()}</StepContainer>
+      {renderStep()}
 
       {currentStep !== 'amount' && (
         <BackButton onPress={handleBack} disabled={isSaving}>

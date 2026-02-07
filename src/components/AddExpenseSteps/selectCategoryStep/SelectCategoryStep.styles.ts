@@ -14,8 +14,10 @@ export const Row = styled.TouchableOpacity<{ isSelected?: boolean }>`
   border-radius: 12px;
   background-color: white;
   margin-bottom: 8px;
-  
-  ${({ isSelected }) => isSelected && `
+
+  ${({ isSelected }) =>
+    isSelected &&
+    `
     border-width: 2px;
     border-color: ${theme.color.lightBlue};
   `}
@@ -24,6 +26,7 @@ export const Row = styled.TouchableOpacity<{ isSelected?: boolean }>`
 export const RowText = styled.Text`
   font-size: 18px;
   margin-left: 12px;
+  font-family: 'MPLUSRounded1c-Medium';
 `;
 
 export const AddCategory = styled.TouchableOpacity`

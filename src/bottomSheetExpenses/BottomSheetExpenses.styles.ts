@@ -27,10 +27,10 @@ export const BottomSheetView = styled.View`
 `;
 
 export const HeaderText = styled.Text`
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 26px;
   text-align: center;
   margin-top: 12px;
+  font-family: 'MPLUSRounded1c-Medium';
 `;
 
 export const BackButton = styled.Pressable`
