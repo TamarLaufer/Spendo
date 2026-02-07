@@ -12,6 +12,7 @@ const SelectSubCategoryStep = () => {
   const categoryId = useExpenseWizard(state => state.categoryId);
   const setSubCategoryId = useExpenseWizard(state => state.setSubCategoryId);
   const { handleContinue } = useExpenseWizardNavigation();
+  const selectedSubCategoryId = useExpenseWizard(state => state.subCategoryId);
 
   const subIndex = useSubcatIndex(state =>
     categoryId ? state.index[categoryId] ?? {} : {},
@@ -30,12 +31,15 @@ const SelectSubCategoryStep = () => {
   const renderItem = useCallback(
     ({ item }: { item: SubCategoryType }) => {
       return (
-        <Row onPress={() => handleSelect(item.id)}>
+        <Row
+          onPress={() => handleSelect(item.id)}
+          isSelected={item.id === selectedSubCategoryId}
+        >
           <RowText>{item.name}</RowText>
         </Row>
       );
     },
-    [handleSelect],
+    [handleSelect, selectedSubCategoryId],
   );
 
   if (!categoryId) {

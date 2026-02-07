@@ -18,8 +18,8 @@ export const Row = styled.TouchableOpacity<{ isSelected?: boolean }>`
   ${({ isSelected }) =>
     isSelected &&
     `
-    border-width: 2px;
-    border-color: ${theme.color.lightBlue};
+    border-width: 1px;
+    border-color: ${theme.color.placeholder};
   `}
 `;
 

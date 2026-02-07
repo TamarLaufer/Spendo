@@ -1,4 +1,5 @@
 import styled from 'styled-components/native';
+import { theme } from '../../../theme/theme';
 
 export const Container = styled.View`
   flex: 1;
@@ -20,10 +21,18 @@ export const Error = styled.Text`
   font-size: 16px;
   color: red;
 `;
-export const Row = styled.Pressable`
-  padding: 10px;
-  border-bottom-width: 1px;
-  border-bottom-color: #ccc;
+export const Row = styled.Pressable<{ isSelected?: boolean }>`
+  padding: 14px;
+  border-radius: 12px;
+  background-color: white;
+  margin-bottom: 8px;
+
+  ${({ isSelected }) =>
+    isSelected &&
+    `
+    border-width: 1px;
+    border-color: ${theme.color.placeholder};
+  `}
 `;
 export const RowText = styled.Text`
   font-size: 18px;
