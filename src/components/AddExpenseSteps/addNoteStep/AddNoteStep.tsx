@@ -1,6 +1,8 @@
-import { StyleSheet, TextInput, View } from 'react-native';
 import React from 'react';
 import { useExpenseWizard } from '../../../zustandState/useExpenseWizard';
+import { STRINGS } from '../../../strings/hebrew';
+import { Container, StyledInput } from './AddNoteStep.styles';
+import { theme } from '../../../theme/theme';
 
 const AddNoteForExpense = () => {
   const setNote = useExpenseWizard(state => state.setNote);
@@ -11,36 +13,17 @@ const AddNoteForExpense = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="תרצה/י להוסיף פירוט להוצאה?"
-          value={note}
-          onChangeText={e => handleNoteInput(e)}
-          multiline
-          textAlignVertical="top"
-          style={styles.input}
-        />
-      </View>
-    </View>
+    <Container>
+      <StyledInput
+        placeholder={STRINGS.ADD_NOTE_PLACEHOLDER}
+        value={note}
+        onChangeText={text => handleNoteInput(text)}
+        multiline
+        textAlignVertical="top"
+        placeholderTextColor={theme.color.placeholder}
+      />
+    </Container>
   );
 };
 
 export default AddNoteForExpense;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  inputContainer: {
-    marginHorizontal: 25,
-  },
-  input: {
-    minHeight: 190,
-    padding: 12,
-    fontSize: 18,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-  },
-});

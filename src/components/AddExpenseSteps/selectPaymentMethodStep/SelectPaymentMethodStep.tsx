@@ -1,12 +1,19 @@
 import { useExpenseWizard } from '../../../zustandState/useExpenseWizard';
 import { PaymentMethods } from '../../../bottomSheetExpenses/types';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useExpenseWizardNavigation } from '../../../hooks/useExpenseWizardNavigation';
+import Separator from '../../separator/Separator';
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import {
+  Container,
+  PaymentMethodText,
+  Row,
+} from './SelectPaymentMethodStep.styles';
 
 const SelectPaymentMethodStep = () => {
   const paymentMethods = useExpenseWizard(state => state.paymentMethods);
   const { handleContinue } = useExpenseWizardNavigation();
   const setPaymentMethod = useExpenseWizard(state => state.setPaymentMethod);
+  const selectedPaymentMethod = useExpenseWizard(state => state.paymentMethod);
 
   const handlePaymentChoose = (selectedPayment: PaymentMethods['name']) => {
     setPaymentMethod(selectedPayment);
@@ -15,30 +22,26 @@ const SelectPaymentMethodStep = () => {
 
   const renderItem = ({ item }: { item: PaymentMethods }) => {
     return (
-      <Pressable onPress={() => handlePaymentChoose(item.name)}>
-        <Text>{item.name}</Text>
-      </Pressable>
+      <Row
+        onPress={() => handlePaymentChoose(item.name)}
+        isSelected={item.name === selectedPaymentMethod}
+      >
+        <PaymentMethodText>{item.name}</PaymentMethodText>
+      </Row>
     );
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        keyExtractor={item => item.id}
+    <Container>
+      <BottomSheetFlatList
         data={paymentMethods}
+        keyExtractor={item => item.id}
         renderItem={renderItem}
+        ItemSeparatorComponent={Separator}
+        showsVerticalScrollIndicator={false}
       />
-    </View>
+    </Container>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 18,
-    justifyContent: 'center',
-    marginHorizontal: 35,
-  },
-});
 
 export default SelectPaymentMethodStep;

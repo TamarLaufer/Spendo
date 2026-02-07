@@ -77,4 +77,5 @@ export const STRINGS = {
   PAY_ATTENTION: 'שים לב! יש לעקוב',
   SEARCH_PLACEHOLDER: 'חיפוש',
   SELECT_CATEGORY_FIRST: 'בחרי קודם קטגוריה',
+  ADD_NOTE_PLACEHOLDER: 'תרצה/י להוסיף פירוט להוצאה?',
 };
