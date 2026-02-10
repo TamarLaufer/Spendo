@@ -12,9 +12,11 @@ import Events from './ticket.svg';
 import Hobies from './hobies.svg';
 import Filter from './filter.svg';
 import Sort from './sort.svg';
+import Logo from './logo-spendo.svg';
 
 //other icons
 export const Icons = {
+  logo: Logo,
   CancelX,
   Back,
   Market,
@@ -33,6 +35,7 @@ export const Icons = {
 
 //categories icons
 export const IconRegistry = {
+  logo: Logo,
   filter: Filter,
   sort: Sort,
   market: Market,
