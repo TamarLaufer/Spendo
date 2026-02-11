@@ -124,9 +124,9 @@ const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
                   autoCapitalize="words"
                   editable={!isSubmitting}
                 />
-                {errors.name?.message ? (
+                {errors.name?.message && (
                   <ErrorText>{errors.name.message}</ErrorText>
-                ) : null}
+                )}
               </InputWrapper>
 
               <InputWrapper>
@@ -143,9 +143,9 @@ const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
                   autoCorrect={false}
                   editable={!isSubmitting}
                 />
-                {errors.email?.message ? (
+                {errors.email?.message && (
                   <ErrorText>{errors.email.message}</ErrorText>
-                ) : null}
+                )}
               </InputWrapper>
 
               <InputWrapper>
@@ -160,9 +160,9 @@ const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
                   secureTextEntry
                   editable={!isSubmitting}
                 />
-                {errors.password?.message ? (
+                {errors.password?.message && (
                   <ErrorText>{errors.password.message}</ErrorText>
-                ) : null}
+                )}
               </InputWrapper>
 
               <InputWrapper>
@@ -177,9 +177,9 @@ const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
                   secureTextEntry
                   editable={!isSubmitting}
                 />
-                {errors.confirmPassword?.message ? (
+                {errors.confirmPassword?.message && (
                   <ErrorText>{errors.confirmPassword.message}</ErrorText>
-                ) : null}
+                )}
               </InputWrapper>
 
               <PrimaryButton
@@ -190,7 +190,7 @@ const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
               </PrimaryButton>
             </Form>
 
-            {onNavigateToLogin ? (
+            {onNavigateToLogin && (
               <Footer>
                 <FooterRow>
                   <FooterText>{STRINGS.REGISTER_HAS_ACCOUNT}</FooterText>
@@ -202,7 +202,7 @@ const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
                   </TouchableOpacity>
                 </FooterRow>
               </Footer>
-            ) : null}
+            )}
           </ScrollContent>
         </ScrollView>
       </KeyboardAvoidingView>

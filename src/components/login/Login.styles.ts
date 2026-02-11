@@ -86,7 +86,6 @@ export const ButtonWrapper = styled.View``;
 export const BottomSection = styled.View`
   margin-top: auto;
   margin-bottom: 36px;
-  background-color: red;
 `;
 
 export const PrimaryButton = styled.Pressable<{ disabled?: boolean }>`

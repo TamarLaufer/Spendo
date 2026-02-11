@@ -28,8 +28,6 @@ import {
   BottomSection,
   KeyboardWrapper,
 } from './Login.styles';
-import { AuthStackParamsType } from '../../navigation/types';
-import { NavigationProp, useNavigation } from '@react-navigation/native';
 
 const loginSchema = z.object({
   email: z
@@ -44,9 +42,10 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 type LoginProps = {
   logo: React.ReactNode;
   onSubmit?: (values: LoginFormValues) => void | Promise<void>;
+  onNavigateToRegister?: () => void;
 };
 
-const Login = ({ logo, onSubmit }: LoginProps) => {
+const Login = ({ logo, onSubmit, onNavigateToRegister }: LoginProps) => {
   const {
     setValue,
     watch,
@@ -60,12 +59,6 @@ const Login = ({ logo, onSubmit }: LoginProps) => {
 
   const email = watch('email');
   const password = watch('password');
-
-  const navigation =
-    useNavigation<NavigationProp<AuthStackParamsType, 'Login'>>();
-  const onNavigateToRegister = () => {
-    navigation.navigate('Register');
-  };
 
   const onFormSubmit = async (values: LoginFormValues) => {
     if (isSubmitting) return;
@@ -106,9 +99,9 @@ const Login = ({ logo, onSubmit }: LoginProps) => {
                   autoCorrect={false}
                   editable={!isSubmitting}
                 />
-                {errors.email?.message ? (
+                {errors.email?.message && (
                   <ErrorText>{errors.email.message}</ErrorText>
-                ) : null}
+                )}
                 <Label>{STRINGS.LOGIN_PASSWORD}</Label>
                 <StyledInput
                   placeholder={STRINGS.LOGIN_PASSWORD_PLACEHOLDER}
@@ -120,9 +113,9 @@ const Login = ({ logo, onSubmit }: LoginProps) => {
                   secureTextEntry
                   editable={!isSubmitting}
                 />
-                {errors.password?.message ? (
+                {errors.password?.message && (
                   <ErrorText>{errors.password.message}</ErrorText>
-                ) : null}
+                )}
               </InputWrapper>
               <BottomSection>
                 <ButtonWrapper>

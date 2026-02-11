@@ -1,18 +1,11 @@
-import { View } from 'react-native';
 import { Icons } from '../../assets/icons';
+import { Container } from './Splash.styles';
 
 const SplashScreen = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: '#f6f7f9',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <Icons.logo width={100} height={100} />
-    </View>
+    <Container>
+      <Icons.Logo width={100} height={100} />
+    </Container>
   );
 };
 export default SplashScreen;

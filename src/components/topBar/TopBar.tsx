@@ -1,12 +1,15 @@
 import { FC } from 'react';
 import { Icons } from '../../assets/icons';
-import { Container, TitleText } from './TopBar.styles';
-import { STRINGS } from '../../strings/hebrew';
+import { Container, LogoWrapper } from './TopBar.styles';
+import Logout from '../logout/Logout';
+
 const TopBar: FC = () => {
   return (
     <Container>
-      <Icons.Payment width={50} height={50} />
-      <TitleText>{STRINGS.FINANCIAL_SAVVY}</TitleText>
+      <LogoWrapper>
+        <Icons.LogoNoBg width={50} height={50} />
+      </LogoWrapper>
+      <Logout />
     </Container>
   );
 };

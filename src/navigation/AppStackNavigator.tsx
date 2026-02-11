@@ -16,7 +16,7 @@ const STACK_SCREEN_OPTIONS = {
   animation: 'default',
 } as const;
 
-export default function StackNavigation() {
+export default function StackNavigator() {
   return (
     <Stack.Navigator screenOptions={STACK_SCREEN_OPTIONS}>
       <Stack.Screen name="MainTabs" component={MainTabsWithBottomSheet} />

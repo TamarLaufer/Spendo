@@ -2,12 +2,12 @@ import React from 'react';
 
 import {
   Container,
-  GreetingIcon,
   GreetingText,
-  IconAndTextContainer,
+  TextContainer,
   SubtitleText,
 } from './HomeHeader.styles';
 import { STRINGS } from '../../strings/hebrew';
+import { useAuthStore } from '../../zustandState/useAuthStore';
 
 type HomeHeaderProps = {
   greeting?: string;
@@ -15,16 +15,18 @@ type HomeHeaderProps = {
 };
 
 const HomeHeader = ({}: HomeHeaderProps) => {
+  const user = useAuthStore(state => state.user);
+  const userName = user?.displayName;
+  const greeting = userName
+    ? STRINGS.HELLO_USER.replace('{{name}}', userName)
+    : STRINGS.HELLO_USER;
+
   return (
     <Container>
-      <GreetingIcon>👋</GreetingIcon>
-      <IconAndTextContainer>
-        {/* TODO: get name from user */}
-        <GreetingText>
-          {STRINGS.HELLO_USER.replace('{{name}}', 'תמר')}
-        </GreetingText>
+      <TextContainer>
+        <GreetingText>{greeting}</GreetingText>
         <SubtitleText>{STRINGS.MONTH_EXPENSES_TEXT}</SubtitleText>
-      </IconAndTextContainer>
+      </TextContainer>
     </Container>
   );
 };

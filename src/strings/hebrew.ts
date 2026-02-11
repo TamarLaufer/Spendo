@@ -41,7 +41,7 @@ export const STRINGS = {
   EDIT: 'עריכה',
   ERROR_IN_LOADING_EXPENSES: 'שגיאה טעינת ההוצאות, בבקשה נסו מאוחר יותר',
   ERROR_IN_LOADING_CATEGORIES: 'שגיאה בטעינת הקטגוריות, בבקשה נסו מאוחר יותר',
-  HELLO_USER: 'היי {{name}},',
+  HELLO_USER: '👋היי {{name}},',
   MONTH_EXPENSES_TEXT: 'החודש הוצאת',
   FROM: 'מתוך',
   EXPENSE_AMOUNT_PLACEHOLDER: 'סכום ההוצאה',
@@ -113,4 +113,6 @@ export const STRINGS = {
   REGISTER_LOGIN_LINK: 'התחבר/י',
   // Category Details
   CATEGORY_DETAILS: 'פרטי קטגוריה',
+  // Top Bar
+  SPENDO: 'Spendo',
 };
