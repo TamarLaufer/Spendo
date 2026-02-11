@@ -18,3 +18,8 @@ export type RootStackParamsType = {
   CategoryDetails: { categoryId: string };
   EditCategory: { categoryId: string };
 };
+
+export type AuthStackParamsType = {
+  Login: undefined;
+  Register: undefined;
+};

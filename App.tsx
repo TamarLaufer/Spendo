@@ -1,11 +1,11 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import StackNavigation from './src/navigation/stack';
 import { StyleSheet } from 'react-native';
+import RootNavigator from './src/navigation/RootNavigator';
 
 function App() {
   return (
     <GestureHandlerRootView style={styles.gustureHendlar}>
-      <StackNavigation />
+      <RootNavigator />
     </GestureHandlerRootView>
   );
 }

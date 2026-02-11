@@ -12,9 +12,16 @@ import Events from './ticket.svg';
 import Hobies from './hobies.svg';
 import Filter from './filter.svg';
 import Sort from './sort.svg';
+import Logo from './logo-spendo.svg';
+import Logout from './logout.svg';
+import LogoNoBg from './logo-no-bg.svg';
+import LogoAndText from './logo-text-spendo.svg';
 
 //other icons
 export const Icons = {
+  LogoAndText,
+  Logo,
+  LogoNoBg,
   CancelX,
   Back,
   Market,
@@ -29,10 +36,14 @@ export const Icons = {
   Hobies,
   Filter,
   Sort,
+  Logout,
 };
 
 //categories icons
 export const IconRegistry = {
+  logoAndText: LogoAndText,
+  logo: Logo,
+  logoNoBg: LogoNoBg,
   filter: Filter,
   sort: Sort,
   market: Market,
@@ -47,6 +58,7 @@ export const IconRegistry = {
   defaultIcon: DefaultIcon,
   events: Events,
   hobies: Hobies,
+  logout: Logout,
 } as const;
 
 export type IconKey = keyof typeof IconRegistry;
