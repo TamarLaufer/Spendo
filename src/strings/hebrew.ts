@@ -41,7 +41,7 @@ export const STRINGS = {
   EDIT: 'עריכה',
   ERROR_IN_LOADING_EXPENSES: 'שגיאה טעינת ההוצאות, בבקשה נסו מאוחר יותר',
   ERROR_IN_LOADING_CATEGORIES: 'שגיאה בטעינת הקטגוריות, בבקשה נסו מאוחר יותר',
-  HELLO_USER: '👋היי {{name}},',
+  HELLO_USER: '👋 היי {{name}},',
   MONTH_EXPENSES_TEXT: 'החודש הוצאת',
   FROM: 'מתוך',
   EXPENSE_AMOUNT_PLACEHOLDER: 'סכום ההוצאה',
@@ -70,6 +70,7 @@ export const STRINGS = {
   NO_SUB_CATEGORIES: 'אין תתי קטגוריות',
   HOW_MUCH_I_SPENT_THIS_MONTH: 'כמה הוצאתי החודש על {{categoryName}}?',
   TRACKING_EXPENSES: 'מעקב הוצאות חודשי',
+  MONTH_BALANCE_TEXT: 'מאזן חודשי',
   OVER_BUDGET: 'חריגה!',
   BE_CAREFUL: 'הגעת למכסה החודש',
   YOU_ARE_IN_GOOD_STATE: 'מצב מעולה',
@@ -89,7 +90,7 @@ export const STRINGS = {
   LOGIN_PASSWORD_PLACEHOLDER: 'הכנס/י סיסמה',
   LOGIN_PASSWORD_REQUIRED: 'שדה סיסמה חובה',
   LOGIN_SUBMIT: 'התחבר/י',
-  LOGIN_REGISTER_LINK: 'איו לך חשבון? הירשם כאן',
+  LOGIN_REGISTER_LINK: 'איו לך חשבון? להרשמה יש ללחוץ כאן',
   // Register
   REGISTER_TITLE: 'הרשמה',
   REGISTER_SUBTITLE: 'צור/י חשבון חדש',
@@ -108,9 +109,9 @@ export const STRINGS = {
   REGISTER_CONFIRM_PASSWORD_PLACEHOLDER: 'הכנס/י שוב את הסיסמה',
   REGISTER_CONFIRM_PASSWORD_REQUIRED: 'נא לאמת את הסיסמה',
   REGISTER_PASSWORDS_MISMATCH: 'הסיסמאות לא תואמות',
-  REGISTER_SUBMIT: 'הירשם/י',
+  REGISTER_SUBMIT: 'הרשמה',
   REGISTER_HAS_ACCOUNT: 'כבר יש לך חשבון?',
-  REGISTER_LOGIN_LINK: 'התחבר/י',
+  REGISTER_LOGIN_LINK: 'התחברות',
   // Category Details
   CATEGORY_DETAILS: 'פרטי קטגוריה',
   // Top Bar

@@ -6,6 +6,7 @@ import {
   Container,
   MaxAmount,
   RegularText,
+  SpentText,
 } from './Balance.styles';
 import { STRINGS } from '../../strings/hebrew';
 import { useBudgetStats } from '../../hooks/useBudgetStats';
@@ -16,8 +17,8 @@ const Balance = () => {
 
   return (
     <Container>
-      {/* TODO: get name from user */}
       <BalanceTextContainer>
+        <SpentText>{STRINGS.MONTH_EXPENSES_TEXT}</SpentText>
         <BalanceAmount>{formatAmount(total.spent)}</BalanceAmount>
         <MaxAmount>
           <RegularText>{STRINGS.FROM} </RegularText>

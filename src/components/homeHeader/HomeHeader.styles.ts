@@ -4,7 +4,7 @@ export const Container = styled.View`
   align-items: flex-start;
   flex-direction: row;
   margin-top: 10px;
-  padding-left: 40px;
+  padding-left: 20px;
 `;
 
 export const TextContainer = styled.View`
@@ -15,10 +15,11 @@ export const TextContainer = styled.View`
 
 export const GreetingText = styled.Text`
   font-family: 'MPLUSRounded1c-Medium';
-  font-size: 28px;
+  font-size: 26px;
   color: #222;
   text-align: right;
   line-height: 34px;
+  margin: 6px 0 8px 0;
 `;
 
 export const SubtitleText = styled.Text`

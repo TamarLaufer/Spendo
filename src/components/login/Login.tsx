@@ -123,7 +123,7 @@ const Login = ({ logo, onSubmit, onNavigateToRegister }: LoginProps) => {
                     disabled={!isValid || isSubmitting}
                     onPress={handleSubmit(onFormSubmit)}
                   >
-                    <PrimaryButtonText>
+                    <PrimaryButtonText disabled={!isValid || isSubmitting}>
                       {STRINGS.LOGIN_SUBMIT}
                     </PrimaryButtonText>
                   </PrimaryButton>

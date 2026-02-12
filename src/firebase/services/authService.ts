@@ -25,6 +25,7 @@ export const registerWithEmailPassword = async (
   const firestore = getFirestore();
 
   const normalizedEmail = email.trim().toLowerCase();
+  const normalizedName = name.trim().toLowerCase();
 
   // ---------- Create auth user ----------
   const credential = await createUserWithEmailAndPassword(
@@ -37,7 +38,7 @@ export const registerWithEmailPassword = async (
 
   // ---------- Update display name ----------
   await updateProfile(user, {
-    displayName: name,
+    displayName: normalizedName,
   });
 
   // ---------- Create household ----------

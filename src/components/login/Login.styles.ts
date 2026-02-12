@@ -3,6 +3,7 @@ import { theme } from '../../theme/theme';
 
 export const Screen = styled.View`
   flex: 1;
+  background-color: ${theme.color.white};
 `;
 
 export const StyledScrollView = styled.ScrollView.attrs({
@@ -15,6 +16,7 @@ export const StyledScrollView = styled.ScrollView.attrs({
 
 export const KeyboardWrapper = styled.KeyboardAvoidingView`
   flex: 1;
+  z-index: 10;
 `;
 
 export const TitlesContainer = styled.View`
@@ -35,18 +37,16 @@ export const Header = styled.View`
 `;
 
 export const Title = styled.Text`
-  font-size: 30px;
+  font-size: 36px;
   font-family: 'MPLUSRounded1c-Bold';
   text-align: center;
-  z-index: 10;
 `;
 
 export const Subtitle = styled.Text`
-  font-size: 18px;
-  font-family: 'MPLUSRounded1c-Regular';
+  font-size: 20px;
+  font-family: 'MPLUSRounded1c-Medium';
   text-align: center;
   margin-top: 8px;
-  z-index: 10;
 `;
 
 export const Form = styled.View`
@@ -56,29 +56,28 @@ export const Form = styled.View`
 export const InputWrapper = styled.View``;
 
 export const Label = styled.Text`
-  font-size: 16px;
+  font-size: 17px;
   font-family: 'MPLUSRounded1c-Medium';
   color: ${theme.color.dark_purple};
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 `;
 
 export const StyledInput = styled.TextInput`
-  height: 52px;
-  border-width: 1px;
-  border-color: ${theme.color.placeholder};
-  border-radius: 14px;
-  padding-horizontal: 16px;
+  height: 48px;
+  border-bottom-width: 1px;
+  border-bottom-color: ${theme.color.placeholder};
   font-size: 18px;
-  background-color: ${theme.color.white};
+  background-color: transparent;
   color: ${theme.color.dark_purple};
   font-family: 'MPLUSRounded1c-Medium';
-  margin-bottom: 18px;
+  margin-bottom: 5px;
 `;
 
 export const ErrorText = styled.Text`
   color: red;
-  font-size: 12px;
+  font-size: 16px;
   font-family: 'Assistant';
+  margin-bottom: 15px;
 `;
 
 export const ButtonWrapper = styled.View``;
@@ -90,15 +89,18 @@ export const BottomSection = styled.View`
 
 export const PrimaryButton = styled.Pressable<{ disabled?: boolean }>`
   height: 52px;
-  border-radius: 14px;
+  width: 92%;
+  align-self: center;
+  border-radius: 10px;
   background-color: ${({ disabled }) =>
-    disabled ? theme.color.placeholder : theme.color.lightBlue};
+    disabled ? theme.color.lightGray : theme.color.shadowColor};
   justify-content: center;
   align-items: center;
+  margin-top: 12px;
 `;
 
-export const PrimaryButtonText = styled.Text`
-  color: ${theme.color.white};
+export const PrimaryButtonText = styled.Text<{ disabled?: boolean }>`
+  color: ${({ disabled }) => (disabled ? theme.color.gray : theme.color.white)};
   font-size: 20px;
   font-family: 'MPLUSRounded1c-Medium';
 `;
@@ -117,5 +119,5 @@ export const LinkText = styled.Text`
 `;
 
 export const LogoContainer = styled.View`
-  margin-bottom: 18px;
+  margin-bottom: 8px;
 `;

@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { Platform, TouchableOpacity } from 'react-native';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -27,7 +22,12 @@ import {
   FooterRow,
   FooterText,
   LinkText,
+  BottomSection,
+  ButtonWrapper,
+  KeyboardWrapper,
+  LogoContainer,
 } from './Register.styles';
+import { StyledScrollView } from '../login/Login.styles';
 
 const registerSchema = z
   .object({
@@ -52,13 +52,14 @@ const registerSchema = z
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 type RegisterProps = {
+  logo: React.ReactNode;
   onSubmit?: (
     values: Omit<RegisterFormValues, 'confirmPassword'>,
   ) => void | Promise<void>;
   onNavigateToLogin?: () => void;
 };
 
-const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
+const Register = ({ logo, onSubmit, onNavigateToLogin }: RegisterProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
@@ -95,18 +96,17 @@ const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
 
   return (
     <Screen>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
+      <KeyboardWrapper
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
       >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
+        <StyledScrollView
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
           <ScrollContent>
             <Header>
+              <LogoContainer>{logo}</LogoContainer>
               <Title>{STRINGS.REGISTER_TITLE}</Title>
               <Subtitle>{STRINGS.REGISTER_SUBTITLE}</Subtitle>
             </Header>
@@ -181,31 +181,33 @@ const Register = ({ onSubmit, onNavigateToLogin }: RegisterProps) => {
                   <ErrorText>{errors.confirmPassword.message}</ErrorText>
                 )}
               </InputWrapper>
-
-              <PrimaryButton
-                disabled={!isValid || isSubmitting}
-                onPress={handleSubmit(onFormSubmit)}
-              >
-                <PrimaryButtonText>{STRINGS.REGISTER_SUBMIT}</PrimaryButtonText>
-              </PrimaryButton>
-            </Form>
-
-            {onNavigateToLogin && (
-              <Footer>
-                <FooterRow>
-                  <FooterText>{STRINGS.REGISTER_HAS_ACCOUNT}</FooterText>
-                  <TouchableOpacity
-                    onPress={onNavigateToLogin}
-                    disabled={isSubmitting}
+              <BottomSection>
+                <ButtonWrapper>
+                  <PrimaryButton
+                    disabled={!isValid || isSubmitting}
+                    onPress={handleSubmit(onFormSubmit)}
                   >
-                    <LinkText>{STRINGS.REGISTER_LOGIN_LINK}</LinkText>
-                  </TouchableOpacity>
-                </FooterRow>
-              </Footer>
-            )}
+                    <PrimaryButtonText>
+                      {STRINGS.REGISTER_SUBMIT}
+                    </PrimaryButtonText>
+                  </PrimaryButton>
+                </ButtonWrapper>
+                <Footer>
+                  <FooterRow>
+                    <FooterText>{STRINGS.REGISTER_HAS_ACCOUNT}</FooterText>
+                    <TouchableOpacity
+                      onPress={onNavigateToLogin}
+                      disabled={isSubmitting}
+                    >
+                      <LinkText>{STRINGS.REGISTER_LOGIN_LINK}</LinkText>
+                    </TouchableOpacity>
+                  </FooterRow>
+                </Footer>
+              </BottomSection>
+            </Form>
           </ScrollContent>
-        </ScrollView>
-      </KeyboardAvoidingView>
+        </StyledScrollView>
+      </KeyboardWrapper>
     </Screen>
   );
 };

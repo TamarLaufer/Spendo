@@ -129,6 +129,7 @@ const EditExpense = () => {
             value={watch('noteText')}
             onChangeText={v => setValue('noteText', v)}
             placeholder={STRINGS.NOTE}
+            placeholderTextColor="#9CA3AF"
           />
         </InputWrapper>
       </Content>

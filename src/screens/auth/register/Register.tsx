@@ -4,6 +4,9 @@ import { registerWithEmailPassword } from '../../../firebase/services/authServic
 import { useNavigation } from '@react-navigation/native';
 import { AuthStackParamsType } from '../../../navigation/types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Icons } from '../../../assets/icons';
+import { getAuth } from '@react-native-firebase/auth';
+import { useAuthStore } from '../../../zustandState/useAuthStore';
 
 type RegisterFormValues = {
   name: string;
@@ -24,7 +27,15 @@ const Register = () => {
     email,
     password,
   }: RegisterFormValues) => {
-    await registerWithEmailPassword(name, email, password);
+    const user = await registerWithEmailPassword(name, email, password);
+
+    await user.reload();
+
+    const freshUser = getAuth().currentUser;
+
+    if (freshUser) {
+      useAuthStore.getState().setUser(freshUser);
+    }
   };
   const onNavigateToLogin = () => {
     navigation.navigate('Login');
@@ -32,6 +43,7 @@ const Register = () => {
 
   return (
     <RegisterComponent
+      logo={<Icons.Logo width={70} height={70} />}
       onSubmit={handleRegister}
       onNavigateToLogin={onNavigateToLogin}
     />

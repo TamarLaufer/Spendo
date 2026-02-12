@@ -10,5 +10,7 @@ export const theme = {
     lightBlue: '#9bacecff',
     lightGreen: 'rgba(186, 236, 209, 0.28)',
     white: '#FFFFFF',
+    lightGray: '#EEEEEE',
+    gray: '#7F8487',
   },
 };
