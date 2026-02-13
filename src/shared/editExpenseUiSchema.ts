@@ -9,7 +9,7 @@ export const editExpenseUiSchema = z.object({
     .refine(v => !isNaN(Number(v)), 'חייב להיות מספר')
     .refine(v => Number(v) > 0, 'חייב להיות גדול מאפס'),
 
-  paymentMethod: z.string().min(1, 'חובה לבחור אמצעי תשלום'),
+  paymentMethodId: z.string().min(1),
 
   noteText: z.string().max(200, 'עד 200 תווים').optional(),
 });

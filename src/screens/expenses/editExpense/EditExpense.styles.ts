@@ -106,3 +106,9 @@ export const SheetRowText = styled.Text`
   font-size: 18px;
   margin-start: 12px;
 `;
+
+export const ListContainer = styled.View`
+  flex: 1;
+  padding: 20px;
+  margin-bottom: 56px;
+`;

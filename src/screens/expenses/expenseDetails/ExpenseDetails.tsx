@@ -20,6 +20,8 @@ import {
 import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
 import PopModal from '../../../components/popModal/PopModal';
 import ItemActions from '../../../components/ItemActions/ItemActions';
+import { getPaymentMethodLabel } from '../../../utils/paymentMethods';
+import { PaymentMethods } from '../../../bottomSheetExpenses/types';
 
 const ExpenseDetails = () => {
   const {
@@ -80,10 +82,14 @@ const ExpenseDetails = () => {
           <BoldText>{formatShortDate(expense.createdAt)}</BoldText>
         </DetailText>
         <DetailText>
-          {`${STRINGS.PAYMENT_PERFORMED_ON}${expense.paymentMethod}`}
+          {`${STRINGS.PAYMENT_PERFORMED_ON}${getPaymentMethodLabel(
+            expense.paymentMethodId as PaymentMethods['id'],
+          )}`}
         </DetailText>
         <NoteText>
-           <DetailText>{expense?.note ? `${STRINGS.NOTE}: ${expense?.note}` : ''}</DetailText>
+          <DetailText>
+            {expense?.note ? `${STRINGS.NOTE}: ${expense?.note}` : ''}
+          </DetailText>
         </NoteText>
       </TextContainer>
       {activeModal === 'delete' && (

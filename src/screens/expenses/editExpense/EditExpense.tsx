@@ -1,8 +1,8 @@
-import { Alert, FlatList } from 'react-native';
-import React, { useMemo, useRef, useState } from 'react';
+import { Alert } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -11,7 +11,10 @@ import { useCategory } from '../../../zustandState/useCategory';
 import { RootStackParamsType } from '../../../navigation/types';
 import { STRINGS } from '../../../strings/hebrew';
 import { IconRegistry } from '../../../assets/icons';
-import { PAYMENT_METHODS } from '../../../bottomSheetExpenses/types';
+import {
+  PAYMENT_METHODS,
+  PaymentMethods,
+} from '../../../bottomSheetExpenses/types';
 
 import {
   Screen,
@@ -28,12 +31,14 @@ import {
   SaveText,
   SheetRow,
   SheetRowText,
+  ListContainer,
 } from './EditExpense.styles';
 
 import {
   editExpenseUiSchema,
   EditExpenseUiDraft,
 } from '../../../shared/editExpenseUiSchema';
+import { getPaymentMethodLabel } from '../../../utils/paymentMethods';
 
 type RootNav = NativeStackNavigationProp<RootStackParamsType>;
 type EditExpenseRoute = RouteProp<RootStackParamsType, 'EditExpense'>;
@@ -48,16 +53,17 @@ const EditExpense = () => {
   const [sheetMode, setSheetMode] = useState<SheetMode>(null);
   const categories = useCategory(state => state.categories);
   const findCategoryById = useCategory(state => state.findCategoryById);
-  const findExpenseById = useExpenses(state => state.findExpenseById);
   const updateExpense = useExpenses(state => state.updateExpense);
-  const expense = findExpenseById(expenseId);
+  const expense = useExpenses(state =>
+    state.expenses.find(e => e.id === expenseId),
+  );
   const currentCategory = findCategoryById(categoryId);
   const snapPoints = useMemo(() => ['75%'], []);
 
   const {
-    register,
     watch,
     setValue,
+    reset,
     handleSubmit,
     formState: { errors, isValid },
   } = useForm<EditExpenseUiDraft>({
@@ -66,10 +72,21 @@ const EditExpense = () => {
     defaultValues: {
       categoryId: currentCategory?.id ?? '',
       amountText: String(expense?.amount ?? ''),
-      paymentMethod: expense?.paymentMethod ?? '',
+      paymentMethodId: expense?.paymentMethodId ?? '',
       noteText: expense?.note ?? '',
     },
   });
+
+  useEffect(() => {
+    if (expense) {
+      reset({
+        categoryId: expense.categoryId ?? '',
+        amountText: String(expense.amount ?? ''),
+        paymentMethodId: expense.paymentMethodId ?? '',
+        noteText: expense.note ?? '',
+      });
+    }
+  }, [expense, reset]);
 
   const openSheet = (mode: SheetMode) => {
     setSheetMode(mode);
@@ -77,7 +94,11 @@ const EditExpense = () => {
   };
 
   const closeSheet = () => {
+    setSheetMode(null);
     bottomSheetRef.current?.close();
+  };
+
+  const handleSheetClosed = () => {
     setSheetMode(null);
   };
 
@@ -86,7 +107,7 @@ const EditExpense = () => {
       updateExpense(expenseId, {
         categoryId: data.categoryId,
         amount: Number(data.amountText),
-        paymentMethod: data.paymentMethod,
+        paymentMethodId: data.paymentMethodId,
         note: data.noteText ?? '',
       });
       Alert.alert(STRINGS.SAVED, STRINGS.EXPENSE_UPDATED_SUCCESSFULLY);
@@ -96,6 +117,12 @@ const EditExpense = () => {
     }
   };
 
+  const selectedCategoryId = watch('categoryId');
+  const selectedCategory = findCategoryById(selectedCategoryId);
+  const selectedPaymentMethodId = watch('paymentMethodId');
+  const selectedAmountText = watch('amountText');
+  const selectedNoteText = watch('noteText');
+
   return (
     <Screen>
       <HeaderContainer>
@@ -103,17 +130,22 @@ const EditExpense = () => {
       </HeaderContainer>
       <Content>
         <ChangeCategoryButton onPress={() => openSheet('category')}>
-          <ChangeCategoryText>{STRINGS.CHANGE_CATEGORY}</ChangeCategoryText>
+          <ChangeCategoryText>
+            {selectedCategory?.name || STRINGS.CHANGE_CATEGORY}
+          </ChangeCategoryText>
         </ChangeCategoryButton>
         <ChangeCategoryButton onPress={() => openSheet('payment')}>
           <ChangeCategoryText>
-            {watch('paymentMethod') || STRINGS.SELECT_PAYMENT_METHOD}
+            {selectedPaymentMethodId
+              ? getPaymentMethodLabel(
+                  selectedPaymentMethodId as PaymentMethods['id'],
+                )
+              : STRINGS.SELECT_PAYMENT_METHOD}
           </ChangeCategoryText>
         </ChangeCategoryButton>
         <InputWrapper>
           <StyledInput
-            {...register('amountText')}
-            value={watch('amountText')}
+            value={selectedAmountText}
             onChangeText={v =>
               setValue('amountText', v, { shouldValidate: true })
             }
@@ -125,9 +157,10 @@ const EditExpense = () => {
           )}
 
           <StyledInput
-            {...register('noteText')}
-            value={watch('noteText')}
-            onChangeText={v => setValue('noteText', v)}
+            value={selectedNoteText}
+            onChangeText={v =>
+              setValue('noteText', v, { shouldValidate: true })
+            }
             placeholder={STRINGS.NOTE}
             placeholderTextColor="#9CA3AF"
           />
@@ -137,18 +170,21 @@ const EditExpense = () => {
         ref={bottomSheetRef}
         index={-1}
         snapPoints={snapPoints}
-        onClose={closeSheet}
+        onClose={handleSheetClosed}
         enablePanDownToClose
         enableDynamicSizing={false}
       >
-        <>
+        <ListContainer>
           {sheetMode === 'category' && (
-            <FlatList
+            <BottomSheetFlatList
+              key={sheetMode}
               data={categories}
+              showsVerticalScrollIndicator={false}
               keyExtractor={category => category.id}
+              extraData={selectedCategoryId}
               renderItem={({ item }) => {
                 const Icon = item.icon ? IconRegistry[item.icon] : undefined;
-                const isSelected = item.id === watch('categoryId');
+                const isSelected = item.id === selectedCategoryId;
                 return (
                   <SheetRow
                     isSelected={isSelected}
@@ -165,16 +201,19 @@ const EditExpense = () => {
             />
           )}
           {sheetMode === 'payment' && (
-            <FlatList
+            <BottomSheetFlatList
+              key={sheetMode}
               data={PAYMENT_METHODS}
+              extraData={selectedPaymentMethodId}
+              showsVerticalScrollIndicator={false}
               keyExtractor={payment => payment.id}
               renderItem={({ item }) => {
-                const isSelected = item.name === watch('paymentMethod');
+                const isSelected = item.id === selectedPaymentMethodId;
                 return (
                   <SheetRow
                     isSelected={isSelected}
                     onPress={() => {
-                      setValue('paymentMethod', item.name, {
+                      setValue('paymentMethodId', item.id, {
                         shouldValidate: true,
                       });
                       closeSheet();
@@ -186,7 +225,7 @@ const EditExpense = () => {
               }}
             />
           )}
-        </>
+        </ListContainer>
       </BottomSheet>
       <Footer>
         <SaveButton disabled={!isValid} onPress={handleSubmit(submitLogic)}>

@@ -9,7 +9,7 @@ export const ExpenseCreateSchema = z.object({
   amount: z.number().positive(),
   categoryId: z.string().min(1),
   subCategoryId: z.string().min(1).nullish(), // string | null | undefined
-  paymentMethod: z.string().trim().min(1),
+  paymentMethodId: z.string().trim().min(1),
   note: z.string().trim().optional(),
   createdAt: z.union([z.date(), z.string().datetime()]).optional(),
 });
@@ -23,7 +23,7 @@ export const ExpenseUpdateSchema = z.object({
   amount: z.number().positive().optional(),
   categoryId: z.string().min(1).optional(),
   subCategoryId: z.string().min(1).nullish().optional(),
-  paymentMethod: z.string().trim().min(1).optional(),
+  paymentMethodId: z.string().trim().min(1).optional(),
   note: z.string().trim().optional(),
   createdBy: z.string().trim().optional(),
   createdAt: z.union([z.date(), z.null()]).optional(),
@@ -40,7 +40,7 @@ export const ExpenseRecordSchema = z.object({
   amount: z.number(),
   categoryId: z.string(),
   subCategoryId: z.string().nullable(),
-  paymentMethod: z.string(),
+  paymentMethodId: z.string(),
   createdAt: z.date().nullable(),
   createdBy: z.string().optional(),
   note: z.string().optional(),

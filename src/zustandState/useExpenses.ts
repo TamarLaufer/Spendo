@@ -47,7 +47,14 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
   subscribeExpenses(householdId) {
     const unsubscribe = subscribeToExpenses(
       householdId,
-      rows => set({ expenses: rows, error: null }),
+      rows =>
+        set({
+          expenses: rows.map(row => ({
+            ...row,
+            paymentMethodId: row.paymentMethodId,
+          })),
+          error: null,
+        }),
       err => set({ error: err.message }),
     );
     return unsubscribe;

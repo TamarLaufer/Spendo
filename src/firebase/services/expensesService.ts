@@ -35,7 +35,7 @@ export type ExpenseFirebaseDoc = {
   categoryId: string;
   subCategoryId?: string | null;
   note?: string | null;
-  paymentMethod?: string | null;
+  paymentMethodId?: string | null;
   createdBy?: string | null;
   createdAt: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
   updatedAt?: FirestoreTypes.FieldValue | FirestoreTypes.Timestamp | null;
@@ -48,7 +48,7 @@ export type ExpenseModel = {
   amount: number;
   categoryId: string;
   subCategoryId: string | null;
-  paymentMethod: string;
+  paymentMethodId: string;
   createdAt: Date | null;
   createdBy?: string;
   note?: string;
@@ -108,7 +108,7 @@ function mapExpenseSnapshotToModel(
     amount: documentData.amount,
     categoryId: documentData.categoryId,
     subCategoryId: documentData.subCategoryId ?? null,
-    paymentMethod: documentData.paymentMethod ?? '',
+    paymentMethodId: documentData.paymentMethodId ?? '',
     createdAt: convertFirestoreTimeToDate(documentData.createdAt),
     createdBy: documentData.createdBy ?? undefined,
     note: documentData.note ?? undefined,
@@ -174,7 +174,7 @@ export async function addExpense(createInput: ExpenseCreateInput) {
     categoryId: validatedCreateInput.categoryId,
     subCategoryId: validatedCreateInput.subCategoryId ?? null,
     note: validatedCreateInput.note ?? null,
-    paymentMethod: validatedCreateInput.paymentMethod ?? null,
+    paymentMethodId: validatedCreateInput.paymentMethodId ?? null,
     createdBy: null,
     createdAt: validatedCreateInput.createdAt
       ? convertUiTimeToFirestoreTimestamp(validatedCreateInput.createdAt)
@@ -217,8 +217,9 @@ export async function updateExpenseService(
   if (validatedUpdatePatch.note !== undefined) {
     updatePayload.note = validatedUpdatePatch.note ?? null;
   }
-  if (validatedUpdatePatch.paymentMethod !== undefined) {
-    updatePayload.paymentMethod = validatedUpdatePatch.paymentMethod ?? null;
+  if (validatedUpdatePatch.paymentMethodId !== undefined) {
+    updatePayload.paymentMethodId =
+      validatedUpdatePatch.paymentMethodId ?? null;
   }
   if (validatedUpdatePatch.createdBy !== undefined) {
     updatePayload.createdBy = validatedUpdatePatch.createdBy ?? null;

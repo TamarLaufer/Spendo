@@ -26,10 +26,6 @@ const RootNavigator = () => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), async firebaseUser => {
-      if (firebaseUser) {
-        await firebaseUser.reload();
-      }
-
       setUserToStore(firebaseUser);
       setIsAuthLoading(false);
     });
