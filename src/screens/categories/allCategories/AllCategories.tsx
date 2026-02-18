@@ -11,6 +11,7 @@ import {
   Header,
   HeaderContainer,
   IconAndTitle,
+  InactiveCategoryText,
   Row,
   RowText,
   Title,
@@ -47,8 +48,18 @@ const AllCategories: FC = () => {
     sortConfig ?? undefined,
   );
 
+  const sortByActive = (a: CategoryType, b: CategoryType) => {
+    const aInactive = a.active === false;
+    const bInactive = b.active === false;
+
+    if (aInactive && !bInactive) return 1;
+    if (!aInactive && bInactive) return -1;
+
+    return 0;
+  };
+
   const sortedCategories = sortConfig
-    ? [...categories].sort((a, b) => {
+    ? [...categories].sort(sortByActive).sort((a, b) => {
         if (sortConfig.key === 'name') {
           return sortConfig.direction === 'asc'
             ? a.name.localeCompare(b.name)
@@ -63,7 +74,7 @@ const AllCategories: FC = () => {
 
         return 0;
       })
-    : categories;
+    : [...categories].sort(sortByActive);
 
   const searchedCategories = textSearch
     ? [...sortedCategories].filter(item =>
@@ -80,13 +91,24 @@ const AllCategories: FC = () => {
   };
 
   const renderItem = ({ item }: { item: CategoryType }) => {
+    const inactiveCategory = item.active === false;
     const Icon = item.icon ? getIconComponent(item.icon) : undefined;
 
     return (
-      <Row onPress={() => handleCategoryPress(item.id)}>
+      <Row
+        onPress={() => handleCategoryPress(item.id)}
+        disabled={inactiveCategory}
+      >
         <IconAndTitle>
           {Icon && <Icon width={30} height={30} />}
-          <Title>{item.name}</Title>
+          <Title>
+            {item.name}
+            {inactiveCategory ? (
+              <InactiveCategoryText> 🚫 קטגוריה לא פעילה</InactiveCategoryText>
+            ) : (
+              ''
+            )}
+          </Title>
         </IconAndTitle>
         <RowText>{item.maxAmount}</RowText>
       </Row>

@@ -39,11 +39,7 @@ const EditCategory = () => {
   const updateCategory = useCategory(state => state.updateCategory);
   const deleteCategory = useCategory(state => state.softDeleteCategory);
 
-  const {
-    watch,
-    setValue,
-    handleSubmit,
-  } = useForm<CategoryForm>({
+  const { watch, setValue, handleSubmit } = useForm<CategoryForm>({
     resolver: zodResolver(CategoryFormSchema),
     mode: 'onChange',
     defaultValues: {
@@ -74,8 +70,8 @@ const EditCategory = () => {
         {
           text: STRINGS.DELETE,
           style: 'destructive',
-          onPress: () => {
-            deleteCategory(categoryId);
+          onPress: async () => {
+            await deleteCategory(categoryId);
             navigation.goBack();
           },
         },
@@ -111,7 +107,10 @@ const EditCategory = () => {
         </InputWrapper>
       </Content>
       <Footer>
-        <ItemActions onDeletePress={confirmDelete} onEditPress={handleSubmit(submitLogic)} />
+        <ItemActions
+          onDeletePress={confirmDelete}
+          onEditPress={handleSubmit(submitLogic)}
+        />
       </Footer>
     </Screen>
   );

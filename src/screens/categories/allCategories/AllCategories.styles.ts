@@ -19,12 +19,15 @@ export const HeaderContainer = styled.View`
   padding-vertical: 15px;
 `;
 
-export const Row = styled.Pressable`
+export const Row = styled.Pressable<{ disabled?: boolean }>`
   padding: 14px;
   border-radius: 12px;
   background-color: white;
   flex-direction: row;
   align-items: center;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  background-color: ${({ disabled }) =>
+    disabled ? theme.color.lightGray : 'white'};
 `;
 
 export const RowText = styled.Text`
@@ -54,4 +57,10 @@ export const IconAndTitle = styled.View`
 export const Title = styled.Text`
   font-size: 18px;
   font-family: 'MPLUSRounded1c-Bold';
+`;
+
+export const InactiveCategoryText = styled.Text`
+  font-size: 14px;
+  font-family: 'MPLUSRounded1c-Bold';
+  color: ${theme.color.gray};
 `;

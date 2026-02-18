@@ -17,7 +17,7 @@ type ExpenseWizardStateType = {
   subCategoryId: string;
   currentStep: Steps;
   paymentMethods: readonly PaymentMethods[];
-  paymentMethod: PaymentMethods['name'];
+  paymentMethodId: PaymentMethods['id'];
   note?: string;
 
   setAmount: (amount: number) => void;
@@ -27,7 +27,7 @@ type ExpenseWizardStateType = {
   setNote: (note: string) => void;
   resetWizard: () => void;
   canProceedToNextStep: () => boolean;
-  setPaymentMethod: (paymentMethod: PaymentMethods['name']) => void;
+  setPaymentMethod: (paymentMethodId: PaymentMethods['id']) => void;
   buildPayload: () => ExpenseCreateInput | null;
   submitExpense: () => Promise<void>;
   isSubmitReady: () => boolean;
@@ -40,14 +40,14 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
     subCategoryId: '',
     currentStep: 'amount',
     paymentMethods: PAYMENT_METHODS,
-    paymentMethod: PAYMENT_METHODS[0].name,
+    paymentMethodId: PAYMENT_METHODS[0].id,
     note: '',
 
     setAmount: amount => set({ amount }),
     setCategoryId: categoryId => set({ categoryId, subCategoryId: '' }),
     setSubCategoryId: subCategoryId => set({ subCategoryId }),
     setCurrentStep: currentStep => set({ currentStep }),
-    setPaymentMethod: paymentMethod => set({ paymentMethod }),
+    setPaymentMethod: paymentMethodId => set({ paymentMethodId }),
     setNote: note => set({ note }),
 
     resetWizard: () =>
@@ -56,7 +56,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
         categoryId: '',
         subCategoryId: '',
         currentStep: 'amount',
-        paymentMethod: PAYMENT_METHODS[0].name,
+        paymentMethodId: PAYMENT_METHODS[0].id,
         note: '',
       }),
 
@@ -70,7 +70,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
         case 'subCategory':
           return !!state.subCategoryId;
         case 'payMethod':
-          return !!state.paymentMethod;
+          return !!state.paymentMethodId;
         case 'addNote':
         case 'endProcess':
           return true;
@@ -80,15 +80,18 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
     },
 
     buildPayload: (): ExpenseCreateInput | null => {
-      const { amount, categoryId, subCategoryId, paymentMethod, note } = get();
-      if (!amount || amount <= 0 || !categoryId || !paymentMethod) return null;
+      const { amount, categoryId, subCategoryId, paymentMethodId, note } =
+        get();
+      if (!amount || amount <= 0 || !categoryId || !paymentMethodId)
+        return null;
+      console.log({ amount, categoryId, subCategoryId, paymentMethodId, note });
 
       const parsed = ExpenseCreateSchema.safeParse({
         householdId: DEV_HOUSEHOLD_ID,
         amount,
         categoryId,
         subCategoryId: subCategoryId ? subCategoryId : null,
-        paymentMethod,
+        paymentMethodId,
         note,
       });
 
@@ -107,7 +110,7 @@ export const useExpenseWizard = create<ExpenseWizardStateType>((set, get) => {
 
       if (!state.amount || state.amount <= 0) return false;
       if (!state.categoryId) return false;
-      if (!state.paymentMethod) return false;
+      if (!state.paymentMethodId) return false;
 
       return true;
     },

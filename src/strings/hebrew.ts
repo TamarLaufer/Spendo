@@ -1,4 +1,5 @@
 export const STRINGS = {
+  NOT_SPECIFIED: 'לא צוין',
   FINANCIAL_SAVVY: 'חסכוני',
   HOME: 'תמונת מצב',
   CATEGORIES: 'קטגוריות',

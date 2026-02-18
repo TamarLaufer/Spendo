@@ -13,9 +13,11 @@ const SelectPaymentMethodStep = () => {
   const paymentMethods = useExpenseWizard(state => state.paymentMethods);
   const { handleContinue } = useExpenseWizardNavigation();
   const setPaymentMethod = useExpenseWizard(state => state.setPaymentMethod);
-  const selectedPaymentMethod = useExpenseWizard(state => state.paymentMethod);
+  const selectedPaymentMethod = useExpenseWizard(
+    state => state.paymentMethodId,
+  );
 
-  const handlePaymentChoose = (selectedPayment: PaymentMethods['name']) => {
+  const handlePaymentChoose = (selectedPayment: PaymentMethods['id']) => {
     setPaymentMethod(selectedPayment);
     handleContinue();
   };
@@ -23,8 +25,8 @@ const SelectPaymentMethodStep = () => {
   const renderItem = ({ item }: { item: PaymentMethods }) => {
     return (
       <Row
-        onPress={() => handlePaymentChoose(item.name)}
-        isSelected={item.name === selectedPaymentMethod}
+        onPress={() => handlePaymentChoose(item.id)}
+        isSelected={item.id === selectedPaymentMethod}
       >
         <PaymentMethodText>{item.name}</PaymentMethodText>
       </Row>

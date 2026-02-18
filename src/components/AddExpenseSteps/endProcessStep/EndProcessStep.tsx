@@ -4,6 +4,7 @@ import { STRINGS } from '../../../strings/hebrew';
 import { formatAmount } from '../../../utils/formatting';
 import { useSubcatIndex } from '../../../zustandState/useSubCategoriesIndex';
 import { Container, StyledText, TextContainer } from './EndProcessStep.styles';
+import { getPaymentMethodLabel } from '../../../utils/paymentMethods';
 
 const EndProcessStep = () => {
   const categoryId = useExpenseWizard(state => state.categoryId);
@@ -17,7 +18,7 @@ const EndProcessStep = () => {
 
   const findCategoryById = useCategory(state => state.findCategoryById);
   const expenseObj = findCategoryById(categoryId);
-  const paymentMethod = useExpenseWizard(state => state.paymentMethod);
+  const paymentMethod = useExpenseWizard(state => state.paymentMethodId);
 
   const isAmountExist = amount ? formatAmount(amount) : '';
 
@@ -29,7 +30,9 @@ const EndProcessStep = () => {
           subCat?.name ? `- ${subCat?.name}` : ''
         }`}</StyledText>
       </TextContainer>
-      <StyledText>{`${isAmountExist} ב${paymentMethod}`}</StyledText>
+      <StyledText>{`${isAmountExist} ב${getPaymentMethodLabel(
+        paymentMethod,
+      )}`}</StyledText>
       {/* <Text style={styles.amountText}>{`ב${paymentMethod}`}</Text> */}
     </Container>
   );

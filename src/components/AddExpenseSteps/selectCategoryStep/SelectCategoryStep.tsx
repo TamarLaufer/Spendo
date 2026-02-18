@@ -22,6 +22,9 @@ const SelectCategoryStep = () => {
   const { handleContinue } = useExpenseWizardNavigation();
   const categoriesList = useCategory(state => state.categories);
   const [isDisplayAddCategory, setDisplayAddCategory] = useState(false);
+  const activeCategoriesList = categoriesList.filter(
+    cat => cat.active !== false,
+  );
 
   const handleCategorySelect = useCallback(
     (selectedCategoryId: string) => {
@@ -52,7 +55,7 @@ const SelectCategoryStep = () => {
   return (
     <Container>
       <BottomSheetFlatList
-        data={categoriesList}
+        data={activeCategoriesList}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         extraData={categoryId}

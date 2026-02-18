@@ -27,6 +27,9 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
   const snapPoints = useMemo(() => ['75%'], []);
   const { handleBack, handleContinue, handleClose } =
     useExpenseWizardNavigation();
+  const selectedCategoryId = useExpenseWizard(state => state.categoryId);
+  const selectedAmountText = useExpenseWizard(state => state.amount);
+  const selectedSubCategoryId = useExpenseWizard(state => state.subCategoryId);
 
   const {
     currentStep,
@@ -80,6 +83,14 @@ const BottomSheetExpenses = ({ bottomSheetRef }: PropsType) => {
       Alert.alert('נשמר!', 'ההוצאה נשמרה בהצלחה');
       handleClose();
     } catch (error) {
+      console.log({
+        categoryId: selectedCategoryId,
+        amount: selectedAmountText,
+        date: new Date().toISOString(),
+        subCategoryId: selectedSubCategoryId,
+      });
+      console.log(error);
+
       Alert.alert('שגיאה', 'שמירה נכשלה');
     } finally {
       setIsSaving(false);

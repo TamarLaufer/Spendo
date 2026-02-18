@@ -110,8 +110,9 @@ function mapCategoryDocToModel(
     id: docSnap.id,
     name: data.categoryName,
     maxAmount: data.maxAmount,
-    isExceed: false, //TODO: implement this
+    isExceed: false, //TODO: implement this feature
     icon: data.icon || 'defaultIcon',
+    active: data.active ?? true,
   };
 }
 
@@ -121,7 +122,6 @@ export async function fetchCategoriesForHousehold(householdId: string) {
     //create a query to the categories collection in the database
     categoriesColRead(), //create a reference to the categories collection in the database
     where('householdId', '==', householdId), //filter the categories by the household id
-    where('active', '==', true), //filter the categories by the active status
     orderBy('order', 'asc'), //sort (on the DB side) the categories by the order
   );
 
@@ -199,12 +199,9 @@ function mapCategoryPatchToDb(patch: CategoryPatch) {
   if (patch.order !== undefined) dbPatch.order = patch.order;
 
   return dbPatch;
-} 
+}
 
-export async function updateCategory(
-  categoryId: string,
-  patch: CategoryPatch,
-) {
+export async function updateCategory(categoryId: string, patch: CategoryPatch) {
   const ref = doc(firestoreDb, 'categories', categoryId);
 
   const dbPatch = mapCategoryPatchToDb(patch);

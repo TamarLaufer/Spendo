@@ -82,9 +82,14 @@ const ExpenseDetails = () => {
           <BoldText>{formatShortDate(expense.createdAt)}</BoldText>
         </DetailText>
         <DetailText>
-          {`${STRINGS.PAYMENT_PERFORMED_ON}${getPaymentMethodLabel(
-            expense.paymentMethodId as PaymentMethods['id'],
-          )}`}
+          {STRINGS.PAYMENT_PERFORMED_ON}{' '}
+          <BoldText>
+            {expense.paymentMethodId
+              ? getPaymentMethodLabel(
+                  expense.paymentMethodId as PaymentMethods['id'],
+                )
+              : STRINGS.NOT_SPECIFIED || 'לא צוין'}
+          </BoldText>
         </DetailText>
         <NoteText>
           <DetailText>

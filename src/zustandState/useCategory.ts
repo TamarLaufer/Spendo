@@ -18,10 +18,7 @@ type CategoryStateType = {
   loadCategories: () => Promise<void>;
   findCategoryById: (categoryId: string) => CategoryType | undefined;
   softDeleteCategory: (categoryId: string) => Promise<void>;
-  updateCategory: (
-    categoryId: string,
-    patch: CategoryPatch,
-  ) => Promise<void>;
+  updateCategory: (categoryId: string, patch: CategoryPatch) => Promise<void>;
 };
 
 export const useCategory = create<CategoryStateType>((set, get) => ({
@@ -55,7 +52,9 @@ export const useCategory = create<CategoryStateType>((set, get) => ({
     try {
       await softDeleteCategoryService(categoryId);
       set(state => ({
-        categories: state.categories.filter(cat => cat.id !== categoryId),
+        categories: state.categories.map(cat =>
+          cat.id === categoryId ? { ...cat, active: false } : cat,
+        ),
       }));
     } catch (e: any) {
       console.error('Failed to soft delete category', e);

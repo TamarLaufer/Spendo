@@ -14,6 +14,7 @@ export type CategoryType = {
   name: string;
   maxAmount: number;
   isExceed: boolean;
+  active: boolean;
   icon?: IconKey;
 };
 
