@@ -6,7 +6,7 @@ import { logout } from '../../firebase/services/authService';
 const Logout = () => {
   return (
     <TouchableOpacity onPress={logout}>
-      <Icons.Logout width={25} height={25} />
+      <Icons.Logout width={30} height={30} />
     </TouchableOpacity>
   );
 };
