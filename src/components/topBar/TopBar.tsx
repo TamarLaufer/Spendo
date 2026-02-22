@@ -7,7 +7,7 @@ const TopBar: FC = () => {
   return (
     <Container>
       <LogoWrapper>
-        <Icons.LogoNoBg width={50} height={50} />
+        <Icons.LogoWallet width={45} height={45} />
       </LogoWrapper>
       <Logout />
     </Container>

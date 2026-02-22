@@ -1,14 +1,18 @@
-import { Icons } from '../../assets/icons';
+import LottieView from 'lottie-react-native';
 import { Container } from './Splash.styles';
-import { useAnimatedRef } from 'react-native-reanimated';
 
 const SplashScreen = () => {
-  const animatedRef = useAnimatedRef();
-
   return (
     <Container>
-      <Icons.Logo width={100} height={100} />
+      <LottieView
+        source={require('../../assets/lotties/wallet-animated.json')}
+        autoPlay
+        loop
+        style={{ width: 160, height: 160 }}
+        resizeMode="contain"
+      />
     </Container>
   );
 };
+
 export default SplashScreen;

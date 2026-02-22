@@ -1,13 +1,15 @@
-import { FC } from 'react';
-import { Text, View } from 'react-native';
+import ReceiptsScanView from '../../components/receipts/receiptsScanView/ReceiptsScanView';
 import ScreenLayout from '../../components/screenLayout/ScreenLayout';
+import { STRINGS } from '../../strings/hebrew';
+import { DummyCameraView } from './Receipts.styles';
 
-const Receipts: FC = () => {
+const Receipts = () => {
   return (
     <ScreenLayout>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Receipts Screen</Text>
-      </View>
+      <ReceiptsScanView footerText={STRINGS.RECEIPTS_DESCRIPTION}>
+        {/* Placeholder למצלמה */}
+        <DummyCameraView />
+      </ReceiptsScanView>
     </ScreenLayout>
   );
 };

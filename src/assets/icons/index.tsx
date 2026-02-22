@@ -17,6 +17,14 @@ import Logout from './logout.svg';
 import LogoNoBg from './logo-no-bg.svg';
 import LogoNoBg2 from './logo-no-bg2.svg';
 import LogoAndText from './logo-text-spendo.svg';
+import PurseTop from './purse-part1.svg';
+import PurseBody from './purse-part2.svg';
+import Coin from './coin-part3.svg';
+import PurseClosed from './close-purse.svg';
+import PurseOpen from './open-purse.svg';
+import PurseFull from './purse-full.svg';
+import Purse from './purse.svg';
+import LogoWallet from './logo-wallet.svg';
 
 //other icons
 export const Icons = {
@@ -39,6 +47,14 @@ export const Icons = {
   Filter,
   Sort,
   Logout,
+  PurseTop,
+  PurseBody,
+  Coin,
+  PurseClosed,
+  PurseOpen,
+  PurseFull,
+  Purse,
+  LogoWallet,
 };
 
 //categories icons
@@ -62,6 +78,14 @@ export const IconRegistry = {
   events: Events,
   hobies: Hobies,
   logout: Logout,
+  purseTop: PurseTop,
+  purseBody: PurseBody,
+  coin: Coin,
+  purseClosed: PurseClosed,
+  purseOpen: PurseOpen,
+  purseFull: PurseFull,
+  purse: Purse,
+  logoWallet: LogoWallet,
 } as const;
 
 export type IconKey = keyof typeof IconRegistry;

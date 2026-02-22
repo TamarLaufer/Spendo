@@ -117,4 +117,6 @@ export const STRINGS = {
   CATEGORY_DETAILS: 'פרטי קטגוריה',
   // Top Bar
   SPENDO: 'Spendo',
+  // Receipts
+  RECEIPTS_DESCRIPTION: 'סרוק בבקשה את הקבלה הרצויה',
 };
