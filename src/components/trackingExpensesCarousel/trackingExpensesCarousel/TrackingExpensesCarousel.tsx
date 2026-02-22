@@ -38,13 +38,14 @@ const TrackingExpensesCarousel = ({
     />
   );
 
-  const isReady = categories.length > 0;
+  const isReady = categories?.length > 0;
 
-  // get active categories
-  const activeCategory = categories.filter(category => category.active);
+  // get all categories that are 'active'
+  const activeCategory = categories?.filter(category => category?.active);
 
   // sort categories by recent used
   const recentCategories = useCategory(state => state.recentCategories);
+
   const sortedCategories = [...activeCategory].sort((categoryA, categoryB) => {
     const lastUsedA = recentCategories[categoryA.id] ?? 0;
     const lastUsedB = recentCategories[categoryB.id] ?? 0;

@@ -22,6 +22,7 @@ const SelectCategoryStep = () => {
   const { handleContinue } = useExpenseWizardNavigation();
   const categoriesList = useCategory(state => state.categories);
   const [isDisplayAddCategory, setDisplayAddCategory] = useState(false);
+  const addRecentCategory = useCategory(state => state.addRecentCategory);
   const activeCategoriesList = categoriesList.filter(
     cat => cat.active !== false,
   );
@@ -29,9 +30,10 @@ const SelectCategoryStep = () => {
   const handleCategorySelect = useCallback(
     (selectedCategoryId: string) => {
       setCategoryId(selectedCategoryId);
+      addRecentCategory(selectedCategoryId);
       handleContinue(selectedCategoryId);
     },
-    [setCategoryId, handleContinue],
+    [setCategoryId, handleContinue, addRecentCategory],
   );
 
   const renderItem = useCallback(

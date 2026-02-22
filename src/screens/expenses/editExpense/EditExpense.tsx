@@ -54,6 +54,7 @@ const EditExpense = () => {
   const categories = useCategory(state => state.categories);
   const findCategoryById = useCategory(state => state.findCategoryById);
   const updateExpense = useExpenses(state => state.updateExpense);
+  const addRecentCategory = useCategory(state => state.addRecentCategory);
   const expense = useExpenses(state =>
     state.expenses.find(e => e.id === expenseId),
   );
@@ -109,6 +110,7 @@ const EditExpense = () => {
         paymentMethodId: data.paymentMethodId,
         note: data.noteText ?? '',
       });
+      addRecentCategory(data.categoryId);
       Alert.alert(STRINGS.SAVED, STRINGS.EXPENSE_UPDATED_SUCCESSFULLY);
       navigation.goBack();
     } catch {
