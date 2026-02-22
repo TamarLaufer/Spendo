@@ -22,7 +22,14 @@ type CategoryCard = {
   onPress: () => void;
 };
 
-const OneCard = ({ name, maxAmount, icon, percent, spent, onPress }: CategoryCard) => {
+const OneCard = ({
+  name,
+  maxAmount,
+  icon,
+  percent,
+  spent,
+  onPress,
+}: CategoryCard) => {
   const Icon = icon ? IconRegistry[icon] : undefined;
 
   return (
@@ -32,7 +39,9 @@ const OneCard = ({ name, maxAmount, icon, percent, spent, onPress }: CategoryCar
         <Title>{name}</Title>
       </TitleContainer>
       <AmountContainer>
-        <AmountText>{STRINGS.SPENT} {formatAmount(spent)}</AmountText>
+        <AmountText>
+          {STRINGS.SPENT} {formatAmount(spent)}
+        </AmountText>
       </AmountContainer>
       <MaxAmount>
         {STRINGS.FROM} {formatAmount(maxAmount || 0)}

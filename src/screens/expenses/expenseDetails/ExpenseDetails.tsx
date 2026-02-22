@@ -44,7 +44,15 @@ const ExpenseDetails = () => {
   if (!expense) {
     return <Text>{STRINGS.LOADING_OR_NOT_FOUND}</Text>;
   }
+
+  if (!expense.paymentMethodId) {
+    return 'בחר אמצעי תשלום';
+  }
+
   const category = findCategoryById(expense.categoryId);
+  const paymentMethod = getPaymentMethodLabel(
+    expense.paymentMethodId as PaymentMethods['id'],
+  );
 
   const handleDeleteFinalPress = () => {
     setActiveModal(null);
@@ -84,11 +92,7 @@ const ExpenseDetails = () => {
         <DetailText>
           {STRINGS.PAYMENT_PERFORMED_ON}{' '}
           <BoldText>
-            {expense.paymentMethodId
-              ? getPaymentMethodLabel(
-                  expense.paymentMethodId as PaymentMethods['id'],
-                )
-              : STRINGS.NOT_SPECIFIED || 'לא צוין'}
+            {paymentMethod ? paymentMethod : STRINGS.NOT_SPECIFIED || 'לא צוין'}
           </BoldText>
         </DetailText>
         <NoteText>

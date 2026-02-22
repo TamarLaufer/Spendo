@@ -13,18 +13,29 @@ type CategoryStateType = {
   categories: CategoryType[];
   loading: boolean;
   error: string | null;
+  recentCategories: Record<string, number>;
   setLoading: (v: boolean) => void;
   setError: (msg: string | null) => void;
   loadCategories: () => Promise<void>;
   findCategoryById: (categoryId: string) => CategoryType | undefined;
   softDeleteCategory: (categoryId: string) => Promise<void>;
   updateCategory: (categoryId: string, patch: CategoryPatch) => Promise<void>;
+  addRecentCategory: (categoryId: string) => void;
 };
 
 export const useCategory = create<CategoryStateType>((set, get) => ({
   categories: [],
   loading: false,
   error: null,
+  recentCategories: {},
+
+  addRecentCategory: (categoryId: string) =>
+    set(state => ({
+      recentCategories: {
+        ...state.recentCategories,
+        [categoryId]: Date.now(),
+      },
+    })),
 
   setLoading: value => set({ loading: value }),
   setError: msg => set({ error: msg }),

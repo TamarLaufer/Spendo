@@ -9,7 +9,7 @@ export type Steps =
 export const PAYMENT_METHODS = [
   { id: 'credit-card', name: 'כרטיס אשראי' },
   { id: 'cash', name: 'מזומן' },
-  { id: 'bit', name: 'ביט/פייבוקס' },
+  { id: 'bit-paybox', name: 'ביט/פייבוקס' },
   { id: 'paypal', name: 'פייפאל' },
   { id: 'bank-transfer', name: 'העברה בנקאית' },
 ] as const;

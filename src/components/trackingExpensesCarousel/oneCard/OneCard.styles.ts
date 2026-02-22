@@ -6,7 +6,7 @@ export const Container = styled.Pressable`
   border-radius: 8px;
   margin-horizontal: 8px;
   width: ${CARD_WIDTH}px;
-  height: ${CARD_HEIGHT}px; 
+  height: ${CARD_HEIGHT}px;
   padding: 8px;
 
   /* shadow */

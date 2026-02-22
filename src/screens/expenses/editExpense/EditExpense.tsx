@@ -57,7 +57,6 @@ const EditExpense = () => {
   const expense = useExpenses(state =>
     state.expenses.find(e => e.id === expenseId),
   );
-  const currentCategory = findCategoryById(categoryId);
   const snapPoints = useMemo(() => ['75%'], []);
 
   const {
@@ -70,7 +69,7 @@ const EditExpense = () => {
     resolver: zodResolver(editExpenseUiSchema),
     mode: 'onChange',
     defaultValues: {
-      categoryId: currentCategory?.id ?? '',
+      categoryId: categoryId ?? '',
       amountText: String(expense?.amount ?? ''),
       paymentMethodId: expense?.paymentMethodId ?? '',
       noteText: expense?.note ?? '',
@@ -78,15 +77,15 @@ const EditExpense = () => {
   });
 
   useEffect(() => {
-    if (expense) {
-      reset({
-        categoryId: expense.categoryId ?? '',
-        amountText: String(expense.amount ?? ''),
-        paymentMethodId: expense.paymentMethodId ?? '',
-        noteText: expense.note ?? '',
-      });
-    }
-  }, [expense, reset]);
+    if (!expense) return;
+
+    reset({
+      categoryId: expense.categoryId ?? '',
+      amountText: String(expense.amount ?? ''),
+      paymentMethodId: expense.paymentMethodId ?? '',
+      noteText: expense.note ?? '',
+    });
+  }, [expense, expense?.id, reset]);
 
   const openSheet = (mode: SheetMode) => {
     setSheetMode(mode);

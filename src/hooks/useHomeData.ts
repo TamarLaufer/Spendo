@@ -13,7 +13,12 @@ export function useHomeData() {
   const categories = useCategory(state => state.categories);
   const categoryError = useCategory(state => state.error);
 
-  useEnsureSubcatIndex(expenses?.map(e => e.categoryId) ?? []);
+  const categoryIds = useMemo(
+    () => expenses.map(e => e.categoryId),
+    [expenses],
+  );
+
+  useEnsureSubcatIndex(categoryIds);
 
   const lastExpenses = useMemo(
     () => expenses.slice(0, NUM_OF_TRANSACTIONS),
@@ -22,9 +27,9 @@ export function useHomeData() {
 
   useEffect(() => {
     const unsub = subscribeExpenses(DEV_HOUSEHOLD_ID);
+
     return () => unsub?.();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [subscribeExpenses]);
 
   return {
     categories,

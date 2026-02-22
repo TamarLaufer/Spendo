@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { RootNav } from '../../../screens/expenses/expenseDetails/types';
 import { STRINGS } from '../../../strings/hebrew';
 import { useBudgetStats } from '../../../hooks/useBudgetStats';
+import { useCategory } from '../../../zustandState/useCategory';
 
 const TrackingExpensesCarousel = ({
   categories,
@@ -39,6 +40,18 @@ const TrackingExpensesCarousel = ({
 
   const isReady = categories.length > 0;
 
+  // get active categories
+  const activeCategory = categories.filter(category => category.active);
+
+  // sort categories by recent used
+  const recentCategories = useCategory(state => state.recentCategories);
+  const sortedCategories = [...activeCategory].sort((categoryA, categoryB) => {
+    const lastUsedA = recentCategories[categoryA.id] ?? 0;
+    const lastUsedB = recentCategories[categoryB.id] ?? 0;
+
+    return lastUsedB - lastUsedA;
+  });
+
   return (
     <WithSkeleton
       ready={isReady}
@@ -49,7 +62,7 @@ const TrackingExpensesCarousel = ({
           <HeaderText>{STRINGS.TRACKING_EXPENSES}</HeaderText>
         </HeaderContainer>
         <FlatList
-          data={categories}
+          data={sortedCategories}
           horizontal
           keyExtractor={item => item.id}
           renderItem={renderItem}

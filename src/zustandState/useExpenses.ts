@@ -1,15 +1,16 @@
 import { create } from 'zustand';
-import { ExpenseRecord, ExpenseUpdatePatch } from '../shared/expenseSchema';
+import { ExpenseUpdatePatch } from '../shared/expenseSchema';
 import { DEV_HOUSEHOLD_ID } from '../config/consts';
 import {
   deleteExpenseFromServer,
+  ExpenseModel,
   fetchExpenses,
   subscribeToExpenses,
   updateExpenseService,
 } from '../firebase/services/expensesService';
 
 export type ExpensesState = {
-  expenses: ExpenseRecord[];
+  expenses: ExpenseModel[];
   loading: boolean;
   error: string | null;
 
@@ -17,10 +18,10 @@ export type ExpensesState = {
   subscribeExpenses: (householdId: string) => () => void;
   setLoading: (value: boolean) => void;
   setError: (msg: string | null) => void;
-  addLocal: (e: ExpenseRecord) => void;
-  replaceAll: (list: ExpenseRecord[]) => void;
+  addLocal: (e: ExpenseModel) => void;
+  replaceAll: (list: ExpenseModel[]) => void;
   clear: () => void;
-  findExpenseById: (id: string) => ExpenseRecord | undefined;
+  findExpenseById: (id: string) => ExpenseModel | undefined;
   deleteExpense: (id: string) => Promise<void>;
   updateExpense: (id: string, patch: ExpenseUpdatePatch) => Promise<void>;
 };
@@ -45,23 +46,20 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
 
   //real-time
   subscribeExpenses(householdId) {
+    if (!householdId) return () => {};
+    set({ loading: true, error: null });
+
     const unsubscribe = subscribeToExpenses(
       householdId,
-      rows =>
-        set({
-          expenses: rows.map(row => ({
-            ...row,
-            paymentMethodId: row.paymentMethodId,
-          })),
-          error: null,
-        }),
-      err => set({ error: err.message }),
+      rows => set({ expenses: rows, error: null, loading: false }),
+      err => set({ error: err.message, loading: false }),
     );
+
     return unsubscribe;
   },
 
   findExpenseById: (id: string) =>
-    get().expenses.find((element: ExpenseRecord) => element.id === id),
+    get().expenses.find((element: ExpenseModel) => element.id === id),
 
   addLocal(expense) {
     set(state => ({ expenses: [expense, ...state.expenses] }));
@@ -82,9 +80,7 @@ export const useExpenses = create<ExpensesState>((set, get) => ({
     }
   },
 
-  updateExpense: async (id: string, patch: ExpenseUpdatePatch) => {
-    console.log('updateExpense', id, patch);
-
+  updateExpense: async (id, patch) => {
     try {
       await updateExpenseService(id, patch);
       set(state => ({

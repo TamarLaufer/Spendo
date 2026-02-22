@@ -3,7 +3,7 @@ import { PaymentMethods } from '../bottomSheetExpenses/types';
 const PAYMENT_METHOD_LABELS: Record<PaymentMethods['id'], string> = {
   'credit-card': 'כרטיס אשראי',
   cash: 'מזומן',
-  bit: 'ביט',
+  'bit-paybox': 'ביט/פייבוקס',
   paypal: 'פייפאל',
   'bank-transfer': 'העברה בנקאית',
 };

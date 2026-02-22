@@ -15,12 +15,10 @@ export const ICON_KEYS = [
 
 export const IconKeySchema = z.enum(ICON_KEYS);
 
-export type CategoryIcon = (typeof ICON_KEYS)[number];
-
 export const SubCategoryCreateSchema = z.object({
   subCategoryId: z.string().min(1),
   subCategoryName: z.string().min(1),
-  icon: IconKeySchema.nullish().or(z.literal('defaultIcon')),
+  icon: IconKeySchema.optional(),
   order: z.number().int().nonnegative().optional(),
   active: z.boolean().optional(),
 });
@@ -71,5 +69,4 @@ export const CategoryFormSchema = z.object({
 //     },
 //   );
 
-  
-  export type CategoryForm = z.infer<typeof CategoryFormSchema>;
+export type CategoryForm = z.infer<typeof CategoryFormSchema>;

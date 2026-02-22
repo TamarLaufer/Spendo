@@ -15,6 +15,7 @@ import Sort from './sort.svg';
 import Logo from './logo-spendo.svg';
 import Logout from './logout.svg';
 import LogoNoBg from './logo-no-bg.svg';
+import LogoNoBg2 from './logo-no-bg2.svg';
 import LogoAndText from './logo-text-spendo.svg';
 
 //other icons
@@ -22,6 +23,7 @@ export const Icons = {
   LogoAndText,
   Logo,
   LogoNoBg,
+  LogoNoBg2,
   CancelX,
   Back,
   Market,
@@ -44,6 +46,7 @@ export const IconRegistry = {
   logoAndText: LogoAndText,
   logo: Logo,
   logoNoBg: LogoNoBg,
+  logoNoBg2: LogoNoBg2,
   filter: Filter,
   sort: Sort,
   market: Market,

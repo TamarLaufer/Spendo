@@ -48,7 +48,7 @@ export type ExpenseModel = {
   amount: number;
   categoryId: string;
   subCategoryId: string | null;
-  paymentMethodId: string;
+  paymentMethodId?: string | null;
   createdAt: Date | null;
   createdBy?: string;
   note?: string;
@@ -102,13 +102,17 @@ function mapExpenseSnapshotToModel(
 ): ExpenseModel {
   const documentData = expenseDocumentSnapshot.data();
 
+  if (!documentData.paymentMethodId) {
+    console.warn('Missing paymentMethodId', expenseDocumentSnapshot.id);
+  }
+
   const mapped: ExpenseModel = {
     id: expenseDocumentSnapshot.id,
     householdId: documentData.householdId,
     amount: documentData.amount,
     categoryId: documentData.categoryId,
     subCategoryId: documentData.subCategoryId ?? null,
-    paymentMethodId: documentData.paymentMethodId ?? '',
+    paymentMethodId: documentData?.paymentMethodId ?? null,
     createdAt: convertFirestoreTimeToDate(documentData.createdAt),
     createdBy: documentData.createdBy ?? undefined,
     note: documentData.note ?? undefined,

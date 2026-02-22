@@ -26,7 +26,7 @@ const ExpenseRowView = ({ expense, onPress }: ExpenseRowViewProps) => {
     ? subIndex[expense.categoryId]?.[expense.subCategoryId]?.name
     : undefined;
 
-  const isReady = !!category && (!expense.subCategoryId || !!subCategoryName);
+  const isReady = !!category;
 
   return (
     <WithSkeleton ready={isReady} skeleton={<RowSkeleton />}>

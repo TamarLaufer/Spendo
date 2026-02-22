@@ -7,7 +7,6 @@ import {
 } from '../../firebase/services/categoriesService';
 import {
   CategoryCreateSchema,
-  CategoryIcon,
   type CategoryCreateInput,
 } from '../../shared/categorySchema';
 import { toId } from '../../firebase/services/categoriesService';
@@ -23,6 +22,8 @@ import {
   Input,
   Label,
 } from './AddCategorySection.styles';
+import { useSubcatIndex } from '../../zustandState/useSubCategoriesIndex';
+import { IconKey } from '../../assets/icons';
 
 type AddCategoryPropsType = {
   setDisplayAddCategory: (value: boolean) => void;
@@ -40,13 +41,16 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
   const [maxAmount, setMaxAmount] = useState('');
   const [submitLoader, setSubmitLoader] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [icon, setIcon] = useState<CategoryIcon>('defaultIcon');
+  const [icon, setIcon] = useState<IconKey>('defaultIcon');
+  const putMany = useSubcatIndex(state => state.putMany);
+
   const loadCategories = useCategory(state => state.loadCategories);
 
   const setError = useCategory(state => state.setError);
+  const trimmedCategoryName = categoryName.trim();
 
   const handleAddCategoryPress = async () => {
-    if (!categoryName.trim()) {
+    if (!trimmedCategoryName) {
       setSubmitError(STRINGS.CATEGORY_NAME_REQUIRED_ERROR);
       return;
     }
@@ -57,10 +61,10 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
     }
 
     const categoryPayload: CategoryCreateInput = {
-      categoryName: categoryName.trim(),
+      categoryName: trimmedCategoryName,
       maxAmount: parsedAmount,
       householdId: DEV_HOUSEHOLD_ID,
-      icon: icon,
+      icon: 'defaultIcon',
       order: Date.now(),
       active: true,
     };
@@ -77,23 +81,33 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
 
     try {
       const categoryId = await addCategory(categoryPayload);
+
       const names = parseCsv(subcategoriesText);
 
       if (names.length) {
-        await Promise.all(
-          names.map((name, idx) =>
-            upsertSubCategory(
+        const now = Date.now();
+        const subs = await Promise.all(
+          names.map((name, idx) => {
+            const id = toId(name) || `${now}-${idx}`;
+            const order = now + idx;
+
+            return upsertSubCategory(categoryId, id, {
+              subCategoryName: name,
+              icon,
+              order,
+              active: true,
+            }).then(() => ({
+              id,
               categoryId,
-              toId(name) || `${Date.now()}-${idx}`,
-              {
-                subCategoryName: name,
-                icon: 'defaultIcon',
-                order: idx,
-                active: true,
-              },
-            ),
-          ),
+              name,
+              icon,
+              order,
+              active: true,
+            }));
+          }),
         );
+
+        putMany(categoryId, subs);
       }
       await loadCategories();
       // reset form
@@ -103,7 +117,6 @@ const AddCategory = ({ setDisplayAddCategory }: AddCategoryPropsType) => {
       setIcon('defaultIcon');
       setError(null);
       setDisplayAddCategory(false);
-      
     } catch (e: any) {
       if (e.message === 'CATEGORY_ALREADY_EXISTS') {
         setSubmitError(STRINGS.CATEGORY_ALREADY_EXISTS_ERROR);
