@@ -1,9 +1,9 @@
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { FlatList } from 'react-native';
 import ScreenLayout from '../../../components/screenLayout/ScreenLayout';
 import { useCategory } from '../../../zustandState/useCategory';
 import { STRINGS } from '../../../strings/hebrew';
-import { CategoryType, SortConfig } from '../../../shared/categoryType';
+import { CategoryType } from '../../../shared/categoryType';
 import {
   AddCategoryButton,
   ButtonText,
@@ -20,7 +20,7 @@ import AddCategory from '../../../components/addCategory/AddCategorySection';
 import Separator from '../../../components/separator/Separator';
 import { getIconComponent } from '../../../utils/getIconComponent';
 import { RootNav } from '../../expenses/expenseDetails/types';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import SortAndFilterButtons from '../../../components/sortAndFilterButtons/SortAndFilterButtons';
 import { useSortFilterAndSearch } from '../../../hooks/useSortFilterAndSearch';
 
@@ -28,25 +28,47 @@ const AllCategories: FC = () => {
   const categories = useCategory(state => state.categories);
   const [displayAddCategory, setDisplayAddCategory] = useState(false);
   const navigation = useNavigation<RootNav>();
-  const [sortConfig, setSortConfig] = useState<
-    SortConfig<CategoryType> | undefined
-  >(undefined);
-  const [filters, setFilters] = useState<
-    ((item: CategoryType) => boolean) | undefined
-  >(undefined);
   const {
     textSearch,
     setTextSearch,
-    handleSortPress,
-    handleFilterPress,
-    sortLabel,
-    filterLabel,
-  } = useSortFilterAndSearch(
+    sortConfig,
     setSortConfig,
+    filters,
     setFilters,
-    filters ?? undefined,
-    sortConfig ?? undefined,
+  } = useSortFilterAndSearch<CategoryType>();
+
+  const handleSortPress = () => {
+    if (!sortConfig) {
+      setSortConfig({ key: 'name', direction: 'asc' });
+    } else if (sortConfig.key === 'name' && sortConfig.direction === 'asc') {
+      setSortConfig({ key: 'name', direction: 'desc' });
+    } else if (sortConfig.key === 'name') {
+      setSortConfig({ key: 'maxAmount', direction: 'asc' });
+    } else if (sortConfig.direction === 'asc') {
+      setSortConfig({ key: 'maxAmount', direction: 'desc' });
+    } else {
+      setSortConfig(undefined);
+    }
+  };
+
+  useEffect(() => {
+    setTextSearch('');
+  }, [filters, sortConfig, setTextSearch]);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        // reset when leaving screen
+        setSortConfig(undefined);
+        setFilters(undefined);
+        setTextSearch('');
+      };
+    }, [setSortConfig, setFilters, setTextSearch]),
   );
+
+  const handleFilterPress = () => {
+    setFilters(filters ? undefined : (item: CategoryType) => item.isExceed);
+  };
 
   const sortByActive = (a: CategoryType, b: CategoryType) => {
     const aInactive = a.active === false;
@@ -58,8 +80,18 @@ const AllCategories: FC = () => {
     return 0;
   };
 
-  const sortedCategories = sortConfig
-    ? [...categories].sort(sortByActive).sort((a, b) => {
+  const processedCategories = useMemo(() => {
+    let result = [...categories];
+
+    if (filters) {
+      result = result.filter(filters);
+    }
+
+    if (sortConfig) {
+      result = result.sort((a, b) => {
+        const activeCompare = sortByActive(a, b);
+        if (activeCompare !== 0) return activeCompare;
+
         if (sortConfig.key === 'name') {
           return sortConfig.direction === 'asc'
             ? a.name.localeCompare(b.name)
@@ -73,22 +105,44 @@ const AllCategories: FC = () => {
         }
 
         return 0;
-      })
-    : [...categories].sort(sortByActive);
+      });
+    } else {
+      result.sort(sortByActive);
+    }
 
-  const searchedCategories = textSearch
-    ? [...sortedCategories].filter(item =>
+    if (textSearch) {
+      result = result.filter(item =>
         item.name.toLowerCase().includes(textSearch.toLowerCase()),
-      )
-    : sortedCategories;
+      );
+    }
+
+    return result;
+  }, [categories, filters, sortConfig, textSearch]);
+
+  const handleAddCategoryPress = () => {
+    setDisplayAddCategory(true);
+  };
 
   const handleCategoryPress = (categoryId: string) => {
     navigation.navigate('CategoryDetails', { categoryId });
   };
 
-  const handleAddCategoryPress = () => {
-    setDisplayAddCategory(true);
-  };
+  const sortLabel = (() => {
+    if (!sortConfig) return STRINGS.SORT;
+
+    const SORT_LABELS: Record<string, string> = {
+      name: STRINGS.NAME,
+      maxAmount: STRINGS.BUDGET,
+    };
+
+    const keyLabel = SORT_LABELS[sortConfig.key];
+    const directionLabel =
+      sortConfig.direction === STRINGS.SORT_ASC ? '↓' : '↑';
+
+    return `${STRINGS.SORT}: ${keyLabel} ${directionLabel}`;
+  })();
+
+  const filterLabel = filters ? STRINGS.FILTER_ACTIVE : STRINGS.FILTER;
 
   const renderItem = ({ item }: { item: CategoryType }) => {
     const inactiveCategory = item.active === false;
@@ -104,7 +158,9 @@ const AllCategories: FC = () => {
           <Title>
             {item.name}
             {inactiveCategory ? (
-              <InactiveCategoryText> 🚫 קטגוריה לא פעילה</InactiveCategoryText>
+              <InactiveCategoryText>
+                {STRINGS.CATEGORY_INACTIVE}
+              </InactiveCategoryText>
             ) : (
               ''
             )}
@@ -119,7 +175,7 @@ const AllCategories: FC = () => {
     <ScreenLayout>
       <Container>
         <FlatList
-          data={searchedCategories}
+          data={processedCategories}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           ListHeaderComponent={
