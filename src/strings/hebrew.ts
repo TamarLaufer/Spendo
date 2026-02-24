@@ -81,8 +81,8 @@ export const STRINGS = {
   SELECT_CATEGORY_FIRST: 'בחרי קודם קטגוריה',
   ADD_NOTE_PLACEHOLDER: 'תרצה/י להוסיף פירוט להוצאה?',
   // Login
-  LOGIN_TITLE: 'התחברות',
-  LOGIN_SUBTITLE: 'טוב לראותך שוב!',
+  LOGIN_TITLE: 'שלום,',
+  LOGIN_SUBTITLE: 'טוב לראות אותך שוב!',
   LOGIN_EMAIL: 'אימייל',
   LOGIN_EMAIL_PLACEHOLDER: 'דוגמה@example.com',
   LOGIN_EMAIL_REQUIRED: 'שדה אימייל חובה',
@@ -91,10 +91,11 @@ export const STRINGS = {
   LOGIN_PASSWORD_PLACEHOLDER: 'הכנס/י סיסמה',
   LOGIN_PASSWORD_REQUIRED: 'שדה סיסמה חובה',
   LOGIN_SUBMIT: 'התחבר/י',
-  LOGIN_REGISTER_LINK: 'איו לך חשבון? להרשמה יש ללחוץ כאן',
+  LOGIN_MOVE_TO_REGISTER: 'אין לך חשבון? ',
+  LOGIN_REGISTER_LINK: 'להרשמה יש ללחוץ כאן',
   // Register
   REGISTER_TITLE: 'הרשמה',
-  REGISTER_SUBTITLE: 'צור/י חשבון חדש',
+  REGISTER_SUBTITLE: 'יצירת חשבון חדש',
   REGISTER_NAME: 'שם מלא',
   REGISTER_NAME_PLACEHOLDER: 'הכנס/י את שמך',
   REGISTER_NAME_REQUIRED: 'שדה שם חובה',
@@ -119,4 +120,6 @@ export const STRINGS = {
   SPENDO: 'Spendo',
   // Receipts
   RECEIPTS_DESCRIPTION: 'סרוק בבקשה את הקבלה הרצויה',
+  // Redirect
+  REDIRECT: 'מעבירים אותך...',
 };

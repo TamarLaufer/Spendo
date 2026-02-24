@@ -16,7 +16,6 @@ export const StyledScrollView = styled.ScrollView.attrs({
 
 export const KeyboardWrapper = styled.KeyboardAvoidingView`
   flex: 1;
-  z-index: 10;
 `;
 
 export const TitlesContainer = styled.View`
@@ -31,7 +30,6 @@ export const ScrollContent = styled.View`
 `;
 
 export const Header = styled.View`
-  z-index: 10;
   align-items: center;
   margin-bottom: 52px;
 `;
@@ -40,17 +38,19 @@ export const Title = styled.Text`
   font-size: 36px;
   font-family: 'MPLUSRounded1c-Bold';
   text-align: center;
+  margin-top: 10px;
 `;
 
 export const Subtitle = styled.Text`
   font-size: 20px;
   font-family: 'MPLUSRounded1c-Medium';
   text-align: center;
-  margin-top: 8px;
+  margin-top: 4px;
 `;
 
 export const Form = styled.View`
   flex: 1;
+  justify-content: center;
 `;
 
 export const InputWrapper = styled.View``;
@@ -59,7 +59,6 @@ export const Label = styled.Text`
   font-size: 17px;
   font-family: 'MPLUSRounded1c-Medium';
   color: ${theme.color.dark_purple};
-  margin-bottom: 2px;
 `;
 
 export const StyledInput = styled.TextInput`
@@ -70,7 +69,7 @@ export const StyledInput = styled.TextInput`
   background-color: transparent;
   color: ${theme.color.dark_purple};
   font-family: 'MPLUSRounded1c-Medium';
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 `;
 
 export const ErrorText = styled.Text`
@@ -84,16 +83,15 @@ export const ButtonWrapper = styled.View``;
 
 export const BottomSection = styled.View`
   margin-top: auto;
-  margin-bottom: 36px;
 `;
 
 export const PrimaryButton = styled.Pressable<{ disabled?: boolean }>`
   height: 52px;
-  width: 92%;
+  width: 100%;
   align-self: center;
   border-radius: 10px;
   background-color: ${({ disabled }) =>
-    disabled ? theme.color.lightGray : theme.color.shadowColor};
+    disabled ? theme.color.lightGray : '#355872'};
   justify-content: center;
   align-items: center;
   margin-top: 12px;
@@ -106,16 +104,22 @@ export const PrimaryButtonText = styled.Text<{ disabled?: boolean }>`
 `;
 
 export const Footer = styled.View`
-  margin-top: 14px;
+  margin: 10px 0 25px 0;
   align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 4px;
 `;
-
-export const FooterRow = styled.View``;
 
 export const LinkText = styled.Text`
   font-size: 18px;
   font-family: 'MPLUSRounded1c-Medium';
-  color: ${theme.color.white};
+  color: ${theme.color.lightBlue};
+`;
+
+export const MoveToRegisterText = styled.Text`
+  font-size: 18px;
+  font-family: 'MPLUSRounded1c-Medium';
 `;
 
 export const LogoContainer = styled.View`

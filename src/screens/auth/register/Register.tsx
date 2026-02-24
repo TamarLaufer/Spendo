@@ -43,7 +43,7 @@ const Register = () => {
 
   return (
     <RegisterComponent
-      logo={<Icons.Logo width={70} height={70} />}
+      logo={<Icons.LogoWallet width={80} height={80} />}
       onSubmit={handleRegister}
       onNavigateToLogin={onNavigateToLogin}
     />

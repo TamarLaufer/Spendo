@@ -1,11 +1,14 @@
-import { FC } from 'react';
 import { Icons } from '../../assets/icons';
 import { Container, LogoWrapper } from './TopBar.styles';
 import Logout from '../logout/Logout';
 
-const TopBar: FC = () => {
+type TopBarProps = {
+  onPress?: () => void;
+};
+
+const TopBar = ({ onPress }: TopBarProps) => {
   return (
-    <Container>
+    <Container onPress={onPress}>
       <LogoWrapper>
         <Icons.LogoWallet width={45} height={45} />
       </LogoWrapper>

@@ -19,7 +19,6 @@ import {
   PrimaryButton,
   PrimaryButtonText,
   Footer,
-  FooterRow,
   LinkText,
   ButtonWrapper,
   LogoContainer,
@@ -27,6 +26,7 @@ import {
   StyledScrollView,
   BottomSection,
   KeyboardWrapper,
+  MoveToRegisterText,
 } from './Login.styles';
 
 const loginSchema = z.object({
@@ -98,6 +98,7 @@ const Login = ({ logo, onSubmit, onNavigateToRegister }: LoginProps) => {
                   autoCapitalize="none"
                   autoCorrect={false}
                   editable={!isSubmitting}
+                  textAlign="right"
                 />
                 {errors.email?.message && (
                   <ErrorText>{errors.email.message}</ErrorText>
@@ -112,34 +113,36 @@ const Login = ({ logo, onSubmit, onNavigateToRegister }: LoginProps) => {
                   }
                   secureTextEntry
                   editable={!isSubmitting}
+                  textAlign="right"
                 />
                 {errors.password?.message && (
                   <ErrorText>{errors.password.message}</ErrorText>
                 )}
               </InputWrapper>
-              <BottomSection>
-                <ButtonWrapper>
-                  <PrimaryButton
-                    disabled={!isValid || isSubmitting}
-                    onPress={handleSubmit(onFormSubmit)}
-                  >
-                    <PrimaryButtonText disabled={!isValid || isSubmitting}>
-                      {STRINGS.LOGIN_SUBMIT}
-                    </PrimaryButtonText>
-                  </PrimaryButton>
-                </ButtonWrapper>
-                <Footer>
-                  <FooterRow>
-                    <TouchableOpacity
-                      onPress={onNavigateToRegister}
-                      disabled={isSubmitting}
-                    >
-                      <LinkText>{STRINGS.LOGIN_REGISTER_LINK}</LinkText>
-                    </TouchableOpacity>
-                  </FooterRow>
-                </Footer>
-              </BottomSection>
             </Form>
+            <BottomSection>
+              <ButtonWrapper>
+                <PrimaryButton
+                  disabled={!isValid || isSubmitting}
+                  onPress={handleSubmit(onFormSubmit)}
+                >
+                  <PrimaryButtonText disabled={!isValid || isSubmitting}>
+                    {STRINGS.LOGIN_SUBMIT}
+                  </PrimaryButtonText>
+                </PrimaryButton>
+              </ButtonWrapper>
+              <Footer>
+                <MoveToRegisterText>
+                  {STRINGS.LOGIN_MOVE_TO_REGISTER}
+                </MoveToRegisterText>
+                <TouchableOpacity
+                  onPress={onNavigateToRegister}
+                  disabled={isSubmitting}
+                >
+                  <LinkText>{STRINGS.LOGIN_REGISTER_LINK}</LinkText>
+                </TouchableOpacity>
+              </Footer>
+            </BottomSection>
           </ScrollContent>
         </StyledScrollView>
       </KeyboardWrapper>

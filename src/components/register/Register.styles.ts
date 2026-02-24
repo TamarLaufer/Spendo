@@ -15,7 +15,7 @@ export const ScrollContent = styled.View`
 export const Header = styled.View`
   z-index: 10;
   align-items: center;
-  margin-bottom: 32px;
+  margin: 20px 0 20px 0;
 `;
 
 export const Title = styled.Text`
@@ -32,6 +32,8 @@ export const Subtitle = styled.Text`
 `;
 
 export const Form = styled.View`
+  flex: 1;
+  justify-content: center;
   gap: 18px;
 `;
 
@@ -66,16 +68,17 @@ export const ErrorText = styled.Text`
 
 export const PrimaryButton = styled.Pressable<{ disabled?: boolean }>`
   height: 52px;
-  border-radius: 14px;
+  width: 100%;
+  border-radius: 10px;
   background-color: ${({ disabled }) =>
-    disabled ? theme.color.placeholder : theme.color.green};
+    disabled ? theme.color.lightGray : theme.color.dark_purple};
   justify-content: center;
   align-items: center;
   margin-top: 12px;
 `;
 
 export const PrimaryButtonText = styled.Text`
-  color: ${theme.color.white};
+  color: ${theme.color.gray};
   font-size: 20px;
   font-family: 'Assistant-SemiBold';
 `;
@@ -83,30 +86,25 @@ export const PrimaryButtonText = styled.Text`
 export const Footer = styled.View`
   margin-top: 12px;
   align-items: center;
-`;
-
-export const FooterRow = styled.View`
   flex-direction: row;
-  align-items: center;
   gap: 4px;
+  justify-content: center;
 `;
 
 export const FooterText = styled.Text`
-  font-size: 20px;
+  font-size: 18px;
   font-family: 'MPLUSRounded1c-Medium';
   color: ${theme.color.dark_purple};
 `;
 
 export const LinkText = styled.Text`
-  font-size: 20px;
+  font-size: 18px;
   font-family: 'MPLUSRounded1c-Medium';
   color: ${theme.color.lightBlue};
 `;
 
 export const BottomSection = styled.View`
   flex: 1;
-  margin-top: auto;
-  margin-top: 12px;
 `;
 
 export const ButtonWrapper = styled.View``;

@@ -7,6 +7,7 @@ import EditExpense from '../screens/expenses/editExpense/EditExpense';
 import CategoryDetails from '../screens/categories/categoryDetails/CategoryDetails';
 import EditCategory from '../screens/categories/editCategory/EditCategory';
 import { STRINGS } from '../strings/hebrew';
+import Redirect from '../screens/redirect/Redirect';
 
 const Stack = createNativeStackNavigator<RootStackParamsType>();
 
@@ -36,6 +37,11 @@ export default function StackNavigator() {
         name="EditCategory"
         component={EditCategory}
         options={{ title: STRINGS.EDIT_CATEGORY }}
+      />
+      <Stack.Screen
+        name="Redirect"
+        component={Redirect}
+        options={{ title: STRINGS.REDIRECT }}
       />
     </Stack.Navigator>
   );

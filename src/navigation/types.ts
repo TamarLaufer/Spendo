@@ -1,3 +1,5 @@
+import { NavigatorScreenParams } from '@react-navigation/native';
+
 export type MainBottomTabsParamsListTypes = {
   Home: undefined;
   AllCategories: undefined;
@@ -7,7 +9,7 @@ export type MainBottomTabsParamsListTypes = {
 };
 
 export type RootStackParamsType = {
-  MainTabs: undefined;
+  MainTabs: NavigatorScreenParams<MainBottomTabsParamsListTypes>;
   ExpenseDetails: {
     expenseId: string;
     categoryId: string;
@@ -17,6 +19,7 @@ export type RootStackParamsType = {
   EditExpense: { expenseId: string; categoryId: string };
   CategoryDetails: { categoryId: string };
   EditCategory: { categoryId: string };
+  Redirect: undefined;
 };
 
 export type AuthStackParamsType = {

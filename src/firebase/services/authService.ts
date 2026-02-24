@@ -45,7 +45,12 @@ export const registerWithEmailPassword = async (
   const householdRef = await addDoc(collection(firestore, 'households'), {
     name: `${name}'s household`,
     ownerId: user.uid,
-    members: [user.uid],
+    members: [
+      {
+        userId: user.uid,
+        role: 'owner',
+      },
+    ],
     createdAt: serverTimestamp(),
   });
 
@@ -83,4 +88,39 @@ export const signInWithEmailPassword = async (
 export const logout = async () => {
   const auth = getAuth();
   await signOut(auth);
+};
+
+// INVITE USER TO HOUSEHOLD
+export const inviteUserToHousehold = async (
+  householdId: string,
+  email: string,
+  role: 'member' | 'admin' = 'member',
+  inviterId: string,
+) => {
+  const firestore = getFirestore();
+
+  await addDoc(collection(firestore, 'householdInvitations'), {
+    householdId,
+    email: email.trim().toLowerCase(),
+    role,
+    invitedBy: inviterId,
+    status: 'pending',
+    createdAt: serverTimestamp(),
+  });
+};
+
+// CHECK PENDING INVITATIONS
+export const checkPendingInvitations = async (email: string) => {
+  const firestore = getFirestore();
+
+  const snapshot = await firestore
+    .collection('householdInvitations')
+    .where('email', '==', email)
+    .where('status', '==', 'pending')
+    .get();
+
+  return snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
 };

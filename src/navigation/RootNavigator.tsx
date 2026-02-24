@@ -1,23 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import StackNavigator from './AppStackNavigator';
 import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import { AuthStackNavigator } from './AuthStackNavigator';
 import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import SplashScreen from '../screens/splash/Splash';
 import { useAuthStore } from '../zustandState/useAuthStore';
-import { useAppBootstrapStore } from '../zustandState/useAppBootstrapStore';
 import { useCategory } from '../zustandState/useCategory';
 import { useExpenses } from '../zustandState/useExpenses';
+import Redirect from '../screens/redirect/Redirect';
 
 const RootNavigator = () => {
   const user = useAuthStore(state => state.user);
-  const isLoading = useAuthStore(state => state.isAuthLoading);
-  const isAppReady = useAppBootstrapStore(state => state.isAppReady);
-  const setAppReady = useAppBootstrapStore(state => state.setAppReady);
+  const isLoggingIn = useAuthStore(state => state.isLoggingIn);
+  const isAuthChecked = useAuthStore(state => state.isAuthChecked);
   const setUserToStore = useAuthStore(state => state.setUser);
-  const setIsAuthLoading = useAuthStore(state => state.setIsAuthLoading);
   const loadCategories = useCategory(state => state.loadCategories);
   const loadExpenses = useExpenses(state => state.loadExpenses);
+  const setIsAuthChecked = useAuthStore(state => state.setIsAuthChecked);
+  const [isAppReady, setIsAppReady] = useState(false);
 
   const theme = {
     ...DefaultTheme,
@@ -27,31 +27,42 @@ const RootNavigator = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(getAuth(), async firebaseUser => {
       setUserToStore(firebaseUser);
-      setIsAuthLoading(false);
+      setIsAuthChecked(true);
     });
 
     return unsubscribe;
-  }, [setAppReady, setUserToStore, setIsAuthLoading]);
+  }, [setUserToStore, setIsAuthChecked]);
 
   useEffect(() => {
     const bootstrap = async () => {
+      if (!isAuthChecked) return;
+
       if (!user) {
-        setAppReady(true);
+        setIsAppReady(true);
         return;
       }
-      setAppReady(false);
+
+      setIsAppReady(false);
+
       try {
         await Promise.all([loadCategories(), loadExpenses()]);
-        setAppReady(true);
-      } catch (e) {
-        console.log('Bootstrap error', e);
+      } catch (error) {
+        console.log('Bootstrap error', error);
+      } finally {
+        setIsAppReady(true);
       }
     };
 
     bootstrap();
-  }, [user, setAppReady, loadCategories, loadExpenses]);
+  }, [user, isAuthChecked, loadCategories, loadExpenses]);
 
-  if (!isAppReady || isLoading) return <SplashScreen />;
+  if (isLoggingIn) {
+    return <Redirect />;
+  }
+
+  if (!isAppReady) {
+    return <SplashScreen />;
+  }
 
   return (
     <NavigationContainer theme={theme}>

@@ -19,15 +19,14 @@ import {
   PrimaryButton,
   PrimaryButtonText,
   Footer,
-  FooterRow,
   FooterText,
   LinkText,
   BottomSection,
   ButtonWrapper,
   KeyboardWrapper,
   LogoContainer,
+  StyledScrollView,
 } from './Register.styles';
-import { StyledScrollView } from '../login/Login.styles';
 
 const registerSchema = z
   .object({
@@ -142,6 +141,7 @@ const Register = ({ logo, onSubmit, onNavigateToLogin }: RegisterProps) => {
                   autoCapitalize="none"
                   autoCorrect={false}
                   editable={!isSubmitting}
+                  textAlign="right"
                 />
                 {errors.email?.message && (
                   <ErrorText>{errors.email.message}</ErrorText>
@@ -159,6 +159,7 @@ const Register = ({ logo, onSubmit, onNavigateToLogin }: RegisterProps) => {
                   }
                   secureTextEntry
                   editable={!isSubmitting}
+                  textAlign="right"
                 />
                 {errors.password?.message && (
                   <ErrorText>{errors.password.message}</ErrorText>
@@ -176,35 +177,34 @@ const Register = ({ logo, onSubmit, onNavigateToLogin }: RegisterProps) => {
                   }
                   secureTextEntry
                   editable={!isSubmitting}
+                  textAlign="right"
                 />
                 {errors.confirmPassword?.message && (
                   <ErrorText>{errors.confirmPassword.message}</ErrorText>
                 )}
               </InputWrapper>
-              <BottomSection>
-                <ButtonWrapper>
-                  <PrimaryButton
-                    disabled={!isValid || isSubmitting}
-                    onPress={handleSubmit(onFormSubmit)}
-                  >
-                    <PrimaryButtonText>
-                      {STRINGS.REGISTER_SUBMIT}
-                    </PrimaryButtonText>
-                  </PrimaryButton>
-                </ButtonWrapper>
-                <Footer>
-                  <FooterRow>
-                    <FooterText>{STRINGS.REGISTER_HAS_ACCOUNT}</FooterText>
-                    <TouchableOpacity
-                      onPress={onNavigateToLogin}
-                      disabled={isSubmitting}
-                    >
-                      <LinkText>{STRINGS.REGISTER_LOGIN_LINK}</LinkText>
-                    </TouchableOpacity>
-                  </FooterRow>
-                </Footer>
-              </BottomSection>
             </Form>
+            <BottomSection>
+              <ButtonWrapper>
+                <PrimaryButton
+                  disabled={!isValid || isSubmitting}
+                  onPress={handleSubmit(onFormSubmit)}
+                >
+                  <PrimaryButtonText>
+                    {STRINGS.REGISTER_SUBMIT}
+                  </PrimaryButtonText>
+                </PrimaryButton>
+              </ButtonWrapper>
+              <Footer>
+                <FooterText>{STRINGS.REGISTER_HAS_ACCOUNT}</FooterText>
+                <TouchableOpacity
+                  onPress={onNavigateToLogin}
+                  disabled={isSubmitting}
+                >
+                  <LinkText>{STRINGS.REGISTER_LOGIN_LINK}</LinkText>
+                </TouchableOpacity>
+              </Footer>
+            </BottomSection>
           </ScrollContent>
         </StyledScrollView>
       </KeyboardWrapper>

@@ -11,9 +11,8 @@ type HomeHeaderProps = {
 
 const HomeHeader = ({}: HomeHeaderProps) => {
   const user = useAuthStore(state => state.user);
-  const userName = user?.displayName;
+  const userName = (user?.displayName ?? '').trim();
 
-  console.log('userName', userName);
   const greeting = userName
     ? STRINGS.HELLO_USER.replace('{{name}}', userName)
     : STRINGS.HELLO_USER;
@@ -22,7 +21,6 @@ const HomeHeader = ({}: HomeHeaderProps) => {
     <Container>
       <TextContainer>
         <GreetingText>{greeting}</GreetingText>
-        {/* <SubtitleText>{STRINGS.MONTH_EXPENSES_TEXT}</SubtitleText> */}
       </TextContainer>
     </Container>
   );
